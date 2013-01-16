@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <sec:http pattern="/admin/**" create-session="never">
+        <sec:http-basic entry-point-ref="restAuthenticationEntryPoint"/>
+        <sec:intercept-url pattern="/**" access="ROLE_ADMIN"/>
+    </sec:http>
+    <sec:http pattern="/user" create-session="never">
+        <sec:http-basic entry-point-ref="restAuthenticationEntryPoint"/>
+        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
+    </sec:http>
+    <sec:http pattern="/**" security="none"/>
+
+    <bean id="restAuthenticationEntryPoint" class="com.documakery.web.RestAuthenticationEntryPoint"/>
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider>
+            <sec:user-service>
+                <sec:user name="jimi" password="jimi" authorities="ROLE_USER, ROLE_ADMIN"/>
+                <sec:user name="bob" password="bob" authorities="ROLE_USER"/>
+            </sec:user-service>
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+</beans>

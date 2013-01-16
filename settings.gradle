@@ -1,0 +1,4 @@
+rootProject.name = "documakery"
+
+include "documakery-server"
+include "documakery-client"

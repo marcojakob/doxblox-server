@@ -1,0 +1,110 @@
+// The group name of our project
+group = 'com.documakery'
+
+version = '0.0.1'
+
+description = 'documakery'
+
+task wrapper(type: Wrapper) {
+  description = "Generates gradlew[.bat] scripts"
+  gradleVersion = "1.3"
+}
+
+buildscript {
+    repositories {
+        maven { url 'http://repo.springsource.org/plugins-release' }
+    }
+    dependencies {
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.2'
+    }
+}
+
+
+project(':documakery-server') {
+  description = "Documakery Server"
+  
+	apply plugin: "java"
+  apply plugin: "war"
+  
+  // Provides additional optional and provided dependency configurations for Gradle
+  apply plugin: "propdeps"
+	apply plugin: "propdeps-eclipse"
+
+  // Import the eclipse plugin, this is used to help set-up our development environment
+  // when we type gradle cleanEclipse eclipse
+  apply plugin: "eclipse"
+  apply plugin: "eclipse-wtp"
+  
+  eclipse {
+    project {
+      natures "com.springsource.sts.gradle.core.nature"
+      natures "org.springframework.ide.eclipse.core.springnature"
+    }
+    classpath {
+      //containers "com.springsource.sts.gradle.classpathcontainer"
+    }
+  }
+  
+  sourceCompatibility = 1.7
+
+  // Declare some constants for versions we are using.
+  ext.springVersion           = "3.1.3.RELEASE"
+  ext.springSecurityVersion   = "3.1.3.RELEASE"
+  ext.aspectjVersion          = "1.7.1"
+  ext.jacksonVersion          = "2.1.2"
+  ext.slf4jVersion            = "1.7.2"
+  ext.logbackVersion          = "1.0.9"
+  ext.junitVersion            = "4.11"
+  
+  repositories {   
+    mavenCentral()
+  }
+
+  dependencies {
+    // Spring dependencies 
+    compile("org.springframework:spring-webmvc:$springVersion") {
+       exclude group: 'commons-logging'
+    }
+    compile("org.springframework.security:spring-security-web:$springSecurityVersion")
+    compile("org.springframework.security:spring-security-config:$springSecurityVersion")
+    
+    // compile("org.springframework:spring-tx:$springVersion")          
+    // compile("org.springframework:spring-orm:$springVersion")
+    // compile("org.springframework:spring-jdbc:$springVersion")
+    // compile("org.springframework:spring-aspects:$springVersion")
+    // compile("org.springframework:spring-aop:$springVersion")
+    // compile("org.aspectj:aspectjrt:$aspectjVersion")
+      
+    // Java's JSR-330 / JSR-299 dependency injection
+    compile("javax.inject:javax.inject:1")
+    
+    // Jackson JSON Mapper
+    compile("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+    compile("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")   
+    
+    // Logging
+    compile("org.slf4j:slf4j-api:$slf4jVersion")
+    runtime("org.slf4j:jcl-over-slf4j:$slf4jVersion")
+    compile("ch.qos.logback:logback-classic:$logbackVersion")
+    compile("ch.qos.logback:logback-access:$logbackVersion") // HTTP-access logging
+
+    provided("javax.servlet:servlet-api:2.5")
+
+    testCompile("junit:junit:$junitVersion")
+    testCompile("org.springframework:spring-test:$springVersion")
+  }
+}
+
+project(':documakery-client') {
+  description = "Documakery Dart Client"
+
+  apply plugin: "eclipse"
+  
+  eclipse {
+    project {
+      natures "com.google.dart.tools.core.dartNature"
+      
+      buildCommand "com.google.dart.tools.core.dartBuilder"
+    }
+  }
+}
