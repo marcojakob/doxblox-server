@@ -1,4 +1,4 @@
-package com.documakery.web;
+package com.documakery.security.authentication;
 
 import java.io.IOException;
 

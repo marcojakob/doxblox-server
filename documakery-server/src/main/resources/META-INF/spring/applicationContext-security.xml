@@ -1,31 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:sec="http://www.springframework.org/schema/security"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <sec:http pattern="/admin/**" create-session="never">
-        <sec:http-basic entry-point-ref="restAuthenticationEntryPoint"/>
-        <sec:intercept-url pattern="/**" access="ROLE_ADMIN"/>
-    </sec:http>
-    <sec:http pattern="/user" create-session="never">
-        <sec:http-basic entry-point-ref="restAuthenticationEntryPoint"/>
-        <sec:intercept-url pattern="/**" access="ROLE_USER"/>
-    </sec:http>
-    <sec:http pattern="/**" security="none"/>
+	<security:http pattern="/index.html" security="none" />
+	<security:http pattern="/angular/**" security="none" />
 
-    <bean id="restAuthenticationEntryPoint" class="com.documakery.web.RestAuthenticationEntryPoint"/>
+	<security:http pattern="/**" create-session="never" entry-point-ref="restAuthenticationEntryPoint">
+		<!-- Add the login digest filter to the Spring Security filter chain -->
+		<security:custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER" />
+		<!-- Add the logout filter to the Spring Security filter chain -->
+		<security:logout logout-url="/logout" delete-cookies="true"
+			invalidate-session="true" success-handler-ref="restLogoutSuccessHandler" />
+	</security:http>
+	
+	<!-- Enable @PreAuthorize and @PostAuthorize annotations -->
+    <security:global-method-security pre-post-annotations="enabled">
+        <!-- Adds a reference to the used expression handler bean -->
+        <security:expression-handler ref="expressionHandler"/>
+    </security:global-method-security>
+    
+	<bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator" ref="myPermissionEvaluator" />
+    </bean>
+    
+    <bean id="myPermissionEvaluator" class="com.documakery.security.authorization.MyPermissionEvaluator"/>
 
-    <sec:authentication-manager alias="authenticationManager">
-        <sec:authentication-provider>
-            <sec:user-service>
-                <sec:user name="jimi" password="jimi" authorities="ROLE_USER, ROLE_ADMIN"/>
-                <sec:user name="bob" password="bob" authorities="ROLE_USER"/>
-            </sec:user-service>
-        </sec:authentication-provider>
-    </sec:authentication-manager>
+	<!-- Configure the authentication entry point -->
+	<bean id="restAuthenticationEntryPoint"
+		class="com.documakery.security.authentication.RestAuthenticationEntryPoint" />
+
+	<!-- Configure a custom login filter bean -->
+    <bean id="loginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationFailureHandler" ref="restAuthenticationFailureHandler"/>
+        <property name="authenticationSuccessHandler" ref="restAuthenticationSuccessHandler"/>
+        <property name="filterProcessesUrl" value="/login"/>
+        <property name="usernameParameter" value="username"/>
+        <property name="passwordParameter" value="password"/>
+        <property name="postOnly" value="true"/>
+    </bean>
+	
+	<!-- Configures a custom authentication success handler that returns the HTTP status code 200 instead of the 301 HTTP status code -->
+    <bean id="restAuthenticationSuccessHandler" class="com.documakery.security.authentication.RestAuthenticationSuccessHandler"/>
+
+    <!-- Configures a custom authentication failure handler -->
+    <bean id="restAuthenticationFailureHandler" class="com.documakery.security.authentication.RestAuthenticationFailureHandler"/>
+
+    <!-- Configures a custom logout success handler -->
+    <bean id="restLogoutSuccessHandler" class="com.documakery.security.authentication.RestLogoutSuccessHandler"/>
+
+	<!-- Configures in-memory implementation of the UserDetailsService implementation -->
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider user-service-ref="myUserDetailsService">
+        	<security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+    
+	<bean id="myUserDetailsService" class="com.documakery.service.impl.MyUserDetailsService" />
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
 </beans>

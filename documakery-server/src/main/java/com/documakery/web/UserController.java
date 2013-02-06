@@ -3,11 +3,14 @@ package com.documakery.web;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.documakery.dto.User;
+import com.documakery.domain.user.dto.UserDto;
+import com.documakery.domain.user.dto.UserRegisterDto;
+import com.documakery.dto.ResponseMessage;
 import com.documakery.service.UserService;
 
 /**
@@ -15,12 +18,24 @@ import com.documakery.service.UserService;
  */
 @Controller
 public class UserController {
-    @Inject
-    private UserService userService;
+  
+  private final UserService userService;
+  
+  @Inject
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    @ResponseBody
-    public User getCurrentUser() {
-        return userService.getCurrentUser();
-    }
+  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  @ResponseBody
+  public UserDto getCurrentUser() {
+    return userService.getCurrentUser();
+  }
+
+  @RequestMapping(value = "/user", method = RequestMethod.POST)
+  @ResponseBody
+  public ResponseMessage registerUser(@RequestBody UserRegisterDto userRegister) {
+    userService.register(userRegister);
+    return new ResponseMessage(ResponseMessage.Type.success, "userRegistered");
+  }
 }

@@ -6,6 +6,7 @@ import com.documakery.dto.Person;
 
 /**
  * Service to handle Persons.
+ * By nidi.
  */
 public interface PersonService {
     List<Person> getAllPersons();

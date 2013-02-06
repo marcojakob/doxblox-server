@@ -10,12 +10,12 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-	<context:component-scan base-package="com.documakery.web" />
+	<!-- JSR-303 support will be detected on classpath and enabled automatically -->
 	<mvc:annotation-driven />
 	
 	<!--
        Ensures that dispatcher servlet can be mapped to '/' and that static resources 
        are still served by the containers default servlet.
     -->
-    <mvc:default-servlet-handler/>
+   <mvc:default-servlet-handler/>
 </beans>
