@@ -4,12 +4,16 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import com.documakery.domain.user.User;
 import com.documakery.domain.user.dto.UserDto;
 import com.documakery.domain.user.dto.UserRegisterDto;
-import com.documakery.dto.ResponseMessage;
 import com.documakery.service.UserService;
 
 /**
@@ -34,33 +38,33 @@ public class UserControllerTest {
   }
 
   @Test
-  public void getCurrentUser() {
+  public void getUser() {
     // given
-    UserDto userDto = new UserDto(EMAIL, NICKNAME);
+    UserDetails user = new org.springframework.security.core.userdetails.User(
+        EMAIL, PASSWORD, new ArrayList<GrantedAuthority>());
 
-    given(userServiceMock.getCurrentUser()).willReturn(userDto);
+    given(userServiceMock.getPrincipal()).willReturn(user);
 
     // when
-    UserDto loggedInUser = userController.getCurrentUser();
+    UserDto loggedInUser = userController.getUser();
 
     // then
-    verify(userServiceMock, times(1)).getCurrentUser();
+    verify(userServiceMock, times(1)).getPrincipal();
     verifyNoMoreInteractions(userServiceMock);
 
-    assertThat(EMAIL, is(loggedInUser.getEmail()));
-    assertThat(NICKNAME, is(loggedInUser.getNickname()));
+    assertThat(loggedInUser.getEmail(), is(EMAIL));
   }
 
   @Test
-  public void getCurrentUser_UserIsNotLoggedIn() {
+  public void getUser_UserIsNotLoggedIn() {
     // given
-    given(userServiceMock.getCurrentUser()).willReturn(null);
+    given(userServiceMock.getUser()).willReturn(null);
 
     // when
-    UserDto loggedInUser = userController.getCurrentUser();
+    UserDto loggedInUser = userController.getUser();
 
     // then
-    verify(userServiceMock, times(1)).getCurrentUser();
+    verify(userServiceMock, times(1)).getPrincipal();
     verifyNoMoreInteractions(userServiceMock);
 
     assertThat(loggedInUser, is(nullValue()));
@@ -73,15 +77,15 @@ public class UserControllerTest {
     userRegister.setEmail(EMAIL);
     userRegister.setNickname(NICKNAME);
     userRegister.setPassword(PASSWORD);
-    userRegister.setPasswordConfirm(PASSWORD);
+    given(userServiceMock.register(userRegister)).willReturn(new User(EMAIL));
 
     // when
-    ResponseMessage response = userController.registerUser(userRegister);
+    UserDto response = userController.registerUser(userRegister);
 
     // then
     verify(userServiceMock, times(1)).register(userRegister);
     verifyNoMoreInteractions(userServiceMock);
 
-    assertThat(response.getType(), is(ResponseMessage.Type.success));
+    assertThat(response.getEmail(), is(EMAIL));
   }
 }

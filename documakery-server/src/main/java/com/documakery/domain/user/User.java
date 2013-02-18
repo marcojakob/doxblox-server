@@ -29,13 +29,14 @@ public class User {
   private ConfirmationCode emailConfirmationCode;
 
   /**
-   * The status of the account.
+   * <code>true</code> if the email address was confirmed.
    */
-  private AccountStatus accountStatus = AccountStatus.NEW;
+  private boolean emailConfirmed;
 
   /**
    * The nickname.
    */
+  @Indexed(unique=true)
   private String nickname;
 
   /**
@@ -76,12 +77,12 @@ public class User {
     this.emailConfirmationCode = emailConfirmationCode;
   }
 
-  public AccountStatus getAccountStatus() {
-    return accountStatus;
+  public boolean isEmailConfirmed() {
+    return emailConfirmed;
   }
 
-  public void setAccountStatus(AccountStatus accountStatus) {
-    this.accountStatus = accountStatus;
+  public void setEmailConfirmed(boolean emailConfirmed) {
+    this.emailConfirmed = emailConfirmed;
   }
 
   public String getNickname() {
@@ -98,39 +99,5 @@ public class User {
 
   public void setPassword(String hash) {
     this.password = hash;
-  }
-
-  /**
-   * The status of the user's account.
-   */
-  public enum AccountStatus {
-    /**
-     * First status: User has been newly created. The new user will only have an email, i.e. NO
-     * password, NO nickname, etc. This status should not be permanent. As soon as a registration
-     * request returns, the Account should be in another status. If not, the user will have to
-     * register again.
-     */
-    NEW,
-  
-    /**
-     * Second status: E-mail has not been confirmed yet. The user will already have a password,
-     * nickname, etc.
-     */
-    EMAIL_UNCONFIRMED,
-  
-    /**
-     * The normal status. Email has been confirmed.
-     */
-    ENABLED,
-  
-    /**
-     * The account has been disabled.
-     */
-    DISABLED,
-  
-    /**
-     * The account has explicitly been locked.
-     */
-    LOCKED
   }
 }

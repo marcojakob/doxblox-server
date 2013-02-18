@@ -8,7 +8,7 @@
         http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security.xsd">
 
-	<security:http pattern="/index.html" security="none" />
+	<security:http pattern="/inde.html" security="none" />
 	<security:http pattern="/angular/**" security="none" />
 
 	<security:http pattern="/**" create-session="never" entry-point-ref="restAuthenticationEntryPoint">
@@ -55,7 +55,7 @@
     <!-- Configures a custom logout success handler -->
     <bean id="restLogoutSuccessHandler" class="com.documakery.security.authentication.RestLogoutSuccessHandler"/>
 
-	<!-- Configures in-memory implementation of the UserDetailsService implementation -->
+	<!-- Configures UserDetailsService implementation -->
     <security:authentication-manager alias="authenticationManager">
         <security:authentication-provider user-service-ref="myUserDetailsService">
         	<security:password-encoder ref="passwordEncoder"/>

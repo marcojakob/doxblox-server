@@ -1,8 +1,9 @@
 package com.documakery.service;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import com.documakery.domain.user.dto.UserDto;
+import com.documakery.domain.user.User;
 import com.documakery.domain.user.dto.UserRegisterDto;
 
 /**
@@ -11,12 +12,21 @@ import com.documakery.domain.user.dto.UserRegisterDto;
 public interface UserService {
 
   /**
-   * Returns the current user that is either authenticated or remembered.
+   * Returns the currently authenticated user. If {@link UserDetails} are sufficient you should call
+   * {@link #getPrincipal()} instead since it will not require a db call.
    * 
    * @return The current user.
    */
   @PreAuthorize("isAuthenticated()")
-  UserDto getCurrentUser();
+  User getUser();
+  
+  /**
+   * Returns the current authenticated principal. 
+   * 
+   * @return The current user.
+   */
+  @PreAuthorize("isAuthenticated()")
+  UserDetails getPrincipal();
 
   /**
    * Registers the user.
@@ -31,5 +41,11 @@ public interface UserService {
    * @throws EmailAlreadyExistsException if the user could not be created because the email already
    *           exists.
    */
-  void register(UserRegisterDto userRegister);
+  User register(UserRegisterDto userRegister);
+  
+  /**
+   * Deletes the current user.
+   */
+  @PreAuthorize("isAuthenticated()")
+  void deleteUser();
 }

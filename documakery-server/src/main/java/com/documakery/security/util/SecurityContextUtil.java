@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SecurityContextUtil {
-  private static final Logger LOGGER = LoggerFactory.getLogger(SecurityContextUtil.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SecurityContextUtil.class);
 
   /**
    * Returns the currently authenticated principal.
@@ -23,7 +23,7 @@ public class SecurityContextUtil {
    *         available
    */
   public UserDetails getPrincipal() {
-    LOGGER.debug("Getting principal from the security context");
+    LOG.debug("Getting principal from security context");
 
     UserDetails principal = null;
 

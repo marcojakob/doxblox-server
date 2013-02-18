@@ -12,8 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.documakery.domain.document.Document;
 
@@ -23,10 +25,12 @@ import com.documakery.domain.document.Document;
  * @author Marco Jakob
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
-public class DocumentRepositoryTest {
+@ContextConfiguration({"classpath*:META-INF/spring/applicationContext-*.xml"})
+@ActiveProfiles("dev")
+@WebAppConfiguration
+public class DocumentRepositoryIntegrationTest {
   
-  static final String JSON_DATA_FILE = DocumentRepositoryTest.class.getSimpleName() + "-data.json";
+  static final String JSON_DATA_FILE = DocumentRepositoryIntegrationTest.class.getSimpleName() + "-data.json";
   static final String COLLECTION_NAME = "document";
 
   @Inject

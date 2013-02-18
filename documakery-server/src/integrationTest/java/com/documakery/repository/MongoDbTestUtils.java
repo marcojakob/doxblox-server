@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.documakery.JsonTestUtils;
+import com.documakery.domain.user.User;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Closeables;
@@ -24,6 +25,13 @@ import com.mongodb.util.JSON;
  * @author Marco Jakob
  */
 public class MongoDbTestUtils {
+  
+  public static final String CORRECT_USERNAME = "nicki99@example.com";
+  public static final String CORRECT_NICKNAME = "nicki99";
+  public static final String CORRECT_PASSWORD = "nicki99pass";
+  public static final String CORRECT_PASSWORD_BCRYPT = "$2a$10$eVNlYxxVtBSX3eWZ1XGKQ.kCXU32umMMilmcc9CnmdTj62AkSSkiK";
+  public static final String INCORRECT_EMAIL = "user-incorrect@user.com";
+  public static final String INCORRECT_PASSWORD = "password-incorrect";
 
   /**
    * Removes all entries in all the collections of the db.
@@ -34,6 +42,19 @@ public class MongoDbTestUtils {
     for (String collectionName : template.getCollectionNames()) {
       template.remove(new Query(), collectionName);
     }
+  }
+  
+  /**
+   * Adds the user with correct credentials {@link #CORRECT_USERNAME} and {@link #CORRECT_PASSWORD}
+   * to the db.
+   * 
+   * @param template
+   */
+  public static void addCorrectUserToDb(MongoTemplate template) {
+    User user = new User(CORRECT_USERNAME);
+    user.setNickname(CORRECT_NICKNAME);
+    user.setPassword(CORRECT_PASSWORD_BCRYPT);
+    template.save(user);
   }
   
   /**
