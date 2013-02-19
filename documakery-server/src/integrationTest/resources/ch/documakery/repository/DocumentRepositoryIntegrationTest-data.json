@@ -1,0 +1,11 @@
+
+	{
+	  "_id" : {
+	    "$oid" : "511181d09c4559da07f275eb"
+	  },
+	  "_class" : "ch.documakery.domain.document.Document",
+	  "name" : "test document",
+	  "creationDate" : {
+	    "$date" : "2013-02-05T22:04:00.495Z"
+	  }
+  	}

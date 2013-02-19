@@ -29,11 +29,11 @@
         <property name="permissionEvaluator" ref="myPermissionEvaluator" />
     </bean>
     
-    <bean id="myPermissionEvaluator" class="com.documakery.security.authorization.MyPermissionEvaluator"/>
+    <bean id="myPermissionEvaluator" class="ch.documakery.security.authorization.MyPermissionEvaluator"/>
 
 	<!-- Configure the authentication entry point -->
 	<bean id="restAuthenticationEntryPoint"
-		class="com.documakery.security.authentication.RestAuthenticationEntryPoint" />
+		class="ch.documakery.security.authentication.RestAuthenticationEntryPoint" />
 
 	<!-- Configure a custom login filter bean -->
     <bean id="loginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
@@ -47,13 +47,13 @@
     </bean>
 	
 	<!-- Configures a custom authentication success handler that returns the HTTP status code 200 instead of the 301 HTTP status code -->
-    <bean id="restAuthenticationSuccessHandler" class="com.documakery.security.authentication.RestAuthenticationSuccessHandler"/>
+    <bean id="restAuthenticationSuccessHandler" class="ch.documakery.security.authentication.RestAuthenticationSuccessHandler"/>
 
     <!-- Configures a custom authentication failure handler -->
-    <bean id="restAuthenticationFailureHandler" class="com.documakery.security.authentication.RestAuthenticationFailureHandler"/>
+    <bean id="restAuthenticationFailureHandler" class="ch.documakery.security.authentication.RestAuthenticationFailureHandler"/>
 
     <!-- Configures a custom logout success handler -->
-    <bean id="restLogoutSuccessHandler" class="com.documakery.security.authentication.RestLogoutSuccessHandler"/>
+    <bean id="restLogoutSuccessHandler" class="ch.documakery.security.authentication.RestLogoutSuccessHandler"/>
 
 	<!-- Configures UserDetailsService implementation -->
     <security:authentication-manager alias="authenticationManager">
@@ -62,7 +62,7 @@
         </security:authentication-provider>
     </security:authentication-manager>
     
-	<bean id="myUserDetailsService" class="com.documakery.service.impl.MyUserDetailsService" />
+	<bean id="myUserDetailsService" class="ch.documakery.service.impl.MyUserDetailsService" />
     <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	
 </beans>

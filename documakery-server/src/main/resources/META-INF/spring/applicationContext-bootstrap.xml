@@ -13,7 +13,7 @@
 	<!-- JSR-303 (validation) support will be detected on classpath and enabled automatically -->
 	<mvc:annotation-driven />
 
-	<context:component-scan base-package="com.documakery.web" />
-	<context:component-scan base-package="com.documakery.security" />
+	<context:component-scan base-package="ch.documakery.web" />
+	<context:component-scan base-package="ch.documakery.security" />
 
 </beans>

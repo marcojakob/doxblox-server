@@ -11,14 +11,14 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<mongo:repositories base-package="com.documakery.repository"
+	<mongo:repositories base-package="ch.documakery.repository"
 		mongo-template-ref="mongoTemplate" />
 		
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
 		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
 	</bean>
 
-	<mongo:repositories base-package="com.documakery.repository"
+	<mongo:repositories base-package="ch.documakery.repository"
 		mongo-template-ref="mongoTemplate" />
 		
 	<beans profile="production">
@@ -30,7 +30,7 @@
 
 	<beans profile="dev">
 		<bean id="mongoDbFactory" init-method="init" destroy-method="destroy"
-			class="com.documakery.repository.EmbeddedMongoDbFactoryBean" />
+			class="ch.documakery.repository.EmbeddedMongoDbFactoryBean" />
 	</beans>
 	
 </beans>
