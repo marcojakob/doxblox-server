@@ -28,7 +28,6 @@ import ch.documakery.domain.user.dto.UserRegisterDto;
 import ch.documakery.repository.MongoDbTestUtils;
 import ch.documakery.web.UserController;
 
-
 /**
  * Integration test for {@link UserController}.
  * 
@@ -63,17 +62,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void getCurrentUser_AsAnonymous_Return401() throws Exception {
-    // when
-    mockMvc.perform(get("/user")
-        .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
-    )
-    // then
-        .andExpect(status().isUnauthorized());
-  }
-  
-  @Test
-  public void getCurrentUser_AsUser_ReturnUserAsJson() throws Exception {
+  public void getUser_AsUser_ReturnUserAsJson() throws Exception {
     // when
     mockMvc.perform(get("/user")
         .with(userDetailsService(MongoDbTestUtils.CORRECT_USERNAME))
@@ -84,6 +73,16 @@ public class UserControllerIntegrationTest {
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
         .andExpect(content().string(containsString("{\"email\":\"" + MongoDbTestUtils.CORRECT_USERNAME)));
     
+  }
+
+  @Test
+  public void getUser_AsAnonymous_ReturnUnauthorized() throws Exception {
+    // when
+    mockMvc.perform(get("/user")
+        .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
+    )
+    // then
+        .andExpect(status().isUnauthorized());
   }
   
   @Test
@@ -106,7 +105,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void registerUser_InvalidEmail_Returns400() throws Exception {
+  public void registerUser_InvalidEmail_ReturnBadRequest() throws Exception {
     // given
     UserRegisterDto userRegister = new UserRegisterDto();
     userRegister.setEmail("invalidemail.com");
@@ -125,7 +124,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void registerUser_EmailAndNicknameNotUnique_Returns400() throws Exception {
+  public void registerUser_EmailAndNicknameNotUnique_ReturnBadRequest() throws Exception {
     // given
     UserRegisterDto userRegister = new UserRegisterDto();
     userRegister.setEmail(MongoDbTestUtils.CORRECT_USERNAME);
@@ -155,5 +154,16 @@ public class UserControllerIntegrationTest {
     // then
         .andExpect(status().isOk());
     assertThat(template.findAll(User.class).size(), is(0));
+  }
+  
+  @Test
+  public void deleteUser_AsAnonymous_ReturnUnauthorized() throws Exception {
+    // when
+    mockMvc.perform(delete("/user")
+        .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
+    )
+    // then
+        .andExpect(status().isUnauthorized());
+    assertThat(template.findAll(User.class).size(), is(1));
   }
 }

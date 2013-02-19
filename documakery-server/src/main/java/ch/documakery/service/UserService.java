@@ -33,13 +33,10 @@ public interface UserService {
    * <p/>
    * At this point, the provided {@link UserRegisterDto} must have been validated, so that the user
    * would have been informed about violations already. The validation should include a uniqueness
-   * check of nickname since this will not be checked by this method. This leaves a very small
-   * chance that the same nickname would be registered twice. However, the uniqueness of the email
-   * is guaranteed and will throw an error if it is not unique.
+   * check of nickname and email. Though the uniqueness of email and nickname is guaranteed by the 
+   * db, no error will be thrown by this method.
    * 
    * @param userRegister User registration information.
-   * @throws EmailAlreadyExistsException if the user could not be created because the email already
-   *           exists.
    */
   User register(UserRegisterDto userRegister);
   

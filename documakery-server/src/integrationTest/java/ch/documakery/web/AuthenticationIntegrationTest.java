@@ -24,7 +24,6 @@ import ch.documakery.repository.MongoDbTestUtils;
 
 /**
  * Integration test for authentication (login/logout).
- * Tests login/logout from controller to 
  * 
  * @author Marco Jakob
  */

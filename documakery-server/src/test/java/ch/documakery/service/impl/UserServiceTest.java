@@ -3,8 +3,6 @@ package ch.documakery.service.impl;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,6 @@ import ch.documakery.domain.user.User;
 import ch.documakery.domain.user.dto.UserRegisterDto;
 import ch.documakery.repository.UserRepository;
 import ch.documakery.security.util.SecurityContextUtil;
-import ch.documakery.service.impl.UserServiceImpl;
 
 /**
  * Test for {@link UserServiceImpl}.

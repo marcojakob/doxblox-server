@@ -36,14 +36,14 @@ public class UserController {
   @ResponseBody
   public UserDto getUser() {
     UserDetails principal = userService.getPrincipal();
-    return createDto(principal);
+    return toDto(principal);
   }
 
   @RequestMapping(value = "/user", method = RequestMethod.POST)
   @ResponseBody
   public UserDto registerUser(@RequestBody @Valid UserRegisterDto userRegister) {
     User user = userService.register(userRegister);
-    return createDto(user);
+    return toDto(user);
   }
   
   @RequestMapping(value = "/user", method = RequestMethod.DELETE)
@@ -53,7 +53,14 @@ public class UserController {
     userService.deleteUser();
   }
   
-  private UserDto createDto(UserDetails principal) {
+  
+  /**
+   * Helper method to convert {@link UserDetails} to {@link UserDto}.
+   * 
+   * @param principal
+   * @return
+   */
+  private UserDto toDto(UserDetails principal) {
     UserDto dto = null;
     if (principal != null) {
       dto = new UserDto(principal.getUsername(), "no nickname");
@@ -62,7 +69,13 @@ public class UserController {
     return dto;
   }
   
-  private UserDto createDto(User user) {
+  /**
+   * Helper method to convert {@link User} to {@link UserDto}.
+   * 
+   * @param user
+   * @return
+   */
+  private UserDto toDto(User user) {
     UserDto dto = null; {
       dto = new UserDto(user.getEmail(), user.getNickname());
     }

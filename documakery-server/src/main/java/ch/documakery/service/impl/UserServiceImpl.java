@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
     
     userRepository.save(user);
 
+    // TODO: Send registration mail
     // registrationMailService.sendConfirmationMail(user);
     
     return user;
