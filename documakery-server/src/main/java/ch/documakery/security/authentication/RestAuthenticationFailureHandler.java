@@ -1,4 +1,5 @@
 package ch.documakery.security.authentication;
+
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -8,12 +9,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Returns 401-unauthorized after a failed authentication.
+ * Returns 401-unauthorized after a failed authentication and a 403-forbidden if the users
+ * email has not been confirmed yet.
  */
 public class RestAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Bad credentials");
+  @Override
+  public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+      AuthenticationException exception) throws IOException, ServletException {
+    
+    if (exception.getCause() instanceof EmailNotConfirmedException) {
+      response.sendError(HttpServletResponse.SC_FORBIDDEN, "Email not confirmed");
+    } else {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Bad credentials");
     }
+  }
 }

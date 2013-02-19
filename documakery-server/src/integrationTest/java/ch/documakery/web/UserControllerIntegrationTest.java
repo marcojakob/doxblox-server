@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.server.samples.context.SecurityRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import javax.inject.Inject;
@@ -26,7 +25,6 @@ import ch.documakery.JsonTestUtils;
 import ch.documakery.domain.user.User;
 import ch.documakery.domain.user.dto.UserRegisterDto;
 import ch.documakery.repository.MongoDbTestUtils;
-import ch.documakery.web.UserController;
 
 /**
  * Integration test for {@link UserController}.
@@ -54,7 +52,7 @@ public class UserControllerIntegrationTest {
   public void setUp() {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter(springSecurityFilterChain)
-            .alwaysDo(print())
+//            .alwaysDo(print()) 
             .build();
     
     MongoDbTestUtils.cleanDb(template);
@@ -71,7 +69,7 @@ public class UserControllerIntegrationTest {
     // then
         .andExpect(status().isOk())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
-        .andExpect(content().string(containsString("{\"email\":\"" + MongoDbTestUtils.CORRECT_USERNAME)));
+        .andExpect(jsonPath("$.email", is(MongoDbTestUtils.CORRECT_USERNAME)));
     
   }
 
@@ -101,7 +99,8 @@ public class UserControllerIntegrationTest {
     // then
         .andExpect(status().isOk())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
-        .andExpect(content().string("{\"email\":\"email@email.com\",\"nickname\":\"nick\"}"));
+        .andExpect(jsonPath("$.email", is("email@email.com")))
+        .andExpect(jsonPath("$.nickname", is("nick")));
   }
   
   @Test
@@ -120,7 +119,8 @@ public class UserControllerIntegrationTest {
     // then
         .andExpect(status().isBadRequest())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
-        .andExpect(content().string("{\"errors\":[{\"path\":\"email\",\"message\":\"not a well-formed email address\"}]}"));
+        .andExpect(jsonPath("$.errors[0].path", is("email")))
+        .andExpect(jsonPath("$.errors[0].message", is("not a well-formed email address")));
   }
   
   @Test
@@ -139,9 +139,7 @@ public class UserControllerIntegrationTest {
         // then
         .andExpect(status().isBadRequest())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
-        .andExpect(content().string(allOf(
-            containsString("{\"path\":\"email\",\"message\":\"Email not unique\"}"),
-            containsString("{\"path\":\"nickname\",\"message\":\"Nickname not unique\"}"))));
+        .andExpect(jsonPath("$..path", hasItems("email", "nickname")));
   }
   
   @Test

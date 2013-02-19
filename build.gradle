@@ -132,6 +132,7 @@ project(':documakery-server') {
     testCompile("org.springframework:spring-test:$springVersion")
     testCompile("org.mockito:mockito-core:1.9.5")
     testCompile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.28")
+    testCompile("com.jayway.jsonpath:json-path:0.8.1")
   }
 }
 

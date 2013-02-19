@@ -9,11 +9,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import ch.documakery.security.authentication.EmailNotConfirmedException;
 import ch.documakery.validation.dto.ValidationErrorMessageDto;
 
 /**
@@ -24,21 +22,6 @@ import ch.documakery.validation.dto.ValidationErrorMessageDto;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-  /**
-   * Handles the {@link EmailNotConfirmedException}.
-   * 
-   * @param ex the target exception
-   * @param request the current request
-   */
-  @ExceptionHandler
-  public ResponseEntity<Object> handleEmailNotConfirmed(EmailNotConfirmedException ex,
-      WebRequest request) {
-    Object bodyOfResponse = null;
-    // TODO: fill body
-    return handleExceptionInternal(ex, bodyOfResponse,
-        new HttpHeaders(), HttpStatus.FORBIDDEN, request);
-  }
-  
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {

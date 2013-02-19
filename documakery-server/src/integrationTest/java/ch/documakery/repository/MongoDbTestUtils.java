@@ -47,15 +47,18 @@ public class MongoDbTestUtils {
   
   /**
    * Adds the user with correct credentials {@link #CORRECT_USERNAME} and {@link #CORRECT_PASSWORD}
-   * to the db.
+   * to the db. The users email is confirmed.
    * 
    * @param template
+   * @return
    */
-  public static void addCorrectUserToDb(MongoTemplate template) {
+  public static User addCorrectUserToDb(MongoTemplate template) {
     User user = new User(CORRECT_USERNAME);
     user.setNickname(CORRECT_NICKNAME);
     user.setPassword(CORRECT_PASSWORD_BCRYPT);
+    user.setEmailConfirmed(true);
     template.save(user);
+    return user;
   }
   
   /**
