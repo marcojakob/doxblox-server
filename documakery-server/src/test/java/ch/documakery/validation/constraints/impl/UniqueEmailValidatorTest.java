@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.*;
 
 import javax.inject.Inject;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,7 +25,9 @@ import ch.documakery.validation.constraints.UniqueEmail;
  * @author Marco Jakob
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("UniqueValidatorTest-context.xml")
+@ContextConfiguration({
+    "classpath:/META-INF/spring/testContext-mockRepositories.xml",
+    "classpath:/META-INF/spring/testContext-validator.xml"})
 public class UniqueEmailValidatorTest {
   
   private class TestBean {
@@ -42,10 +45,16 @@ public class UniqueEmailValidatorTest {
   @Inject
   UserRepository userRepositoryMock;
   
+  @Before
+  public void setUp() {
+    // Injected mock is a singleton and must therefore be reset before each test
+    reset(userRepositoryMock);
+  }
+  
   @Test
   public void validate_EmailUnique_NoErrors() {
     // given
-    String email = "unique@nickname.com";
+    String email = "unique@email.com";
     TestBean bean = new TestBean(email);
     given(userRepositoryMock.findByEmail(email)).willReturn(null);
     
@@ -61,7 +70,7 @@ public class UniqueEmailValidatorTest {
   @Test
   public void validate_EmailNotUnique_ReportError() {
     // given
-    String email = "not_unique@nickname.com";
+    String email = "not_unique@email.com";
     TestBean bean = new TestBean(email);
     given(userRepositoryMock.findByEmail(email)).willReturn(new User(email));
     

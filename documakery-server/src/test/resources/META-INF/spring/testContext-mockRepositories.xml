@@ -5,10 +5,8 @@
          http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<!-- Mock Object -->
-	<bean id="userRepositoryMock" class="org.mockito.Mockito" factory-method="mock"  >
+	<bean id="userRepositoryMock" class="org.mockito.Mockito" factory-method="mock" >
 		<constructor-arg value="ch.documakery.repository.UserRepository" />
 	</bean>
 	
-	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
 </beans>

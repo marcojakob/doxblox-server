@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.*;
 
 import javax.inject.Inject;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,7 +25,9 @@ import ch.documakery.validation.constraints.UniqueNickname;
  * @author Marco Jakob
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("UniqueValidatorTest-context.xml")
+@ContextConfiguration({
+  "classpath:/META-INF/spring/testContext-mockRepositories.xml",
+  "classpath:/META-INF/spring/testContext-validator.xml"})
 public class UniqueNicknameValidatorTest {
   
   private class TestBean {
@@ -41,6 +44,12 @@ public class UniqueNicknameValidatorTest {
 
   @Inject
   UserRepository userRepositoryMock;
+  
+  @Before
+  public void setUp() {
+    // Injected mock is a singleton and must therefore be reset before each test
+    reset(userRepositoryMock);
+  }
   
   @Test
   public void validate_NicknameUnique_NoErrors() {

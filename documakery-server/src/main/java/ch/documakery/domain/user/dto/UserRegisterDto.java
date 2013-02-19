@@ -30,6 +30,26 @@ public class UserRegisterDto {
   @Size(min = 4, max = 25)
   private String password;
   
+  /**
+   * Default constructor.
+   */
+  public UserRegisterDto() {
+  }
+  
+  /**
+   * Constructor.
+   * 
+   * @param email
+   * @param nickname
+   * @param password
+   */
+  public UserRegisterDto(String email, String nickname, String password) {
+    super();
+    this.email = email;
+    this.nickname = nickname;
+    this.password = password;
+  }
+
   public String getEmail() {
     return email;
   }
