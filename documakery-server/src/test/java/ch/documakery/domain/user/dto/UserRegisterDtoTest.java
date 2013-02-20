@@ -59,7 +59,7 @@ public class UserRegisterDtoTest {
   public void validate_EmailNotUnique_Error() {
     // given
     UserRegisterDto dto = new UserRegisterDto("email@email.com", "nickname", "password");
-    given(userRepositoryMock.findByEmail(anyString())).willReturn(new User("email@email.com"));
+    given(userRepositoryMock.findByEmail(anyString())).willReturn(new User("email@email.com", "password"));
     Errors errors = new BeanPropertyBindingResult(dto, "dto");
     
     // when
@@ -104,7 +104,7 @@ public class UserRegisterDtoTest {
   public void validate_NicknameNotUnique_Error() {
     // given
     UserRegisterDto dto = new UserRegisterDto("email@email.com", "nickname", "password");
-    given(userRepositoryMock.findByNickname("nickname")).willReturn(new User("email@email.com"));
+    given(userRepositoryMock.findByNickname("nickname")).willReturn(new User("email@email.com", "nickname"));
     Errors errors = new BeanPropertyBindingResult(dto, "dto");
     
     // when

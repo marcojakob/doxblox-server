@@ -9,6 +9,7 @@ import java.util.Map;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
  * The datastore object for a document.
@@ -22,7 +23,7 @@ public class Document {
   /**
    * The name.
    */
-  private String name = "No Name";
+  private String name;
   
   /**
    * The creation date.
@@ -36,7 +37,7 @@ public class Document {
   
   /**
    * Cached {@link DocumentBlock}s, iteration order of the map will match the order of the
-   * {@link DocumentBlock} keys.
+   * {@link DocumentBlock} ids.
    */
   @Transient
   private Map<ObjectId, DocumentBlock> documentBlockCache;
@@ -44,6 +45,7 @@ public class Document {
   /**
    * Reference id to the user, i.e. owner.
    */
+  @Indexed
   private ObjectId userId;
 
   public String getName() {

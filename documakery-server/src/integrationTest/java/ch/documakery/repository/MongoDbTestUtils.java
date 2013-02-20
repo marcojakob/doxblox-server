@@ -53,9 +53,8 @@ public class MongoDbTestUtils {
    * @return
    */
   public static User addCorrectUserToDb(MongoTemplate template) {
-    User user = new User(CORRECT_USERNAME);
+    User user = new User(CORRECT_USERNAME, CORRECT_PASSWORD_BCRYPT);
     user.setNickname(CORRECT_NICKNAME);
-    user.setPassword(CORRECT_PASSWORD_BCRYPT);
     user.setEmailConfirmed(true);
     template.save(user);
     return user;

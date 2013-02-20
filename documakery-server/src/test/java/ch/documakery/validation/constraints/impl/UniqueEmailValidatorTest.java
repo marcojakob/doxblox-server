@@ -72,7 +72,7 @@ public class UniqueEmailValidatorTest {
     // given
     String email = "not_unique@email.com";
     TestBean bean = new TestBean(email);
-    given(userRepositoryMock.findByEmail(email)).willReturn(new User(email));
+    given(userRepositoryMock.findByEmail(email)).willReturn(new User(email, "anypassword"));
     
     Errors errors = new BeanPropertyBindingResult(bean, "bean");
     

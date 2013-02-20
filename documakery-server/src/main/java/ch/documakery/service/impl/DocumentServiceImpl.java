@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ch.documakery.domain.document.Document;
 import ch.documakery.repository.DocumentRepository;
 import ch.documakery.service.DocumentService;
+import ch.documakery.service.UserService;
 
 
 /**
@@ -18,13 +19,17 @@ import ch.documakery.service.DocumentService;
 public class DocumentServiceImpl implements DocumentService {
 
   private DocumentRepository repository;
+  private UserService userService;
   
   @Inject
-  public DocumentServiceImpl(DocumentRepository repository) {
+  public DocumentServiceImpl(UserService userService, DocumentRepository repository) {
+    this.userService = userService;
     this.repository = repository;
   }
 
-  public List<Document> findAll() {
-    return repository.findAll();
+  @Override
+  public List<Document> getAllDocumentsOfUser() {
+//    userService.getUser
+    return null;
   }
 }

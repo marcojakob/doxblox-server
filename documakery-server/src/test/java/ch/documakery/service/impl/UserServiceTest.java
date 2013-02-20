@@ -3,20 +3,16 @@ package ch.documakery.service.impl;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import ch.documakery.domain.user.SecurityRole;
+import ch.documakery.UserTestUtils;
 import ch.documakery.domain.user.User;
 import ch.documakery.domain.user.dto.UserRegisterDto;
 import ch.documakery.repository.UserRepository;
@@ -28,12 +24,6 @@ import ch.documakery.security.util.SecurityContextUtil;
  * @author Marco Jakob
  */
 public class UserServiceTest {
-
-  private static final GrantedAuthority AUTHORITY = new SimpleGrantedAuthority(
-      SecurityRole.ROLE_USER.name());
-  private static final String EMAIL = "user@user.com";
-  private static final String PASSWORD = "password";
-  private static final String NICKNAME = "nickname";
 
   // SUT //
   private UserServiceImpl userService;
@@ -51,61 +41,30 @@ public class UserServiceTest {
   }
   
   @Test
-  public void getPrincipal_UserIsLoggedIn_ReturnPrincipal() {
-    // given
-    List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-    authorities.add(AUTHORITY);
-    
-    UserDetails principal = new org.springframework.security.core.userdetails.User(
-        EMAIL, PASSWORD, authorities);
-    given(securityContextUtilMock.getPrincipal()).willReturn(principal);
-
-    // when
-    UserDetails loggedInPrincipal = userService.getPrincipal();
-    
-    // then
-    verify(securityContextUtilMock, times(1)).getPrincipal();
-    verifyNoMoreInteractions(securityContextUtilMock);
-    
-    assertThat(loggedInPrincipal.getUsername(), is(EMAIL));
-  }
-
-  @Test
   public void getUser_UserIsLoggedIn_ReturnsUser() {
     // given
-    List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-    authorities.add(AUTHORITY);
-    
-    UserDetails principal = new org.springframework.security.core.userdetails.User(
-        EMAIL, PASSWORD, authorities);
-    given(securityContextUtilMock.getPrincipal()).willReturn(principal);
+    given(securityContextUtilMock.getCurrentUser()).willReturn(UserTestUtils.TEST_USER);
 
-    User user = new User(EMAIL);
-    given(userRepositoryMock.findByEmail(EMAIL)).willReturn(user);
-    
     // when
     User loggedInUser = userService.getUser();
 
     // then
-    verify(securityContextUtilMock, times(1)).getPrincipal();
+    verify(securityContextUtilMock, times(1)).getCurrentUser();
     verifyNoMoreInteractions(securityContextUtilMock);
     
-    verify(userRepositoryMock, times(1)).findByEmail(anyString());
-    verifyNoMoreInteractions(userRepositoryMock);
-    
-    assertThat(loggedInUser.getEmail(), is(EMAIL));
+    assertThat(loggedInUser.getEmail(), is(UserTestUtils.EMAIL));
   }
 
   @Test
   public void getUser_UserIsNotLoggedIn_ReturnsNull() {
     // given
-    given(securityContextUtilMock.getPrincipal()).willReturn(null);
+    given(securityContextUtilMock.getCurrentUser()).willReturn(null);
 
     // when
     User loggedInUser = userService.getUser();
 
     // then
-    verify(securityContextUtilMock, times(1)).getPrincipal();
+    verify(securityContextUtilMock, times(1)).getCurrentUser();
     verifyNoMoreInteractions(securityContextUtilMock);
     
     verifyZeroInteractions(userRepositoryMock);
@@ -117,9 +76,9 @@ public class UserServiceTest {
   public void registerUser() {
     // given
     UserRegisterDto userRegister = new UserRegisterDto();
-    userRegister.setEmail(EMAIL);
-    userRegister.setNickname(NICKNAME);
-    userRegister.setPassword(PASSWORD);
+    userRegister.setEmail(UserTestUtils.EMAIL);
+    userRegister.setNickname(UserTestUtils.NICKNAME);
+    userRegister.setPassword(UserTestUtils.PASSWORD);
 
     // when
     userService.register(userRegister);
@@ -130,26 +89,23 @@ public class UserServiceTest {
     verifyNoMoreInteractions(userRepositoryMock);
     
     assertThat(userArgument.getValue().isEmailConfirmed(), is(false));
-    assertThat(userArgument.getValue().getEmail(), is(EMAIL));
-    assertThat(userArgument.getValue().getNickname(), is(NICKNAME));
-    assertTrue(passwordEncoder.matches(PASSWORD, userArgument.getValue().getPassword()));
+    assertThat(userArgument.getValue().getEmail(), is(UserTestUtils.EMAIL));
+    assertThat(userArgument.getValue().getNickname(), is(UserTestUtils.NICKNAME));
+    assertTrue(passwordEncoder.matches(UserTestUtils.PASSWORD, userArgument.getValue().getPassword()));
   }
   
   @Test
   public void deleteUser() {
     // given
-    UserDetails principal = new org.springframework.security.core.userdetails.User(
-        EMAIL, PASSWORD, new ArrayList<GrantedAuthority>());
-    given(securityContextUtilMock.getPrincipal()).willReturn(principal);
+    given(securityContextUtilMock.getCurrentUser()).willReturn(UserTestUtils.TEST_USER);
     
-    User user = new User(EMAIL);
-    given(userRepositoryMock.findByEmail(EMAIL)).willReturn(user);
-
     // when
     userService.deleteUser();
 
     // then
-    verify(userRepositoryMock, times(1)).findByEmail(EMAIL);
+    verify(securityContextUtilMock, times(1)).getCurrentUser();
+    verifyNoMoreInteractions(securityContextUtilMock);
+    
     verify(userRepositoryMock, times(1)).delete((User)any());
     verifyNoMoreInteractions(userRepositoryMock);
   }

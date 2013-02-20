@@ -1,7 +1,5 @@
 package ch.documakery.domain.user.dto;
 
-import org.springframework.security.core.userdetails.UserDetails;
-
 import ch.documakery.domain.user.User;
 
 public class UserDto {
@@ -18,15 +16,6 @@ public class UserDto {
   public UserDto(String email, String nickname) {
     this.email = email;
     this.nickname = nickname;
-  }
-  
-  /**
-   * Constructor for converting {@link UserDetails} to dto.
-   * 
-   * @param principal
-   */
-  public UserDto(UserDetails principal) {
-    this(principal.getUsername(), null);
   }
   
   /**

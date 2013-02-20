@@ -4,8 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import ch.documakery.domain.user.User;
 
 /**
  * Util to get the principal from the security context.
@@ -22,17 +23,17 @@ public class SecurityContextUtil {
    * @return the currently authenticated principal or null if no authentication information is
    *         available
    */
-  public UserDetails getPrincipal() {
+  public User getCurrentUser() {
     LOG.debug("Getting principal from security context");
 
-    UserDetails principal = null;
+    User principal = null;
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
     if (authentication != null) {
       Object currentPrincipal = authentication.getPrincipal();
-      if (currentPrincipal instanceof UserDetails) {
-        principal = (UserDetails) currentPrincipal;
+      if (currentPrincipal instanceof User) {
+        principal = (User) currentPrincipal;
       }
     }
 

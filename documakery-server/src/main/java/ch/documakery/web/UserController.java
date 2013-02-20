@@ -5,7 +5,6 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,12 +34,12 @@ public class UserController {
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   @ResponseBody
   public UserDto getUser() {
-    UserDetails principal = userService.getPrincipal();
-    if (principal == null) {
+    User user = userService.getUser();
+    if (user == null) {
       return null;
     }
-    LOG.debug("Getting user for principal: {}", principal.getUsername());
-    return new UserDto(principal);
+    LOG.debug("Returning current user: {}", user.getUsername());
+    return new UserDto(user);
   }
 
   @RequestMapping(value = "/user", method = RequestMethod.POST)

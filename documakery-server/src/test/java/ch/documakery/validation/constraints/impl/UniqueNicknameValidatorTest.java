@@ -68,11 +68,11 @@ public class UniqueNicknameValidatorTest {
   }
   
   @Test
-  public void validate_EmailNotUnique_ReportError() {
+  public void validate_NicknameNotUnique_ReportError() {
     // given
     String nickname = "notUniqueNickname";
     TestBean bean = new TestBean(nickname);
-    given(userRepositoryMock.findByNickname(nickname)).willReturn(new User(""));
+    given(userRepositoryMock.findByNickname(nickname)).willReturn(new User("user", "anypassword"));
     
     Errors errors = new BeanPropertyBindingResult(bean, "bean");
     

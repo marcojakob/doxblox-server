@@ -10,5 +10,5 @@ import ch.documakery.domain.document.Document;
  */
 public interface DocumentService {
   
-  List<Document> findAll();
+  List<Document> getAllDocumentsOfUser();
 }

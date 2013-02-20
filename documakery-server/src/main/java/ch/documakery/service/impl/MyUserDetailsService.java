@@ -1,12 +1,7 @@
 package ch.documakery.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,16 +40,6 @@ public final class MyUserDetailsService implements UserDetailsService {
       throw new EmailNotConfirmedException("Email not confirmed");
     }
     
-    boolean enabled = true;
-    boolean accountNonExpired = true;
-    boolean credentialsNonExpired = true;
-    boolean accountNonLocked = true;
-
-    List<GrantedAuthority> authorities = new ArrayList<>();
-    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-    
-    return new org.springframework.security.core.userdetails.User(
-        user.getEmail(), user.getPassword(), enabled, accountNonExpired,
-        credentialsNonExpired, accountNonLocked, authorities);
+    return user;
   }
 }

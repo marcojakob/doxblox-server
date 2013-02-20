@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,31 +38,18 @@ public class UserServiceImpl implements UserService {
   
   @Override
   public User getUser() {
-    UserDetails principal = getPrincipal();
-    if (principal != null) {
-      LOG.debug("Getting user from db: {}", principal.getUsername());
-      return userRepository.findByEmail(principal.getUsername());
-    } else {
-      LOG.warn("No principal.");
-      return null;
-    }
-  }
-
-  @Override
-  public UserDetails getPrincipal() {
-    LOG.debug("Getting logged in user from security context.");
-    UserDetails principal = securityContextUtil.getPrincipal();
-
-    return principal;
+    User user = securityContextUtil.getCurrentUser();
+    LOG.debug("Getting current user from security context: {}", user);
+    return user;
   }
 
   @Override
   public User register(UserRegisterDto userRegister) {
-    User user = new User(userRegister.getEmail());
-    user.setNickname(userRegister.getNickname());
-    
     // Encode the password
-    user.setPassword(passwordEncoder.encode(userRegister.getPassword()));
+    String encodedPassword = passwordEncoder.encode(userRegister.getPassword());
+    
+    User user = new User(userRegister.getEmail(), encodedPassword);
+    user.setNickname(userRegister.getNickname());
     
     userRepository.save(user);
 
@@ -78,7 +64,7 @@ public class UserServiceImpl implements UserService {
   public void deleteUser() {
     User user = getUser();
     if (user != null) {
-      LOG.debug("Deleting user from db: {}", user.getEmail());
+      LOG.info("Deleting user from db: {}", user.getEmail());
       userRepository.delete(user);
     } else {
       LOG.warn("Current user was null.");

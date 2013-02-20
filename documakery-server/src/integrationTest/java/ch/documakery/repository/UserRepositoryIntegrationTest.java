@@ -17,7 +17,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import ch.documakery.domain.user.User;
-import ch.documakery.repository.UserRepository;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -56,12 +55,10 @@ public class UserRepositoryIntegrationTest {
   public void setUp() {
     MongoDbTestUtils.cleanDb(template);
     
-    user1 = new User(EMAIL_1);
-    user1.setPassword(PASSWORD_1);
+    user1 = new User(EMAIL_1, PASSWORD_1);
     user1.setNickname(NICKNAME_1);
     
-    user2 = new User(EMAIL_2);
-    user2.setPassword(PASSWORD_2);
+    user2 = new User(EMAIL_2, PASSWORD_2);
     user2.setNickname(NICKNAME_2);
   }
   
