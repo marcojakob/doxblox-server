@@ -49,27 +49,27 @@ public class UserControllerIntegrationTest {
   private MockMvc mockMvc;
   
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter(springSecurityFilterChain)
-//            .alwaysDo(print()) 
+//            .alwaysDo(MockMvcResultHandlers.print()) 
             .build();
     
     MongoDbTestUtils.cleanDb(template);
-    MongoDbTestUtils.addCorrectUserToDb(template);
+    MongoDbTestUtils.importTestUsers(template);
   }
   
   @Test
   public void getUser_AsUser_ReturnUserAsJson() throws Exception {
     // when
     mockMvc.perform(get("/user")
-        .with(userDetailsService(MongoDbTestUtils.CORRECT_USERNAME))
+        .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
     // then
         .andExpect(status().isOk())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$.email", is(MongoDbTestUtils.CORRECT_USERNAME)));
+        .andExpect(jsonPath("$.email", is(MongoDbTestUtils.USER1_EMAIL)));
     
   }
 
@@ -127,8 +127,8 @@ public class UserControllerIntegrationTest {
   public void registerUser_EmailAndNicknameNotUnique_ReturnBadRequest() throws Exception {
     // given
     UserRegisterDto userRegister = new UserRegisterDto();
-    userRegister.setEmail(MongoDbTestUtils.CORRECT_USERNAME);
-    userRegister.setNickname(MongoDbTestUtils.CORRECT_NICKNAME);
+    userRegister.setEmail(MongoDbTestUtils.USER1_EMAIL);
+    userRegister.setNickname(MongoDbTestUtils.USER1_NICKNAME);
     userRegister.setPassword("password");
     
     // when
@@ -146,12 +146,12 @@ public class UserControllerIntegrationTest {
   public void deleteUser() throws Exception {
     // when
     mockMvc.perform(delete("/user")
-        .with(userDetailsService(MongoDbTestUtils.CORRECT_USERNAME))
+        .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
     // then
         .andExpect(status().isOk());
-    assertThat(template.findAll(User.class).size(), is(0));
+    assertThat(template.findAll(User.class).size(), is(1));
   }
   
   @Test
@@ -162,6 +162,6 @@ public class UserControllerIntegrationTest {
     )
     // then
         .andExpect(status().isUnauthorized());
-    assertThat(template.findAll(User.class).size(), is(1));
+    assertThat(template.findAll(User.class).size(), is(2));
   }
 }

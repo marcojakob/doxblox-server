@@ -46,7 +46,7 @@ public class UserController {
   @ResponseBody
   public UserDto registerUser(@RequestBody @Valid UserRegisterDto userRegister) {
     LOG.debug("Registering user: {}", userRegister.getEmail());
-    User user = userService.register(userRegister);
+    User user = userService.registerUser(userRegister);
     return new UserDto(user);
   }
   

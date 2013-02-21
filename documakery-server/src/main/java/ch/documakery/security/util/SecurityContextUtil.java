@@ -24,7 +24,6 @@ public class SecurityContextUtil {
    *         available
    */
   public User getCurrentUser() {
-    LOG.debug("Getting principal from security context");
 
     User principal = null;
 
@@ -37,6 +36,7 @@ public class SecurityContextUtil {
       }
     }
 
+    LOG.debug("Getting current user from security context: {}", principal);
     return principal;
   }
 }

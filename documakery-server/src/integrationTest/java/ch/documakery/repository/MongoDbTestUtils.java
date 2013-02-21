@@ -3,13 +3,15 @@ package ch.documakery.repository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
 import ch.documakery.JsonTestUtils;
-import ch.documakery.domain.user.User;
+import ch.documakery.domain.document.DocumentFolder;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
@@ -27,13 +29,17 @@ import com.mongodb.util.JSON;
  */
 public class MongoDbTestUtils {
   
-  public static final String CORRECT_USERNAME = "nicki99@example.com";
-  public static final String CORRECT_NICKNAME = "nicki99";
-  public static final String CORRECT_PASSWORD = "nicki99pass";
-  public static final String CORRECT_PASSWORD_BCRYPT = "$2a$10$eVNlYxxVtBSX3eWZ1XGKQ.kCXU32umMMilmcc9CnmdTj62AkSSkiK";
-  public static final String INCORRECT_EMAIL = "user-incorrect@user.com";
-  public static final String INCORRECT_PASSWORD = "password-incorrect";
-
+  public static final ObjectId USER1_ID = new ObjectId("111111111111111111111111");
+  public static final String USER1_EMAIL = "user1@example.com";
+  public static final String USER1_NICKNAME = "nicknameUser1";
+  public static final String USER1_PASSWORD = "p@ssw0rdUser1";
+  
+  public static final ObjectId USER2_ID = new ObjectId("222222222222222222222222");
+  public static final String USER2_EMAIL = "user2@example.com";
+  public static final String USER2_NICKNAME = "nicknameUser2";
+  public static final String USER2_PASSWORD = "p#sswordUser2";
+  
+  
   /**
    * Removes all entries in all the collections of the db.
    * 
@@ -45,20 +51,64 @@ public class MongoDbTestUtils {
     }
   }
   
+  
   /**
-   * Adds the user with correct credentials {@link #CORRECT_USERNAME} and {@link #CORRECT_PASSWORD}
-   * to the db. The users email is confirmed.
+   * Imports user test data including {@link #USER1_EMAIL} and {@link #USER2_EMAIL}.
    * 
    * @param template
-   * @return
+   * @throws IOException
    */
-  public static User addCorrectUserToDb(MongoTemplate template) {
-    User user = new User(CORRECT_USERNAME, CORRECT_PASSWORD_BCRYPT);
-    user.setNickname(CORRECT_NICKNAME);
-    user.setEmailConfirmed(true);
-    template.save(user);
-    return user;
+  public static void importTestUsers(MongoTemplate template) throws IOException {
+    importData(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-data/users.json"), 
+        template.getCollection("user"));
   }
+  
+  /**
+   * Imports test data.
+   * 
+   * @param template
+   * @throws IOException
+   */
+  public static void importTestDocumentFolders(MongoTemplate template) throws IOException {
+    importData(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-data/documentFolders.json"), 
+        template.getCollection("documentFolder"));
+  }
+  
+  /**
+   * Imports test data.
+   * 
+   * @param template
+   * @throws IOException
+   */
+  public static void importTestDocuments(MongoTemplate template) throws IOException {
+    importData(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-data/documents.json"), 
+        template.getCollection("document"));
+  }
+  
+  /**
+   * Imports test data.
+   * 
+   * @param template
+   * @throws IOException
+   */
+  public static void importTestQuestionBlocks(MongoTemplate template) throws IOException {
+    importData(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-data/questionBlocks.json"), 
+        template.getCollection("questionBlocks"));
+  }
+  
+  public static void importGeneratedTestData(MongoTemplate template, ObjectId userId) throws IOException {
+    List<Object> result = new ArrayList<>();
+    DocumentFolder root = TestDataFactory.createFolder("root", userId, result);
+    TestDataFactory.createFolderTreeBwl(root, userId, result);
+    TestDataFactory.createFolderTreeRecht(root, userId, result);
+    TestDataFactory.createFolderTreeRw(root, userId, result);
+    
+    for (Object object : result) {
+      template.save(object);
+    }
+  }
+  
+  
   
   /**
    * Imports data into a collection.
@@ -90,6 +140,19 @@ public class MongoDbTestUtils {
   }
   
   /**
+   * Helper method to serialize a collection into its JSON form.
+   * 
+   * @param template 
+   * @param collectionName
+   * @param prettyPrint
+   * @return String containing JSON form of the object
+   */
+  public static String convertToJsonString(MongoTemplate template, String collectionName, boolean prettyPrint) throws IOException {
+    DBCollection collection = template.getCollection(collectionName);
+    return convertToJsonString(collection.find(), true);
+  }
+
+  /**
    * Helper method to serialize a {@link DBObject} into its JSON form.
    * 
    * @param dbObject object to serialize
@@ -119,4 +182,5 @@ public class MongoDbTestUtils {
     }
     return json;
   }
+  
 }

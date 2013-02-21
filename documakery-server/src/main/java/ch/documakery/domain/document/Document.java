@@ -33,7 +33,7 @@ public class Document {
   /**
    * Reference ids to the {@link DocumentBlock}s.
    */
-  private List<ObjectId> documentBlockIds;
+  private List<ObjectId> documentBlockIds = new ArrayList<>();
   
   /**
    * Cached {@link DocumentBlock}s, iteration order of the map will match the order of the
@@ -47,6 +47,14 @@ public class Document {
    */
   @Indexed
   private ObjectId userId;
+  
+  public ObjectId getId() {
+    return id;
+  }
+  
+  public void setId(ObjectId id) {
+    this.id = id;
+  }
 
   public String getName() {
     return name;

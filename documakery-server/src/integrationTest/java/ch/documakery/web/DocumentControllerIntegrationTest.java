@@ -1,7 +1,6 @@
 package ch.documakery.web;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
 import static org.springframework.test.web.server.samples.context.SecurityRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -22,8 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import ch.documakery.JsonTestUtils;
-import ch.documakery.domain.user.User;
-import ch.documakery.domain.user.dto.UserRegisterDto;
 import ch.documakery.repository.MongoDbTestUtils;
 
 /**
@@ -49,25 +46,27 @@ public class DocumentControllerIntegrationTest {
   private MockMvc mockMvc;
   
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter(springSecurityFilterChain)
 //            .alwaysDo(print()) 
             .build();
     
     MongoDbTestUtils.cleanDb(template);
-    MongoDbTestUtils.addCorrectUserToDb(template);
+    MongoDbTestUtils.importTestUsers(template);
+    MongoDbTestUtils.importTestDocuments(template);
   }
   
   @Test
   public void getAllDocumentsOfUser_AsUser_ReturnDocuments() throws Exception {
     // when
     mockMvc.perform(get("/document")
-        .with(userDetailsService(MongoDbTestUtils.CORRECT_USERNAME))
+        .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
     // then
         .andExpect(status().isOk())
-        .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8));
+        .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$", is("test document")));
   }
 }

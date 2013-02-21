@@ -1,0 +1,29 @@
+[ {
+  "_id" : {
+    "$oid" : "111111111111111111111111"
+  },
+  "_class" : "ch.documakery.domain.user.User",
+  "email" : "user1@example.com",
+  "emailConfirmed" : true,
+  "nickname" : "nicknameUser1",
+  "password" : "$2a$10$qcYQfAt0.dtaQmunbrM2/eYfsU92PXOwS7qJ2HA7l4UkQN4y9vfvK",
+  "authorities" : [ ],
+  "accountNonExpired" : true,
+  "accountNonLocked" : true,
+  "credentialsNonExpired" : true,
+  "enabled" : true
+}, {
+  "_id" : {
+    "$oid" : "222222222222222222222222"
+  },
+  "_class" : "ch.documakery.domain.user.User",
+  "email" : "user2@example.com",
+  "emailConfirmed" : true,
+  "nickname" : "nicknameUser2",
+  "password" : "$2a$10$14jxQxEfOyLt0qs6o9KyReBHgLnh3CRlwcuYrcH/1S6s9QcMfv8nO",
+  "authorities" : [ ],
+  "accountNonExpired" : true,
+  "accountNonLocked" : true,
+  "credentialsNonExpired" : true,
+  "enabled" : true
+} ]

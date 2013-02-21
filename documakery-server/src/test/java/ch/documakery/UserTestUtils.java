@@ -3,6 +3,7 @@ package ch.documakery;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -18,6 +19,7 @@ public class UserTestUtils {
   
   public static final GrantedAuthority AUTHORITY = new SimpleGrantedAuthority(
       SecurityRole.ROLE_USER.name());
+  public static final ObjectId ID = new ObjectId("51255ec818a38d4e9c179b29");
   public static final String EMAIL = "test@user.com";
   public static final String PASSWORD = "testUserPassword";
   public static final String NICKNAME = "testUserNickname";
@@ -31,5 +33,6 @@ public class UserTestUtils {
     
     TEST_USER = new User(EMAIL, PASSWORD, authorities);
     TEST_USER.setNickname(NICKNAME);
+    TEST_USER.setId(ID);
   }
 }

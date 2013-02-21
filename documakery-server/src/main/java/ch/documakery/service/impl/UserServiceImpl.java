@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User register(UserRegisterDto userRegister) {
+  public User registerUser(UserRegisterDto userRegister) {
     // Encode the password
     String encodedPassword = passwordEncoder.encode(userRegister.getPassword());
     

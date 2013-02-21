@@ -1,0 +1,95 @@
+[ {
+  "_id" : {
+    "$oid" : "51267b98f5c757f73f98dc15"
+  },
+  "_class" : "ch.documakery.domain.document.DocumentFolder",
+  "name" : "root",
+  "documentIds" : [ ],
+  "userId" : {
+    "$oid" : "111111111111111111111111"
+  }
+}, {
+  "_id" : {
+    "$oid" : "51267b98f5c757f73f98dc1c"
+  },
+  "_class" : "ch.documakery.domain.document.DocumentFolder",
+  "name" : "2012 Herbstsemester",
+  "parentId" : {
+    "$oid" : "51267b98f5c757f73f98dc15"
+  },
+  "documentIds" : [ ],
+  "userId" : {
+    "$oid" : "111111111111111111111111"
+  }
+}, {
+  "_id" : {
+    "$oid" : "51267b98f5c757f73f98dc1f"
+  },
+  "_class" : "ch.documakery.domain.document.DocumentFolder",
+  "name" : "B1.503",
+  "parentId" : {
+    "$oid" : "51267b98f5c757f73f98dc1c"
+  },
+  "documentIds" : [ ],
+  "userId" : {
+    "$oid" : "111111111111111111111111"
+  }
+}, {
+  "_id" : {
+    "$oid" : "51267b98f5c757f73f98dc1d"
+  },
+  "_class" : "ch.documakery.domain.document.DocumentFolder",
+  "name" : "2013 Frühlingssemester",
+  "parentId" : {
+    "$oid" : "51267b98f5c757f73f98dc15"
+  },
+  "documentIds" : [ ],
+  "userId" : {
+    "$oid" : "111111111111111111111111"
+  }
+}, {
+  "_id" : {
+    "$oid" : "51267b98f5c757f73f98dc1e"
+  },
+  "_class" : "ch.documakery.domain.document.DocumentFolder",
+  "name" : "Klasse E1.603",
+  "parentId" : {
+    "$oid" : "51267b98f5c757f73f98dc1d"
+  },
+  "documentIds" : [ {
+    "$oid" : "51267930f5c7f925eaae04d1"
+  }, {
+    "$oid" : "51267930f5c7f925eaae04d7"
+  } ],
+  "userId" : {
+    "$oid" : "111111111111111111111111"
+  }
+}, 
+
+
+{
+  "_id" : {
+    "$oid" : "51267b98f5c757f73f98dc1f"
+  },
+  "_class" : "ch.documakery.domain.document.DocumentFolder",
+  "name" : "root",
+  "documentIds" : [ ],
+  "userId" : {
+    "$oid" : "222222222222222222222222"
+  }
+}, {
+  "_id" : {
+    "$oid" : "51267b98f5c757f73f98dc27"
+  },
+  "_class" : "ch.documakery.domain.document.DocumentFolder",
+  "name" : "Schuljahr 2012/2013",
+  "parentId" : {
+    "$oid" : "51267b98f5c757f73f98dc1f"
+  },
+  "documentIds" : [ {
+    "$oid" : "51267930f5c7f925eaae04d8"
+  } ],
+  "userId" : {
+    "$oid" : "222222222222222222222222"
+  }
+} ]

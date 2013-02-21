@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * The domain object for a question with a simple text answer.
  */
-@Document(collection="question")
+@Document
 public class TextAnswerQuestion extends Question {
 
   /**

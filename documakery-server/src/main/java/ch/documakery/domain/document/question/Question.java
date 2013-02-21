@@ -1,7 +1,5 @@
 package ch.documakery.domain.document.question;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -10,12 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * 
  * @author Marco Jakob
  */
-@Document(collection="question")
+@Document
 public abstract class Question {
   
-  @Id
-  private ObjectId id;
-
   /**
    * The actual text of the question.
    */
@@ -31,14 +26,6 @@ public abstract class Question {
    */
   private int points; 
   
-  public ObjectId getId() {
-    return id;
-  }
-
-  public void setId(ObjectId id) {
-    this.id = id;
-  }
-
   public String getText() {
     return text;
   }

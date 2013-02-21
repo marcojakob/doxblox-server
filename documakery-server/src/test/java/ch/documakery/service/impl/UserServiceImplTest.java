@@ -23,7 +23,7 @@ import ch.documakery.security.util.SecurityContextUtil;
  * 
  * @author Marco Jakob
  */
-public class UserServiceTest {
+public class UserServiceImplTest {
 
   // SUT //
   private UserServiceImpl userService;
@@ -81,7 +81,7 @@ public class UserServiceTest {
     userRegister.setPassword(UserTestUtils.PASSWORD);
 
     // when
-    userService.register(userRegister);
+    userService.registerUser(userRegister);
 
     // then
     ArgumentCaptor<User> userArgument = ArgumentCaptor.forClass(User.class);

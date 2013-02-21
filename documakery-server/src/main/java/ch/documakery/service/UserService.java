@@ -16,7 +16,7 @@ public interface UserService {
    * @return The current user.
    */
   @PreAuthorize("isAuthenticated()")
-  User getUser();
+  public User getUser();
   
   /**
    * Registers the user.
@@ -28,11 +28,11 @@ public interface UserService {
    * 
    * @param userRegister User registration information.
    */
-  User register(UserRegisterDto userRegister);
+  public User registerUser(UserRegisterDto userRegister);
   
   /**
    * Deletes the current user.
    */
   @PreAuthorize("isAuthenticated()")
-  void deleteUser();
+  public void deleteUser();
 }

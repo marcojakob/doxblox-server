@@ -7,9 +7,10 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import ch.documakery.domain.document.Document;
+import ch.documakery.domain.user.User;
 import ch.documakery.repository.DocumentRepository;
+import ch.documakery.security.util.SecurityContextUtil;
 import ch.documakery.service.DocumentService;
-import ch.documakery.service.UserService;
 
 
 /**
@@ -18,18 +19,25 @@ import ch.documakery.service.UserService;
 @Service
 public class DocumentServiceImpl implements DocumentService {
 
-  private DocumentRepository repository;
-  private UserService userService;
+  private DocumentRepository documentRepository;
+  private SecurityContextUtil securityContextUtil;
   
   @Inject
-  public DocumentServiceImpl(UserService userService, DocumentRepository repository) {
-    this.userService = userService;
-    this.repository = repository;
+  public DocumentServiceImpl(SecurityContextUtil securityContextUtil, DocumentRepository repository) {
+    this.securityContextUtil = securityContextUtil;
+    this.documentRepository = repository;
   }
 
   @Override
   public List<Document> getAllDocumentsOfUser() {
-//    userService.getUser
-    return null;
+    User user = securityContextUtil.getCurrentUser();
+    return documentRepository.findByUserId(user.getId());
+  }
+
+  @Override
+  public Document saveWithUser(Document document) {
+    User user = securityContextUtil.getCurrentUser();
+    document.setUserId(user.getId());
+    return documentRepository.save(document);
   }
 }

@@ -73,6 +73,12 @@ public class UserRepositoryIntegrationTest {
     assertThat(user1Saved.getEmail(), is(EMAIL_1));
     assertThat(user1Saved.isEmailConfirmed(), is(false));
     assertThat(user1Saved.getPassword(), is(PASSWORD_1));
+    assertThat(user1Saved.getAuthorities().size(), is(0));
+    assertThat(user1Saved.getNickname(), is(NICKNAME_1));
+    assertThat(user1Saved.isAccountNonExpired(), is(true));
+    assertThat(user1Saved.isAccountNonLocked(), is(true));
+    assertThat(user1Saved.isCredentialsNonExpired(), is(true));
+    assertThat(user1Saved.isEnabled(), is(true));
     
     assertThat(user2Saved.getId(), is(notNullValue()));
     
@@ -85,6 +91,7 @@ public class UserRepositoryIntegrationTest {
     assertThat(user1Db.getString("password"), is(PASSWORD_1));
     assertThat(user1Db.getString("emailConfirmed"), is("false"));
     assertThat(user1Db.get("_id"), is(notNullValue()));
+//    assertEquals(203, ((BasicDBObject) myDoc.get("info")).get("x"));
     
     BasicDBObject user2Db = (BasicDBObject) collection.findOne(new BasicDBObject("email", EMAIL_2));
     assertThat(user2Db.getString("email"), is(EMAIL_2));

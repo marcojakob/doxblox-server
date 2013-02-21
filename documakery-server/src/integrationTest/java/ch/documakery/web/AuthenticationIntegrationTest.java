@@ -2,6 +2,8 @@ package ch.documakery.web;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.springframework.data.mongodb.core.query.Criteria.*;
+import static org.springframework.data.mongodb.core.query.Query.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -49,17 +51,16 @@ public class AuthenticationIntegrationTest {
   MongoTemplate template;
   
   private MockMvc mockMvc;
-  private User correctUser;
   
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter(springSecurityFilterChain)
 //            .alwaysDo(print()) 
             .build();
     
     MongoDbTestUtils.cleanDb(template);
-    correctUser = MongoDbTestUtils.addCorrectUserToDb(template);
+    MongoDbTestUtils.importTestUsers(template);
   }
   
   @Test
@@ -67,8 +68,8 @@ public class AuthenticationIntegrationTest {
     // when
     mockMvc.perform(post("/login")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .param(REQUEST_PARAMETER_USERNAME, MongoDbTestUtils.CORRECT_USERNAME)
-        .param(REQUEST_PARAMETER_PASSWORD, MongoDbTestUtils.CORRECT_PASSWORD)
+        .param(REQUEST_PARAMETER_USERNAME, MongoDbTestUtils.USER1_EMAIL)
+        .param(REQUEST_PARAMETER_PASSWORD, MongoDbTestUtils.USER1_PASSWORD)
     )
     // then
         .andExpect(status().isOk());
@@ -79,8 +80,8 @@ public class AuthenticationIntegrationTest {
     // when
     mockMvc.perform(post("/login")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .param(REQUEST_PARAMETER_USERNAME, MongoDbTestUtils.INCORRECT_EMAIL)
-        .param(REQUEST_PARAMETER_PASSWORD, MongoDbTestUtils.INCORRECT_PASSWORD)
+        .param(REQUEST_PARAMETER_USERNAME, "alskdfwle@fjasldea.com")
+        .param(REQUEST_PARAMETER_PASSWORD, "asdfalkdflwüü")
     )
     // then
         .andExpect(status().isUnauthorized());
@@ -90,8 +91,8 @@ public class AuthenticationIntegrationTest {
   public void login_IncorrectRequestMethod_ReturnUnauthorized() throws Exception {
     // when
     mockMvc.perform(get("/login")
-        .param(REQUEST_PARAMETER_USERNAME, MongoDbTestUtils.CORRECT_USERNAME)
-        .param(REQUEST_PARAMETER_PASSWORD, MongoDbTestUtils.CORRECT_PASSWORD)
+        .param(REQUEST_PARAMETER_USERNAME, MongoDbTestUtils.USER1_EMAIL)
+        .param(REQUEST_PARAMETER_PASSWORD, MongoDbTestUtils.USER1_PASSWORD)
     )
     // then
         .andExpect(status().isUnauthorized());
@@ -100,14 +101,15 @@ public class AuthenticationIntegrationTest {
   @Test
   public void login_EmailNotConfirmed_ReturnForbidden() throws Exception {
     // given
+    User correctUser = template.findOne(query(where("email").is(MongoDbTestUtils.USER1_EMAIL)), User.class);
     correctUser.setEmailConfirmed(false);
     template.save(correctUser);
     
     // when
     MvcResult result = mockMvc.perform(post("/login")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .param(REQUEST_PARAMETER_USERNAME, MongoDbTestUtils.CORRECT_USERNAME)
-        .param(REQUEST_PARAMETER_PASSWORD, MongoDbTestUtils.CORRECT_PASSWORD)
+        .param(REQUEST_PARAMETER_USERNAME, MongoDbTestUtils.USER1_EMAIL)
+        .param(REQUEST_PARAMETER_PASSWORD, MongoDbTestUtils.USER1_PASSWORD)
     )
     // then
         .andExpect(status().isForbidden())

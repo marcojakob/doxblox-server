@@ -48,13 +48,13 @@ public class QuestionBlock implements DocumentBlock {
   /**
    * A list of {@link Question}s.
    */
-  private List<Question> questions;
+  private List<Question> questions = new ArrayList<>();
   
   /**
    * A reference to the topics of this {@link Questions}. It may be more than
-   * one because each {@link Question} can have a different topic.
+   * one because each {@link Question} could have a different topic.
    */
-  private List<Topic> topics;
+  private List<Topic> topics = new ArrayList<>();
   
   /**
    * The library this {@link QuestionBlock} is part of. Default is 
@@ -117,18 +117,6 @@ public class QuestionBlock implements DocumentBlock {
     this.topics = topics;
   }
   
-  /**
-   * Convenience method to add a {@link Topic}.
-   * 
-   * @param topic
-   */
-  public void addTopic(Topic topic) {
-    if (topics == null) {
-      topics = new ArrayList<Topic>();
-    }
-    topics.add(topic);
-  }
-
   public LibraryType getLibraryType() {
     return libraryType;
   }
