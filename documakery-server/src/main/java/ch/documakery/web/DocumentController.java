@@ -3,10 +3,12 @@ package ch.documakery.web;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,8 +34,15 @@ public class DocumentController {
   @RequestMapping(value = "/document", method = RequestMethod.GET)
   @ResponseBody
   public List<Document> getAllDocumentsOfUser() {
+    LOG.debug("Request to get all documents of current user");
     List<Document> result = documentService.getAllDocumentsOfUser();
-    LOG.debug("Returning all documents of user");
     return result;
+  }
+  
+  @RequestMapping(value = "/document", method = RequestMethod.POST)
+  @ResponseBody
+  public Document saveDocument(@RequestBody @Valid Document document) {
+    LOG.debug("Reqest to save document : {}", document);
+    return documentService.saveWithUser(document);
   }
 }

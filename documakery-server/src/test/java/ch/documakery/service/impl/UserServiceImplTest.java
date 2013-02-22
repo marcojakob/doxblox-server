@@ -52,7 +52,7 @@ public class UserServiceImplTest {
     verify(securityContextUtilMock, times(1)).getCurrentUser();
     verifyNoMoreInteractions(securityContextUtilMock);
     
-    assertThat(loggedInUser.getEmail(), is(UserTestUtils.EMAIL));
+    assertThat(loggedInUser.getEmail(), is(UserTestUtils.TEST_USER_EMAIL));
   }
 
   @Test
@@ -76,9 +76,9 @@ public class UserServiceImplTest {
   public void registerUser() {
     // given
     UserRegisterDto userRegister = new UserRegisterDto();
-    userRegister.setEmail(UserTestUtils.EMAIL);
-    userRegister.setNickname(UserTestUtils.NICKNAME);
-    userRegister.setPassword(UserTestUtils.PASSWORD);
+    userRegister.setEmail(UserTestUtils.TEST_USER_EMAIL);
+    userRegister.setNickname(UserTestUtils.TEST_USER_NICKNAME);
+    userRegister.setPassword(UserTestUtils.TEST_USER_PASSWORD);
 
     // when
     userService.registerUser(userRegister);
@@ -89,9 +89,9 @@ public class UserServiceImplTest {
     verifyNoMoreInteractions(userRepositoryMock);
     
     assertThat(userArgument.getValue().isEmailConfirmed(), is(false));
-    assertThat(userArgument.getValue().getEmail(), is(UserTestUtils.EMAIL));
-    assertThat(userArgument.getValue().getNickname(), is(UserTestUtils.NICKNAME));
-    assertTrue(passwordEncoder.matches(UserTestUtils.PASSWORD, userArgument.getValue().getPassword()));
+    assertThat(userArgument.getValue().getEmail(), is(UserTestUtils.TEST_USER_EMAIL));
+    assertThat(userArgument.getValue().getNickname(), is(UserTestUtils.TEST_USER_NICKNAME));
+    assertTrue(passwordEncoder.matches(UserTestUtils.TEST_USER_PASSWORD, userArgument.getValue().getPassword()));
   }
   
   @Test

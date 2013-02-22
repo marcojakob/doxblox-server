@@ -1,11 +1,15 @@
 package ch.documakery.service.impl;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import ch.documakery.UserTestUtils;
+import ch.documakery.domain.document.Document;
 import ch.documakery.repository.DocumentRepository;
 import ch.documakery.security.util.SecurityContextUtil;
 
@@ -31,7 +35,7 @@ public class DocumentServiceImplTest {
   }
   
   @Test
-  public void getAllDocumentsOfUser() {
+  public void getAllDocumentsOfUser_AsUser_OnlyReturnsDocumentsOfUser() {
     // given
     given(securityContextUtilMock.getCurrentUser()).willReturn(UserTestUtils.TEST_USER);
     
@@ -39,7 +43,27 @@ public class DocumentServiceImplTest {
     documentService.getAllDocumentsOfUser();
 
     // then
-    verify(documentRepositoryMock, times(1)).findByUserId(UserTestUtils.ID);
+    verify(documentRepositoryMock, times(1)).findByUserId(UserTestUtils.TEST_USER_ID);
     verifyNoMoreInteractions(documentRepositoryMock);
+  }
+  
+  @Test
+  public void saveWithUser_AsUser_UserIdIsAddedBeforeSave() {
+    // given
+    given(securityContextUtilMock.getCurrentUser()).willReturn(UserTestUtils.TEST_USER);
+    Document document = new Document();
+    document.setName("My Doc Name");
+    
+    // when
+    documentService.saveWithUser(document);
+
+    // then
+    ArgumentCaptor<Document> documentArgument = ArgumentCaptor.forClass(Document.class);
+    verify(documentRepositoryMock, times(1)).save(documentArgument.capture());
+    verifyNoMoreInteractions(documentRepositoryMock);
+    
+    assertThat(documentArgument.getValue().getName(), is("My Doc Name"));
+    assertThat(documentArgument.getValue().getUserId(), is(UserTestUtils.TEST_USER_ID));
+
   }
 }

@@ -22,9 +22,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import ch.documakery.JsonTestUtils;
-import ch.documakery.domain.user.User;
 import ch.documakery.domain.user.dto.UserRegisterDto;
 import ch.documakery.repository.MongoDbTestUtils;
+import ch.documakery.repository.UserRepository;
 
 /**
  * Integration test for {@link UserController}.
@@ -44,7 +44,10 @@ public class UserControllerIntegrationTest {
   private WebApplicationContext webApplicationContext;
 
   @Inject
-  MongoTemplate template;
+  private MongoTemplate template;
+  
+  @Inject
+  private UserRepository userRepository;
   
   private MockMvc mockMvc;
   
@@ -89,7 +92,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void registerUser() throws Exception {
+  public void registerUser_Valid_UserIsInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -108,10 +111,12 @@ public class UserControllerIntegrationTest {
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.email", is("email@email.com")))
         .andExpect(jsonPath("$.nickname", is("nick")));
+    
+    assertThat(userRepository.findByEmail("email@email.com"), is(notNullValue()));
   }
   
   @Test
-  public void registerUser_InvalidEmail_ReturnBadRequest() throws Exception {
+  public void registerUser_InvalidEmail_ReturnErrorAndNotInDb() throws Exception {
     // given
     UserRegisterDto userRegister = new UserRegisterDto();
     userRegister.setEmail("invalidemail.com");
@@ -128,10 +133,12 @@ public class UserControllerIntegrationTest {
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.errors[0].path", is("email")))
         .andExpect(jsonPath("$.errors[0].message", is("not a well-formed email address")));
+    
+    assertThat(userRepository.count(), is(0L));
   }
   
   @Test
-  public void registerUser_EmailAndNicknameNotUnique_ReturnBadRequest() throws Exception {
+  public void registerUser_EmailAndNicknameNotUnique_ReturnError() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -152,7 +159,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void deleteUser() throws Exception {
+  public void deleteUser_AsUser_ReturnOkAndUserDeletedInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -163,7 +170,7 @@ public class UserControllerIntegrationTest {
     )
     // then
         .andExpect(status().isOk());
-    assertThat(template.findAll(User.class).size(), is(1));
+    assertThat(userRepository.count(), is(1L));
   }
   
   @Test
@@ -177,6 +184,6 @@ public class UserControllerIntegrationTest {
     )
     // then
         .andExpect(status().isUnauthorized());
-    assertThat(template.findAll(User.class).size(), is(2));
+    assertThat(userRepository.count(), is(2L));
   }
 }
