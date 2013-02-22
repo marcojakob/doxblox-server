@@ -9,12 +9,14 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import com.google.common.base.Strings;
+
 /**
  * Validation test for {@link Document}.
  * 
  * @author Marco Jakob
  */
-public class DocumentTest {
+public class DocumentFolderTest {
   
   static LocalValidatorFactoryBean validator;
 
@@ -27,12 +29,11 @@ public class DocumentTest {
   @Test
   public void validate_NoErrors() {
     // given
-    Document doc = new Document();
-    doc.setName("My supi-dupi Doc");
-    Errors errors = new BeanPropertyBindingResult(doc, "doc");
+    DocumentFolder folder = new DocumentFolder("Schoolyear 2012/2013");
+    Errors errors = new BeanPropertyBindingResult(folder, "");
 
     // when
-    validator.validate(doc, errors);
+    validator.validate(folder, errors);
     
     // then
     assertThat(errors.hasErrors(), is(false));
@@ -41,11 +42,11 @@ public class DocumentTest {
   @Test
   public void validate_NameNull_Error() {
     // given
-    Document doc = new Document();
-    Errors errors = new BeanPropertyBindingResult(doc, "doc");
+    DocumentFolder folder = new DocumentFolder(null);
+    Errors errors = new BeanPropertyBindingResult(folder, "");
 
     // when
-    validator.validate(doc, errors);
+    validator.validate(folder, errors);
     
     // then
     assertThat(errors.getErrorCount(), is(1));
@@ -56,12 +57,11 @@ public class DocumentTest {
   @Test
   public void validate_NameTooLong_Error() {
     // given
-    Document doc = new Document();
-    doc.setName("12345678901234567890123456789012345678901234567890123456789012345678901234567890A");
-    Errors errors = new BeanPropertyBindingResult(doc, "doc");
+    DocumentFolder folder = new DocumentFolder(Strings.repeat("A", 51));
+    Errors errors = new BeanPropertyBindingResult(folder, "doc");
     
     // when
-    validator.validate(doc, errors);
+    validator.validate(folder, errors);
     
     // then
     assertThat(errors.getErrorCount(), is(1));

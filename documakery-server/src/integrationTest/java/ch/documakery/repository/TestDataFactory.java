@@ -8,8 +8,8 @@ import org.bson.types.ObjectId;
 
 import ch.documakery.domain.document.Document;
 import ch.documakery.domain.document.DocumentFolder;
-import ch.documakery.domain.document.question.QuestionBlock;
-import ch.documakery.domain.document.question.QuestionBlock.LibraryType;
+import ch.documakery.domain.document.QuestionBlock;
+import ch.documakery.domain.document.QuestionBlock.LibraryType;
 import ch.documakery.domain.document.question.TextAnswerQuestion;
 
 /**

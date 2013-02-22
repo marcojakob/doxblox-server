@@ -69,7 +69,7 @@
 
 {
   "_id" : {
-    "$oid" : "51267b98f5c757f73f98dc1f"
+    "$oid" : "51267b98f5c757f73f98dc2f"
   },
   "_class" : "ch.documakery.domain.document.DocumentFolder",
   "name" : "root",
@@ -79,12 +79,12 @@
   }
 }, {
   "_id" : {
-    "$oid" : "51267b98f5c757f73f98dc27"
+    "$oid" : "51267b98f5c757f73f98dc37"
   },
   "_class" : "ch.documakery.domain.document.DocumentFolder",
   "name" : "Schuljahr 2012/2013",
   "parentId" : {
-    "$oid" : "51267b98f5c757f73f98dc1f"
+    "$oid" : "51267b98f5c757f73f98dc2f"
   },
   "documentIds" : [ {
     "$oid" : "51267930f5c7f925eaae04d8"

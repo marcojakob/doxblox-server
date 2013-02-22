@@ -31,7 +31,7 @@ public class UserController {
     this.userService = userService;
   }
 
-  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  @RequestMapping(value = "/users", method = RequestMethod.GET)
   @ResponseBody
   public UserDto getUser() {
     User user = userService.getUser();
@@ -42,7 +42,7 @@ public class UserController {
     return new UserDto(user);
   }
 
-  @RequestMapping(value = "/user", method = RequestMethod.POST)
+  @RequestMapping(value = "/users", method = RequestMethod.POST)
   @ResponseBody
   public UserDto registerUser(@RequestBody @Valid UserRegisterDto userRegister) {
     LOG.debug("Registering user: {}", userRegister.getEmail());
@@ -50,10 +50,10 @@ public class UserController {
     return new UserDto(user);
   }
   
-  @RequestMapping(value = "/user", method = RequestMethod.DELETE)
+  @RequestMapping(value = "/users", method = RequestMethod.DELETE)
   @ResponseBody
   public void deleteUser() {
-    LOG.info("Deleging user.");
+    LOG.info("Deleting user.");
     userService.deleteUser();
   }
   

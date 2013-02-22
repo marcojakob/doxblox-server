@@ -67,7 +67,7 @@ public class UserControllerIntegrationTest {
     MongoDbTestUtils.importTestUsers(template);
     
     // when
-    mockMvc.perform(get("/user")
+    mockMvc.perform(get("/users")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
@@ -84,7 +84,7 @@ public class UserControllerIntegrationTest {
     MongoDbTestUtils.importTestUsers(template);
     
     // when
-    mockMvc.perform(get("/user")
+    mockMvc.perform(get("/users")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
     // then
@@ -102,7 +102,7 @@ public class UserControllerIntegrationTest {
     userRegister.setPassword("password");
     
     // when
-    mockMvc.perform(post("/user")
+    mockMvc.perform(post("/users")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
         .content(JsonTestUtils.convertToJsonBytes(userRegister))
     )
@@ -124,7 +124,7 @@ public class UserControllerIntegrationTest {
     userRegister.setPassword("password");
     
     // when
-    mockMvc.perform(post("/user")
+    mockMvc.perform(post("/users")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
         .content(JsonTestUtils.convertToJsonBytes(userRegister))
     )
@@ -148,7 +148,7 @@ public class UserControllerIntegrationTest {
     userRegister.setPassword("password");
     
     // when
-    mockMvc.perform(post("/user")
+    mockMvc.perform(post("/users")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
         .content(JsonTestUtils.convertToJsonBytes(userRegister))
         )
@@ -164,7 +164,7 @@ public class UserControllerIntegrationTest {
     MongoDbTestUtils.importTestUsers(template);
     
     // when
-    mockMvc.perform(delete("/user")
+    mockMvc.perform(delete("/users")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
@@ -179,7 +179,7 @@ public class UserControllerIntegrationTest {
     MongoDbTestUtils.importTestUsers(template);
     
     // when
-    mockMvc.perform(delete("/user")
+    mockMvc.perform(delete("/users")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
     // then

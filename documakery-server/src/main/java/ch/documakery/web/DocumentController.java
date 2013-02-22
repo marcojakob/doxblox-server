@@ -31,7 +31,7 @@ public class DocumentController {
     this.documentService = documentService;
   }
 
-  @RequestMapping(value = "/document", method = RequestMethod.GET)
+  @RequestMapping(value = "/documents", method = RequestMethod.GET)
   @ResponseBody
   public List<Document> getAllDocumentsOfUser() {
     LOG.debug("Request to get all documents of current user");
@@ -39,10 +39,10 @@ public class DocumentController {
     return result;
   }
   
-  @RequestMapping(value = "/document", method = RequestMethod.POST)
+  @RequestMapping(value = "/documents", method = RequestMethod.POST)
   @ResponseBody
-  public Document saveDocument(@RequestBody @Valid Document document) {
-    LOG.debug("Reqest to save document : {}", document);
+  public Document createDocument(@RequestBody @Valid Document document) {
+    LOG.debug("Reqest to create new document : {}", document);
     return documentService.saveWithUser(document);
   }
 }

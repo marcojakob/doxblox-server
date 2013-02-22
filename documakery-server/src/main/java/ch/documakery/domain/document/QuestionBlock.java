@@ -1,13 +1,20 @@
-package ch.documakery.domain.document.question;
+package ch.documakery.domain.document;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.bson.types.ObjectId;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import ch.documakery.domain.document.DocumentBlock;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import ch.documakery.domain.document.question.Question;
+import ch.documakery.domain.document.question.Topic;
 
 /**
  * The domain object for a block of {@link Question}s. 
@@ -34,8 +41,10 @@ public class QuestionBlock implements DocumentBlock {
   private ObjectId id;
   
   /**
-   * The title.
+   * The title of the question block.
    */
+  @NotBlank
+  @Size(max = 120)
   private String title;
   
   /**
@@ -45,12 +54,12 @@ public class QuestionBlock implements DocumentBlock {
   private String introduction;
   
   /**
-   * A list of {@link Question}s.
+   * An (embedded) list of {@link Question}s.
    */
   private List<Question> questions = new ArrayList<>();
   
   /**
-   * A reference to the topics of this {@link Questions}. It may be more than
+   * An (embedded) list of {@link Topics}. It may be more than
    * one because each {@link Question} could have a different topic.
    */
   private List<Topic> topics = new ArrayList<>();
@@ -59,6 +68,7 @@ public class QuestionBlock implements DocumentBlock {
    * The library this {@link QuestionBlock} is part of. Default is 
    * {@link LibraryType#PRIVATE}.
    */
+  @NotNull
   private LibraryType libraryType = LibraryType.PRIVATE;
   
   /**
@@ -69,6 +79,7 @@ public class QuestionBlock implements DocumentBlock {
   /**
    * Reference to the user, i.e. owner.
    */
+  @JsonIgnore
   private ObjectId userId;
 
   public ObjectId getId() {

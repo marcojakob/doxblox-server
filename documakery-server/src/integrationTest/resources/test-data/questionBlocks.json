@@ -2,7 +2,7 @@
   "_id" : {
     "$oid" : "51267930f5c7f925eaae04d2"
   },
-  "_class" : "ch.documakery.domain.document.question.QuestionBlock",
+  "_class" : "ch.documakery.domain.document.QuestionBlock",
   "title" : "Inventar 1",
   "introduction" : "Introduction for Inventar 1",
   "questions" : [ {
@@ -44,7 +44,7 @@
   "_id" : {
     "$oid" : "51267930f5c7f925eaae04d3"
   },
-  "_class" : "ch.documakery.domain.document.question.QuestionBlock",
+  "_class" : "ch.documakery.domain.document.QuestionBlock",
   "title" : "Inventar 2",
   "introduction" : "Introduction for Inventar 2",
   "questions" : [ {
@@ -86,7 +86,7 @@
   "_id" : {
     "$oid" : "51267930f5c7f925eaae04d4"
   },
-  "_class" : "ch.documakery.domain.document.question.QuestionBlock",
+  "_class" : "ch.documakery.domain.document.QuestionBlock",
   "title" : "Leitbild des Hotels/Restaurants Edelweiss",
   "introduction" : "Die neue Betriebsassistentin Selina Poltera möchte durch die Formulierung eines Leitbilds ein paar grundlegende Ziele des Hotels/Restaurants Edelweiss festhalten. Beantworten Sie zu diesem Leitbild folgende Fragen:",
   "questions" : [ {

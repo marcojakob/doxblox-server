@@ -3,9 +3,14 @@ package ch.documakery.domain.document;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.Size;
+
 import org.bson.types.ObjectId;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The domain object for a folder that contains documents or other folders. 
@@ -25,6 +30,8 @@ public class DocumentFolder {
   /**
    * The name of the folder.
    */
+  @NotBlank
+  @Size(max = 50)
   private String name;
 
   /**
@@ -42,6 +49,7 @@ public class DocumentFolder {
    * Reference id to the user, i.e. owner.
    */
   @Indexed
+  @JsonIgnore
   private ObjectId userId;
 
   @SuppressWarnings("unused")

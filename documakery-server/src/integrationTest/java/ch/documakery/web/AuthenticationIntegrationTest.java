@@ -56,7 +56,7 @@ public class AuthenticationIntegrationTest {
   public void setUp() throws Exception {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter(springSecurityFilterChain)
-//            .alwaysDo(print()) 
+//            .alwaysDo(MockMvcResultHandlers.print()) 
             .build();
     
     MongoDbTestUtils.cleanDb(template);
