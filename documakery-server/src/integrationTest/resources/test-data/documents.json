@@ -4,9 +4,6 @@
   },
   "_class" : "ch.documakery.domain.document.Document",
   "name" : "Prüfung - Inventar, Bilanz, Bilanzveränderung",
-  "creationDate" : {
-    "$date" : "2013-02-21T19:44:48.373Z"
-  },
   "documentBlockIds" : [ {
     "$oid" : "51267930f5c7f925eaae04d2"
   }, {
@@ -23,9 +20,6 @@
   },
   "_class" : "ch.documakery.domain.document.Document",
   "name" : "Prüfung - Konto, Journal, Hauptbuch",
-  "creationDate" : {
-    "$date" : "2013-02-21T19:44:48.375Z"
-  },
   "documentBlockIds" : [ ],
   "userId" : {
     "$oid" : "111111111111111111111111"
@@ -39,9 +33,6 @@
   },
   "_class" : "ch.documakery.domain.document.Document",
   "name" : "Prüfung - Rechtsformen",
-  "creationDate" : {
-    "$date" : "2013-02-21T19:44:48.375Z"
-  },
   "documentBlockIds" : [ ],
   "userId" : {
     "$oid" : "222222222222222222222222"

@@ -36,9 +36,6 @@
   } ],
   "topics" : [ ],
   "libraryType" : "PRIVATE",
-  "creationDate" : {
-    "$date" : "2013-02-21T19:44:48.374Z"
-  },
   "popularity" : 0,
   "userId" : {
     "$oid" : "111111111111111111111111"
@@ -81,9 +78,6 @@
   } ],
   "topics" : [ ],
   "libraryType" : "PUBLIC",
-  "creationDate" : {
-    "$date" : "2013-02-21T19:44:48.374Z"
-  },
   "popularity" : 0,
   "userId" : {
     "$oid" : "111111111111111111111111"
@@ -112,9 +106,6 @@
   } ],
   "topics" : [ ],
   "libraryType" : "PRIVATE",
-  "creationDate" : {
-    "$date" : "2013-02-21T19:44:48.375Z"
-  },
   "popularity" : 0,
   "userId" : {
     "$oid" : "111111111111111111111111"

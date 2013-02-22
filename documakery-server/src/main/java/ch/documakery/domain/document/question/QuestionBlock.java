@@ -1,7 +1,6 @@
 package ch.documakery.domain.document.question;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -63,11 +62,6 @@ public class QuestionBlock implements DocumentBlock {
   private LibraryType libraryType = LibraryType.PRIVATE;
   
   /**
-   * The creation date.
-   */
-  private Date creationDate = new Date();
-  
-  /**
    * The popularity.
    */
   private int popularity; // initially 0
@@ -125,10 +119,6 @@ public class QuestionBlock implements DocumentBlock {
     this.libraryType = libraryType;
   }
 
-  public Date getCreationDate() {
-    return creationDate;
-  }
-  
   public int getPopularity() {
     return popularity;
   }

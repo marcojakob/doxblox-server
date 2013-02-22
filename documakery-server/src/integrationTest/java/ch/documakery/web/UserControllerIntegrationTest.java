@@ -56,11 +56,13 @@ public class UserControllerIntegrationTest {
             .build();
     
     MongoDbTestUtils.cleanDb(template);
-    MongoDbTestUtils.importTestUsers(template);
   }
   
   @Test
   public void getUser_AsUser_ReturnUserAsJson() throws Exception {
+    // given
+    MongoDbTestUtils.importTestUsers(template);
+    
     // when
     mockMvc.perform(get("/user")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
@@ -75,6 +77,9 @@ public class UserControllerIntegrationTest {
 
   @Test
   public void getUser_AsAnonymous_ReturnUnauthorized() throws Exception {
+    // given
+    MongoDbTestUtils.importTestUsers(template);
+    
     // when
     mockMvc.perform(get("/user")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
@@ -86,6 +91,8 @@ public class UserControllerIntegrationTest {
   @Test
   public void registerUser() throws Exception {
     // given
+    MongoDbTestUtils.importTestUsers(template);
+    
     UserRegisterDto userRegister = new UserRegisterDto();
     userRegister.setEmail("email@email.com");
     userRegister.setNickname("nick");
@@ -126,6 +133,8 @@ public class UserControllerIntegrationTest {
   @Test
   public void registerUser_EmailAndNicknameNotUnique_ReturnBadRequest() throws Exception {
     // given
+    MongoDbTestUtils.importTestUsers(template);
+    
     UserRegisterDto userRegister = new UserRegisterDto();
     userRegister.setEmail(MongoDbTestUtils.USER1_EMAIL);
     userRegister.setNickname(MongoDbTestUtils.USER1_NICKNAME);
@@ -144,6 +153,9 @@ public class UserControllerIntegrationTest {
   
   @Test
   public void deleteUser() throws Exception {
+    // given
+    MongoDbTestUtils.importTestUsers(template);
+    
     // when
     mockMvc.perform(delete("/user")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
@@ -156,6 +168,9 @@ public class UserControllerIntegrationTest {
   
   @Test
   public void deleteUser_AsAnonymous_ReturnUnauthorized() throws Exception {
+    // given
+    MongoDbTestUtils.importTestUsers(template);
+    
     // when
     mockMvc.perform(delete("/user")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)

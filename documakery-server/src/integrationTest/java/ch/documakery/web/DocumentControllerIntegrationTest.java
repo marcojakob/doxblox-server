@@ -49,16 +49,18 @@ public class DocumentControllerIntegrationTest {
   public void setUp() throws Exception {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter(springSecurityFilterChain)
-//            .alwaysDo(print()) 
+//            .alwaysDo(MockMvcResultHandlers.print()) 
             .build();
     
     MongoDbTestUtils.cleanDb(template);
-    MongoDbTestUtils.importTestUsers(template);
-    MongoDbTestUtils.importTestDocuments(template);
   }
   
   @Test
   public void getAllDocumentsOfUser_AsUser_ReturnDocuments() throws Exception {
+    // given
+    MongoDbTestUtils.importTestUsers(template);
+    MongoDbTestUtils.importTestDocuments(template);
+    
     // when
     mockMvc.perform(get("/document")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
@@ -67,6 +69,35 @@ public class DocumentControllerIntegrationTest {
     // then
         .andExpect(status().isOk())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$", is("test document")));
+        .andExpect(jsonPath("$..name", hasItems(
+            "Prüfung - Inventar, Bilanz, Bilanzveränderung", 
+            "Prüfung - Konto, Journal, Hauptbuch")));
+  }
+  
+  
+  @Test
+  public void getAllDocumentsOfUser_AsUserNoDocuments_ReturnEmptyBody() throws Exception {
+    // given
+    MongoDbTestUtils.importTestUsers(template);
+    
+    // when
+    mockMvc.perform(get("/document")
+        .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
+        .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
+    )
+    // then
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$").doesNotExist());
+  }
+  
+  @Test
+  public void getAllDocumentsOfUser_AsAnonymous_ReturnUnauthorized() throws Exception {
+    // when
+    mockMvc.perform(get("/document")
+        .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
+    )
+    // then
+        .andExpect(status().isUnauthorized());
   }
 }

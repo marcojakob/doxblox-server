@@ -1,0 +1,22 @@
+package ch.documakery.web.json;
+
+import org.bson.types.ObjectId;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+/**
+ * ObjectMapper used for serializing MongoDb's ObjectId.
+ * 
+ * @author Marco Jakob
+ */
+public class MyObjectMapper extends ObjectMapper {
+  
+  private static final long serialVersionUID = 1L;
+
+  public MyObjectMapper() {
+    SimpleModule module = new SimpleModule("ObjectIdModule");
+    module.addSerializer(ObjectId.class, new ObjectIdSerializer());
+    this.registerModule(module);
+  }
+}
