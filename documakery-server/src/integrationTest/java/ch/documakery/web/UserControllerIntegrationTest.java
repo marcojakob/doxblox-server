@@ -22,8 +22,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import ch.documakery.JsonTestUtils;
+import ch.documakery.MongoDbTestUtils;
 import ch.documakery.domain.user.dto.UserRegisterDto;
-import ch.documakery.repository.MongoDbTestUtils;
 import ch.documakery.repository.UserRepository;
 
 /**

@@ -24,8 +24,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import ch.documakery.MongoDbTestUtils;
 import ch.documakery.domain.user.User;
-import ch.documakery.repository.MongoDbTestUtils;
 
 /**
  * Integration test for authentication (login/logout).

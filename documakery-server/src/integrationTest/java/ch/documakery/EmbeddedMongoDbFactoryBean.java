@@ -1,4 +1,4 @@
-package ch.documakery.repository;
+package ch.documakery;
 
 import java.io.IOException;
 

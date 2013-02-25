@@ -22,9 +22,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import ch.documakery.JsonTestUtils;
+import ch.documakery.MongoDbTestUtils;
 import ch.documakery.domain.document.DocumentFolder;
 import ch.documakery.repository.DocumentFolderRepository;
-import ch.documakery.repository.MongoDbTestUtils;
 
 /**
  * Integration test for {@link DocumentFolderController}.

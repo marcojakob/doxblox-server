@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import ch.documakery.MongoDbTestUtils;
 import ch.documakery.domain.user.User;
 
 import com.mongodb.BasicDBObject;

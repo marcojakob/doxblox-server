@@ -1,4 +1,4 @@
-package ch.documakery.repository;
+package ch.documakery;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +10,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
-import ch.documakery.JsonTestUtils;
 import ch.documakery.domain.document.DocumentFolder;
 
 import com.google.common.base.Charsets;
