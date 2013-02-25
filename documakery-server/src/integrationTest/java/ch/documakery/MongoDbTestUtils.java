@@ -92,7 +92,7 @@ public class MongoDbTestUtils {
    */
   public static void importTestQuestionBlocks(MongoTemplate template) throws IOException {
     importData(Thread.currentThread().getContextClassLoader().getResourceAsStream("test-data/questionBlocks.json"), 
-        template.getCollection("questionBlocks"));
+        template.getCollection("questionBlock"));
   }
   
   public static void importGeneratedTestData(MongoTemplate template, ObjectId userId) throws IOException {
