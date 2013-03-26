@@ -11,7 +11,7 @@ public class EmailNotConfirmedException extends AccountStatusException {
   private static final long serialVersionUID = 1L;
 
   /**
-   * Constructs a <code>EmailNotConfirmedException</code> with the specified message.
+   * Constructs an <code>EmailNotConfirmedException</code> with the specified message.
    * 
    * @param msg the detail message.
    */

@@ -19,7 +19,7 @@ import ch.documakery.domain.user.User;
 import ch.documakery.repository.UserRepository;
 
 /**
- * Test for {@link UserRegisterDto}.
+ * Validation test for {@link UserRegisterDto}.
  * 
  * @author Marco Jakob
  */

@@ -6,7 +6,9 @@ import ch.documakery.domain.user.User;
 import ch.documakery.domain.user.dto.UserRegisterDto;
 
 /**
- * Service to handle Users.
+ * Service for managing {@link User}s.   
+ * 
+ * @author Marco Jakob
  */
 public interface UserService {
 
@@ -24,7 +26,7 @@ public interface UserService {
    * At this point, the provided {@link UserRegisterDto} must have been validated, so that the user
    * would have been informed about violations already. The validation should include a uniqueness
    * check of nickname and email. Though the uniqueness of email and nickname is guaranteed by the 
-   * db, no error will be thrown by this method.
+   * database, no error will be thrown by this method.
    * 
    * @param userRegister User registration information.
    */

@@ -17,7 +17,7 @@ import ch.documakery.domain.document.DocumentFolder;
 import ch.documakery.service.DocumentFolderService;
 
 /**
- * Controller for {@link DocumentFolder}s.
+ * Rest access to {@link DocumentFolder}s.
  */
 @Controller
 public class DocumentFolderController {

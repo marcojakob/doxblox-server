@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 
 /**
  * ObjectMapper used for serializing MongoDb's ObjectId.
+ * The serialization is used to transfer ObjectIds to the client.
  * 
  * @author Marco Jakob
  */

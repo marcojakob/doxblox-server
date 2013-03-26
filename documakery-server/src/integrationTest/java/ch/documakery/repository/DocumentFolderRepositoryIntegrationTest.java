@@ -41,7 +41,7 @@ public class DocumentFolderRepositoryIntegrationTest {
   }
   
   @Test
-  public void findByUserId_User1_Return5Folders() throws Exception {
+  public void findByUserId_User1_ReturnsFiveFolders() throws Exception {
     // given
     MongoDbTestUtils.importTestDocumentFolders(template);
     assertThat(repository.findAll().size(), is(7));

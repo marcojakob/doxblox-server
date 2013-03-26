@@ -62,7 +62,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void getUser_AsUser_ReturnUserAsJson() throws Exception {
+  public void GETusers_AsUser_ReturnsUserAsJson() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -79,7 +79,7 @@ public class UserControllerIntegrationTest {
   }
 
   @Test
-  public void getUser_AsAnonymous_ReturnUnauthorized() throws Exception {
+  public void GETusers_AsAnonymous_ReturnsUnauthorized() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -92,7 +92,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void registerUser_Valid_UserIsInDb() throws Exception {
+  public void POSTusers_Valid_UserIsInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -116,7 +116,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void registerUser_InvalidEmail_ReturnErrorAndNotInDb() throws Exception {
+  public void POSTusers_InvalidEmail_ReturnsErrorAndNotInDb() throws Exception {
     // given
     UserRegisterDto userRegister = new UserRegisterDto();
     userRegister.setEmail("invalidemail.com");
@@ -138,7 +138,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void registerUser_EmailAndNicknameNotUnique_ReturnError() throws Exception {
+  public void POSTusers_EmailAndNicknameNotUnique_ReturnsError() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -159,7 +159,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void deleteUser_AsUser_ReturnOkAndUserDeletedInDb() throws Exception {
+  public void DELETEusers_AsUser_ReturnsOkAndUserDeletedInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -174,7 +174,7 @@ public class UserControllerIntegrationTest {
   }
   
   @Test
-  public void deleteUser_AsAnonymous_ReturnUnauthorized() throws Exception {
+  public void DELETEusers_AsAnonymous_ReturnsUnauthorized() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     

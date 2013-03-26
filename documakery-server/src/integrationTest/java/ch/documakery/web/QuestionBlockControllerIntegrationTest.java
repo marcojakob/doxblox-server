@@ -1,6 +1,6 @@
 package ch.documakery.web;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.server.samples.context.SecurityRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -23,11 +23,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 import ch.documakery.JsonTestUtils;
 import ch.documakery.MongoDbTestUtils;
-import ch.documakery.domain.document.Document;
-import ch.documakery.repository.DocumentRepository;
+import ch.documakery.domain.document.QuestionBlock;
+import ch.documakery.repository.QuestionBlockRepository;
 
 /**
- * Integration test for {@link DocumentController}.
+ * Integration test for {@link QuestionBlockController}.
  * 
  * @author Marco Jakob
  */
@@ -35,7 +35,7 @@ import ch.documakery.repository.DocumentRepository;
 @ContextConfiguration({"classpath*:META-INF/spring/applicationContext-*.xml"})
 @ActiveProfiles("dev")
 @WebAppConfiguration
-public class DocumentControllerIntegrationTest {
+public class QuestionBlockControllerIntegrationTest {
   
   @Inject
   private FilterChainProxy springSecurityFilterChain;
@@ -47,7 +47,7 @@ public class DocumentControllerIntegrationTest {
   private MongoTemplate template;
   
   @Inject
-  private DocumentRepository documentRepository;
+  private QuestionBlockRepository questionBlockRepository;
   
   private MockMvc mockMvc;
   
@@ -62,32 +62,33 @@ public class DocumentControllerIntegrationTest {
   }
   
   @Test
-  public void GETdocuments_AsUser_ReturnsDocuments() throws Exception {
+  public void GETquestionblocks_AsUser_ReturnsAllQuestionBlocksOfUser() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
-    MongoDbTestUtils.importTestDocuments(template);
+    MongoDbTestUtils.importTestQuestionBlocks(template);
     
     // when
-    mockMvc.perform(get("/documents")
+    mockMvc.perform(get("/questionblocks")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
     // then
         .andExpect(status().isOk())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$..name", hasItems(
-            "Prüfung - Inventar, Bilanz, Bilanzveränderung", 
-            "Prüfung - Konto, Journal, Hauptbuch")));
+        .andExpect(jsonPath("$", hasSize(3)))
+        .andExpect(jsonPath("$[0].title", is("Inventar 1")))
+        .andExpect(jsonPath("$[1].questions", hasSize(4)))
+        .andExpect(jsonPath("$[2].title", is("Leitbild des Hotels/Restaurants Edelweiss")));
   }
   
-  
   @Test
-  public void GETdocuments_AsUserNoDocuments_ReturnsEmptyBody() throws Exception {
+  public void GETquestionblocks_AsUserWithNoQuestionBlocks_ReturnsEmptyBody() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
+    // NOT importing question blocks
     
     // when
-    mockMvc.perform(get("/documents")
+    mockMvc.perform(get("/questionblocks")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
@@ -98,9 +99,9 @@ public class DocumentControllerIntegrationTest {
   }
   
   @Test
-  public void GETdocuments_AsAnonymous_ReturnsUnauthorized() throws Exception {
+  public void GETQuestionblocks_AsAnonymous_ReturnsUnauthorized() throws Exception {
     // when
-    mockMvc.perform(get("/documents")
+    mockMvc.perform(get("/questionblocks")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
     )
     // then
@@ -108,89 +109,90 @@ public class DocumentControllerIntegrationTest {
   }
   
   @Test
-  public void POSTdocuments_AsUser_ReturnsOkAndDocumentInDb() throws Exception {
+  public void POSTquestionblocks_AsUserAndOneBlockAsParam_ReturnsOkAndQuestionBlockIsInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
-    Document document = new Document();
-    document.setName("New Doc Name");
+    QuestionBlock questionBlock = new QuestionBlock();
+    questionBlock.setTitle("Title of my new question block");
     
     // when
-    mockMvc.perform(post("/documents")
+    mockMvc.perform(post("/questionblocks")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
-        .content(JsonTestUtils.convertToJsonBytes(document))
+        .content(JsonTestUtils.convertToJsonBytes(questionBlock))
     )
     // then
         .andExpect(status().isOk())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$.name", is("New Doc Name")));
+        .andExpect(jsonPath("$.title", is("Title of my new question block")));
     
-    assertThat(documentRepository.count(), is(1L));
+    assertThat(questionBlockRepository.count(), is(1L));
   }
   
   @Test
-  public void POST_documents_AsAnonymous_ReturnsUnauthorizedAndDocumentNotInDb() throws Exception {
+  public void POSTquestionblocks_AsAnonymous_ReturnsUnauthorizedAndQuestionBlockIsNotInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
-    Document document = new Document();
-    document.setName("New Doc Name");
+    QuestionBlock questionBlock = new QuestionBlock();
+    questionBlock.setTitle("Title of my new question block");
     
     // when
-    mockMvc.perform(post("/documents")
+    mockMvc.perform(post("/questionblocks")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
-        .content(JsonTestUtils.convertToJsonBytes(document))
+        .content(JsonTestUtils.convertToJsonBytes(questionBlock))
     )
     // then
         .andExpect(status().isUnauthorized());
     
-    assertThat(documentRepository.count(), is(0L));
+    assertThat(questionBlockRepository.count(), is(0L));
   }
   
   @Test
-  public void POSTdocuments_InvalidName_ReturnsErrorAndDocumentNotInDb() throws Exception {
+  public void POSTquestionblocks_InvalidTitle_ReturnsErrorAndQuestionBlockIsNotInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
-    Document document = new Document();
-    document.setName("");
+    QuestionBlock questionBlock = new QuestionBlock();
+    questionBlock.setTitle("");
     
     // when
-    mockMvc.perform(post("/documents")
+    mockMvc.perform(post("/questionblocks")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
-        .content(JsonTestUtils.convertToJsonBytes(document))
+        .content(JsonTestUtils.convertToJsonBytes(questionBlock))
     )
     // then
         .andExpect(status().isBadRequest())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
-        .andExpect(jsonPath("$.errors[0].path", is("name")))
+        .andExpect(jsonPath("$.errors[0].path", is("title")))
         .andExpect(jsonPath("$.errors[0].message", is("may not be empty")))
-        .andExpect(jsonPath("$.errors[1]").doesNotExist());
+        .andExpect(jsonPath("$.errors", hasSize(1)));
     
-    assertThat(documentRepository.count(), is(0L));
+    assertThat(questionBlockRepository.count(), is(0L));
   }
   
   @Test
-  public void POSTdocuments_IllegalUserIdSet_DocumentSavedButUserIdIsIgnored() throws Exception {
+  public void POSTquestionblocks_IllegalUserIdSet_QuestionBlockSavedButUserIdIsIgnored() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
     // when
-    mockMvc.perform(post("/documents")
+    // aaaaaa... is not the current user's id
+    mockMvc.perform(post("/questionblocks")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
-        .content("{\"id\":\"666666666666666666666666\",\"name\":\"docName\",\"documentBlockIds\":[],\"userId\":{\"$oid\":\"aaaaaaaaaaaaaaaaaaaaaaaa\"}}")
+        .content("{\"id\":\"666666666666666666666666\",\"title\":\"just a title\",\"userId\":{\"$oid\":\"aaaaaaaaaaaaaaaaaaaaaaaa\"}}")
     )
     // then
         .andExpect(status().isOk())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.id", is("666666666666666666666666")))
         .andExpect(jsonPath("$.userId").doesNotExist())
-        .andExpect(jsonPath("$.name", is("docName")));
+        .andExpect(jsonPath("$.title", is("just a title")));
     
-    Document savedEntity = template.findById("666666666666666666666666", Document.class);
+    QuestionBlock savedEntity = template.findById("666666666666666666666666", QuestionBlock.class);
     assertThat(savedEntity.getUserId(), is(MongoDbTestUtils.USER1_ID));
   }
 }

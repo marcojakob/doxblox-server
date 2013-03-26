@@ -17,7 +17,7 @@ import ch.documakery.domain.document.Document;
 import ch.documakery.service.DocumentService;
 
 /**
- * Controller for {@link Document}s.
+ * REST access to {@link Document}s.
  */
 @Controller
 public class DocumentController {

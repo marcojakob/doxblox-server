@@ -12,7 +12,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import com.google.common.base.Strings;
 
 /**
- * Validation test for {@link Document}.
+ * Validation test for {@link Document} domain class.
  * 
  * @author Marco Jakob
  */

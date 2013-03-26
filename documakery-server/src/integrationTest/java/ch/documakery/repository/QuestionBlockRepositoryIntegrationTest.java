@@ -41,7 +41,7 @@ public class QuestionBlockRepositoryIntegrationTest {
   }
   
   @Test
-  public void findByUserId_User1_Return2Documents() throws Exception {
+  public void findByUserId_User1_ReturnsTwoDocuments() throws Exception {
     // given
     MongoDbTestUtils.importTestQuestionBlocks(template);
     assertThat(repository.findAll().size(), is(3));

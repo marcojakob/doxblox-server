@@ -64,7 +64,7 @@ public class AuthenticationIntegrationTest {
   }
   
   @Test
-  public void login_CorrectCredentials_ReturnOk() throws Exception {
+  public void POSTlogin_CorrectCredentials_ReturnOk() throws Exception {
     // when
     mockMvc.perform(post("/login")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -76,7 +76,7 @@ public class AuthenticationIntegrationTest {
   }
   
   @Test
-  public void login_IncorrectCredentials_ReturnUnauthorized() throws Exception {
+  public void POSTlogin_IncorrectCredentials_ReturnUnauthorized() throws Exception {
     // when
     mockMvc.perform(post("/login")
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -88,7 +88,7 @@ public class AuthenticationIntegrationTest {
   }
 
   @Test
-  public void login_IncorrectRequestMethod_ReturnUnauthorized() throws Exception {
+  public void GETlogin_IncorrectRequestMethod_ReturnUnauthorized() throws Exception {
     // when
     mockMvc.perform(get("/login")
         .param(REQUEST_PARAMETER_USERNAME, MongoDbTestUtils.USER1_EMAIL)
@@ -99,7 +99,7 @@ public class AuthenticationIntegrationTest {
   }
   
   @Test
-  public void login_EmailNotConfirmed_ReturnForbidden() throws Exception {
+  public void POSTlogin_EmailNotConfirmed_ReturnForbidden() throws Exception {
     // given
     User correctUser = template.findOne(query(where("email").is(MongoDbTestUtils.USER1_EMAIL)), User.class);
     correctUser.setEmailConfirmed(false);
@@ -118,7 +118,7 @@ public class AuthenticationIntegrationTest {
   }
   
   @Test
-  public void logout_ReturnOk() throws Exception {
+  public void GETlogout_ReturnOk() throws Exception {
     // when
     mockMvc.perform(get("/logout")
         // .with(SecurityRequestPostProcessors.userDetailsService(CORRECT_USERNAME))

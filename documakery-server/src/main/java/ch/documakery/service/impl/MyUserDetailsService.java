@@ -2,6 +2,7 @@ package ch.documakery.service.impl;
 
 import javax.inject.Inject;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,7 +15,10 @@ import ch.documakery.security.authentication.EmailNotConfirmedException;
 import com.google.common.base.Preconditions;
 
 /**
- * Database user authentication service.
+ * Loads the user from the MongoDB repository (by email) and provides it to Spring. This is
+ * primarily used by {@link SecurityContextHolder} to get access to the {@link UserDetails}.
+ * 
+ * @author Marco Jakob
  */
 @Service
 public final class MyUserDetailsService implements UserDetailsService {

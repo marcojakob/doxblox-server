@@ -2,6 +2,11 @@ package ch.documakery.domain.user.dto;
 
 import ch.documakery.domain.user.User;
 
+/**
+ * Used to transfer simple user information between client and server.
+ * 
+ * @author Marco Jakob
+ */
 public class UserDto {
   
   private String email;

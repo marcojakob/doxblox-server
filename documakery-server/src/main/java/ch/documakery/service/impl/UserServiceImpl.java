@@ -15,7 +15,7 @@ import ch.documakery.security.util.SecurityContextUtil;
 import ch.documakery.service.UserService;
 
 /**
- * UserService that accesses the spring credentials.
+ * Service to access {@link User}s in MongoDB repository.
  * 
  * @author Marco Jakob
  */

@@ -9,12 +9,14 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import com.google.common.base.Strings;
+
 /**
- * Validation test for {@link Document} domain class.
+ * Validation test for {@link QuestionBlock} domain class.
  * 
  * @author Marco Jakob
  */
-public class DocumentTest {
+public class QuestionBlockTest {
   
   static LocalValidatorFactoryBean validator;
 
@@ -27,45 +29,45 @@ public class DocumentTest {
   @Test
   public void validate_NoErrors() {
     // given
-    Document doc = new Document();
-    doc.setName("My supi-dupi Doc");
-    Errors errors = new BeanPropertyBindingResult(doc, "doc");
+    QuestionBlock block = new QuestionBlock();
+    block.setTitle("a Title");
+    Errors errors = new BeanPropertyBindingResult(block, "");
 
     // when
-    validator.validate(doc, errors);
+    validator.validate(block, errors);
     
     // then
     assertThat(errors.hasErrors(), is(false));
   }
   
   @Test
-  public void validate_NameNull_Error() {
+  public void validate_TitleNull_Error() {
     // given
-    Document doc = new Document();
-    Errors errors = new BeanPropertyBindingResult(doc, "doc");
+    QuestionBlock block = new QuestionBlock();
+    Errors errors = new BeanPropertyBindingResult(block, "");
 
     // when
-    validator.validate(doc, errors);
+    validator.validate(block, errors);
     
     // then
     assertThat(errors.getErrorCount(), is(1));
     assertThat(errors.getFieldError().getCode(), is("NotBlank"));
-    assertThat(errors.getFieldError().getField(), is("name"));
+    assertThat(errors.getFieldError().getField(), is("title"));
   }
   
   @Test
-  public void validate_NameTooLong_Error() {
+  public void validate_TitleTooLong_Error() {
     // given
-    Document doc = new Document();
-    doc.setName("12345678901234567890123456789012345678901234567890123456789012345678901234567890A");
-    Errors errors = new BeanPropertyBindingResult(doc, "doc");
+    QuestionBlock block = new QuestionBlock();
+    block.setTitle(Strings.repeat("Z", 121));
+    Errors errors = new BeanPropertyBindingResult(block, "");
     
     // when
-    validator.validate(doc, errors);
+    validator.validate(block, errors);
     
     // then
     assertThat(errors.getErrorCount(), is(1));
     assertThat(errors.getFieldError().getCode(), is("Size"));
-    assertThat(errors.getFieldError().getField(), is("name"));
+    assertThat(errors.getFieldError().getField(), is("title"));
   }
 }

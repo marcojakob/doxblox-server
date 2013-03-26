@@ -3,8 +3,6 @@ package ch.documakery.service.impl;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +39,7 @@ public class UserServiceImplTest {
   }
   
   @Test
-  public void getUser_UserIsLoggedIn_ReturnsUser() {
+  public void getUser_AsUser_ReturnsUser() {
     // given
     given(securityContextUtilMock.getCurrentUser()).willReturn(UserTestUtils.TEST_USER);
 
@@ -56,7 +54,7 @@ public class UserServiceImplTest {
   }
 
   @Test
-  public void getUser_UserIsNotLoggedIn_ReturnsNull() {
+  public void getUser_AsAnonymous_ReturnsNull() {
     // given
     given(securityContextUtilMock.getCurrentUser()).willReturn(null);
 
@@ -73,7 +71,7 @@ public class UserServiceImplTest {
   }
 
   @Test
-  public void registerUser() {
+  public void registerUser_AsAnonymous_SaveCalledWithHashedPassword() {
     // given
     UserRegisterDto userRegister = new UserRegisterDto();
     userRegister.setEmail(UserTestUtils.TEST_USER_EMAIL);
@@ -95,7 +93,7 @@ public class UserServiceImplTest {
   }
   
   @Test
-  public void deleteUser() {
+  public void deleteUser_AsUser_DeleteUserCalledWithCurrentUser() {
     // given
     given(securityContextUtilMock.getCurrentUser()).willReturn(UserTestUtils.TEST_USER);
     
@@ -106,7 +104,7 @@ public class UserServiceImplTest {
     verify(securityContextUtilMock, times(1)).getCurrentUser();
     verifyNoMoreInteractions(securityContextUtilMock);
     
-    verify(userRepositoryMock, times(1)).delete((User)any());
+    verify(userRepositoryMock, times(1)).delete(UserTestUtils.TEST_USER);
     verifyNoMoreInteractions(userRepositoryMock);
   }
 }

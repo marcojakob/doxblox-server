@@ -8,7 +8,9 @@ import ch.documakery.domain.document.DocumentFolder;
 
 
 /**
- * Service to handle {@link DocumentFolder}s.
+ * Service for managing {@link DocumentFolder}s.
+ * 
+ * @author Marco Jakob
  */
 public interface DocumentFolderService {
   

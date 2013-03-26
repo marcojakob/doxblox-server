@@ -17,7 +17,7 @@ import ch.documakery.domain.user.dto.UserRegisterDto;
 import ch.documakery.service.UserService;
 
 /**
- * Controller for user actions.
+ * Rest access to {@link User}s.
  */
 @Controller
 public class UserController {

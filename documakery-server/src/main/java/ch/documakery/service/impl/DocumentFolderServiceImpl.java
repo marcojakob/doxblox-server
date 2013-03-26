@@ -14,7 +14,9 @@ import ch.documakery.service.DocumentFolderService;
 
 
 /**
- * {@link DocumentFolder} Service implementation.
+ * Service to access {@link DocumentFolder}s in MongoDB repository.
+ * 
+ * @author Marco Jakob
  */
 @Service
 public class DocumentFolderServiceImpl implements DocumentFolderService {

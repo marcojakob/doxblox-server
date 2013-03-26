@@ -8,7 +8,9 @@ import ch.documakery.domain.document.Document;
 
 
 /**
- * Service to handle {@link Document}s.
+ * Service for managing {@link Document}s.
+ * 
+ * @author Marco Jakob
  */
 public interface DocumentService {
   

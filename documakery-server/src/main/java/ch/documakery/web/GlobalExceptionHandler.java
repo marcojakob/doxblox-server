@@ -28,14 +28,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
     List<ObjectError> globalErrors = ex.getBindingResult().getGlobalErrors();
     
+    // Create dto for the body of the exception message.
     ValidationErrorMessageDto validationErrors = new ValidationErrorMessageDto();
     
+    // Add field errors
     for (FieldError fieldError : fieldErrors) {
       validationErrors.addError(fieldError.getField(), fieldError.getDefaultMessage());
     }
+    
+    // Add object errors
     for (ObjectError objectError : globalErrors) {
       validationErrors.addError(objectError.getObjectName(), objectError.getDefaultMessage());
     }
+    
     return handleExceptionInternal(ex, validationErrors, headers, status, request);
   }
 }

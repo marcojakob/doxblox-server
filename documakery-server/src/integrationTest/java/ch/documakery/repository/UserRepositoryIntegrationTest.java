@@ -102,7 +102,7 @@ public class UserRepositoryIntegrationTest {
   }
   
   @Test
-  public void save_UniqueEmailViolation_IgnoreSave() {
+  public void save_UniqueEmailViolation_SaveIgnored() {
     // given
     template.save(user1);
     user2.setEmail(EMAIL_1);

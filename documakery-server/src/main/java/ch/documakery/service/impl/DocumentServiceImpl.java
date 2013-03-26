@@ -14,7 +14,9 @@ import ch.documakery.service.DocumentService;
 
 
 /**
- * Document Service implementation.
+ * Service to access {@link Document}s in MongoDB repository.
+ * 
+ * @author Marco Jakob
  */
 @Service
 public class DocumentServiceImpl implements DocumentService {

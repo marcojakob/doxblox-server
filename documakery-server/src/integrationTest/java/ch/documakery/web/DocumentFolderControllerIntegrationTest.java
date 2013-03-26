@@ -1,6 +1,6 @@
 package ch.documakery.web;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.server.samples.context.SecurityRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -62,7 +62,7 @@ public class DocumentFolderControllerIntegrationTest {
   }
   
   @Test
-  public void getAllFoldersOfUser_AsUser_ReturnFolders() throws Exception {
+  public void GETdocumentfolders_AsUser_ReturnsFolders() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     MongoDbTestUtils.importTestDocumentFolders(template);
@@ -78,12 +78,12 @@ public class DocumentFolderControllerIntegrationTest {
         .andExpect(jsonPath("$[0].name", is("root")))
         .andExpect(jsonPath("$[1].name", is("2012 Herbstsemester")))
         .andExpect(jsonPath("$[2].name", is("B1.503")))
-        .andExpect(jsonPath("$[5]").doesNotExist());
+        .andExpect(jsonPath("$", hasSize(5)));
   }
   
   
   @Test
-  public void getAllFoldersOfUser_AsUserWithNoDocuments_ReturnEmptyBody() throws Exception {
+  public void GETdocumentfolders_AsUserWithNoDocuments_ReturnsEmptyBody() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -99,7 +99,7 @@ public class DocumentFolderControllerIntegrationTest {
   }
   
   @Test
-  public void getAllFoldersOfUser_AsAnonymous_ReturnUnauthorized() throws Exception {
+  public void GETdocumentfolders_AsAnonymous_ReturnsUnauthorized() throws Exception {
     // when
     mockMvc.perform(get("/documentfolders")
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
@@ -109,7 +109,7 @@ public class DocumentFolderControllerIntegrationTest {
   }
   
   @Test
-  public void createFolder_AsUser_ReturnOkAndFolderInDb() throws Exception {
+  public void POSTdocumentFolders_AsUser_ReturnsOkAndFolderInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -130,7 +130,7 @@ public class DocumentFolderControllerIntegrationTest {
   }
   
   @Test
-  public void createFolder_AsAnonymous_ReturnUnauthorizedAndFolderNotInDb() throws Exception {
+  public void POSTdocumentFolders_AsAnonymous_ReturnsUnauthorizedAndFolderNotInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -148,7 +148,7 @@ public class DocumentFolderControllerIntegrationTest {
   }
   
   @Test
-  public void createFolder_InvalidName_ReturnErrorAndDocumentNotInDb() throws Exception {
+  public void POSTdocumentFolders_InvalidName_ReturnsErrorAndDocumentNotInDb() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -165,13 +165,13 @@ public class DocumentFolderControllerIntegrationTest {
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.errors[0].path", is("name")))
         .andExpect(jsonPath("$.errors[0].message", is("may not be empty")))
-        .andExpect(jsonPath("$.errors[1]").doesNotExist());
+        .andExpect(jsonPath("$.errors", hasSize(1)));
     
     assertThat(folderRepository.count(), is(0L));
   }
   
   @Test
-  public void createFolder_IllegalUserIdSet_FolderSavedButUserIdIsIgnored() throws Exception {
+  public void POSTdocumentFolders_IllegalUserIdSet_FolderSavedButUserIdIsIgnored() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
