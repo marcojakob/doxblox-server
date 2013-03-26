@@ -78,9 +78,9 @@ project(':documakery-server') {
   sourceCompatibility = 1.7
   
   // Declare some constants for versions we are using.
-  ext.springVersion             = "3.2.1.RELEASE"
+  ext.springVersion             = "3.2.2.RELEASE"
   ext.springSecurityVersion     = "3.2.0.M1"
-  ext.hibernateValidatorVersion = "5.0.0.Alpha2"
+  ext.hibernateValidatorVersion = "5.0.0.CR4"
   
   repositories {   
     mavenCentral()
@@ -102,36 +102,36 @@ project(':documakery-server') {
     // compile("org.springframework:spring-jdbc:$springVersion")
     // compile("org.springframework:spring-aspects:$springVersion")
     // compile("org.springframework:spring-aop:$springVersion")
-    // compile("org.aspectj:aspectjrt:1.7.1")
+    // compile("org.aspectj:aspectjrt:1.7.2")
     
     // MongoDB
-    compile("org.springframework.data:spring-data-mongodb:1.1.1.RELEASE")
+    compile("org.springframework.data:spring-data-mongodb:1.2.0.RELEASE")
     
     // Java's JSR-330 / JSR-299 dependency injection
     compile("javax.inject:javax.inject:1")
     
     // Jackson JSON Mapper
-    compile("com.fasterxml.jackson.core:jackson-core:2.1.2")
-    compile("com.fasterxml.jackson.core:jackson-databind:2.1.2")  
+    compile("com.fasterxml.jackson.core:jackson-core:2.1.4")
+    compile("com.fasterxml.jackson.core:jackson-databind:2.1.4")  
 
     // Hibernate Validator
     compile("org.hibernate:hibernate-validator:$hibernateValidatorVersion")
     
     // Logging
-    compile("org.slf4j:slf4j-api:1.7.2")
-    runtime("org.slf4j:jcl-over-slf4j:1.7.2")
-    compile("ch.qos.logback:logback-classic:1.0.9")
-    compile("ch.qos.logback:logback-access:1.0.9") // HTTP-access logging
+    compile("org.slf4j:slf4j-api:1.7.5")
+    runtime("org.slf4j:jcl-over-slf4j:1.7.5")
+    compile("ch.qos.logback:logback-classic:1.0.11")
+    compile("ch.qos.logback:logback-access:1.0.11") // HTTP-access logging
     
     // Utils
-    compile("com.google.guava:guava:14.0-rc2")
+    compile("com.google.guava:guava:14.0.1")
 
     provided("javax.servlet:servlet-api:2.5")
 
     testCompile("junit:junit:4.11")
     testCompile("org.springframework:spring-test:$springVersion")
     testCompile("org.mockito:mockito-core:1.9.5")
-    testCompile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.28")
+    testCompile("de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.29")
     testCompile("com.jayway.jsonpath:json-path:0.8.1")
   }
 }
