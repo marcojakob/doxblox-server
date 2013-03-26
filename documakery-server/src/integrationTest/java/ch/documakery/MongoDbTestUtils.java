@@ -14,7 +14,6 @@ import ch.documakery.domain.document.DocumentFolder;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
-import com.google.common.io.Closeables;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -117,9 +116,10 @@ public class MongoDbTestUtils {
    * @throws IOException 
    */
   public static void importData(InputStream jsonStream, DBCollection collection) throws IOException {
-    String jsonString = CharStreams.toString(new InputStreamReader(jsonStream, Charsets.UTF_8));
-    Closeables.closeQuietly(jsonStream);
-    importData(jsonString, collection);
+    try (InputStreamReader stream = new InputStreamReader(jsonStream, Charsets.UTF_8)) {
+      String jsonString = CharStreams.toString(stream);
+      importData(jsonString, collection);
+    }
   }
   
   /**

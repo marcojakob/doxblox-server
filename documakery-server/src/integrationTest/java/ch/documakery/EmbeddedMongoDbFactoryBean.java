@@ -9,14 +9,22 @@ import org.springframework.stereotype.Component;
 
 import com.mongodb.Mongo;
 
+import de.flapdoodle.embed.mongo.Command;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.ArtifactStoreBuilder;
+import de.flapdoodle.embed.mongo.config.DownloadConfigBuilder;
 import de.flapdoodle.embed.mongo.config.MongodConfig;
-import de.flapdoodle.embed.mongo.config.RuntimeConfig;
+import de.flapdoodle.embed.mongo.config.MongodProcessOutputConfig;
+import de.flapdoodle.embed.mongo.config.RuntimeConfigBuilder;
 import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.config.IRuntimeConfig;
 import de.flapdoodle.embed.process.extract.UserTempNaming;
+import de.flapdoodle.embed.process.io.directories.PropertyOrPlatformTempDir;
+import de.flapdoodle.embed.process.runtime.ICommandLinePostProcessor;
 import de.flapdoodle.embed.process.runtime.Network;
+import de.flapdoodle.embed.process.store.IArtifactStore;
 
 /**
  * EmbeddedMongoDbFactoryBean creates a MongoDbFactory with an embedded mongo instance.
@@ -33,11 +41,22 @@ public class EmbeddedMongoDbFactoryBean implements FactoryBean<MongoDbFactory> {
   private static MongodProcess mongod;
 
   public void init() throws IOException {
-    MongodConfig config = new MongodConfig(Version.Main.V2_2, PORT, Network.localhostIsIPv6());
+    MongodConfig config = new MongodConfig(Version.Main.V2_4, PORT, Network.localhostIsIPv6());
     
-    RuntimeConfig runtimeConfig = new RuntimeConfig();
-    // Set executable naming to be the same for every run so we don't need to confirm the firewall dialog
-    runtimeConfig.setExecutableNaming(new UserTempNaming());
+    // Set executable naming to be the same for every run so we don't need to confirm the firewall dialog$
+    // Everything is same as ArtifactStoreBuilder#defaults(Command.MongoD).
+    IArtifactStore artifactStore = new ArtifactStoreBuilder()
+      .tempDir(new PropertyOrPlatformTempDir())
+      .executableNaming(new UserTempNaming())
+      .download(new DownloadConfigBuilder().defaultsForCommand(Command.MongoD))
+      .cache(false) 
+      .build();
+    
+    IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+        .processOutput(MongodProcessOutputConfig.getDefaultInstance())
+        .commandLinePostProcessor(new ICommandLinePostProcessor.Noop())
+        .artifactStore(artifactStore)
+        .build();
     
     // Set up Logging
 //    runtimeConfig.setProcessOutput(new ProcessOutput(Processors.logTo(LOG, Level.INFO),
@@ -51,9 +70,6 @@ public class EmbeddedMongoDbFactoryBean implements FactoryBean<MongoDbFactory> {
   public void destroy() {
     if (mongod != null) {
       mongod.stop();
-    }
-    if (mongodExec != null) {
-      mongodExec.stop();
     }
   }
 
