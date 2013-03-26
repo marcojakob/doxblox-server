@@ -17,6 +17,7 @@
 		<mvc:message-converters register-defaults="true">
 			<bean
 				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<!--ObjectMapper used for serializing MongoDb's ObjectId -->
 				<property name="objectMapper">
 					<bean class="ch.documakery.web.json.MyObjectMapper"></bean>
 				</property>
