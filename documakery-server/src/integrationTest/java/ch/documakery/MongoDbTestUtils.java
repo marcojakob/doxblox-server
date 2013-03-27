@@ -3,12 +3,16 @@ package ch.documakery;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.codec.Base64;
 
 import ch.documakery.domain.document.DocumentFolder;
 
@@ -30,7 +34,7 @@ public class MongoDbTestUtils {
   public static final ObjectId USER1_ID = new ObjectId("111111111111111111111111");
   public static final String USER1_EMAIL = "user1@example.com";
   public static final String USER1_NICKNAME = "nicknameUser1";
-  public static final String USER1_PASSWORD = "p@ssw0rdUser1";
+  public static final String USER1_PASSWORD = "p@sswördUser1";
   
   public static final ObjectId USER2_ID = new ObjectId("222222222222222222222222");
   public static final String USER2_EMAIL = "user2@example.com";
@@ -182,4 +186,27 @@ public class MongoDbTestUtils {
     return json;
   }
   
+  /**
+   * Helper method to create HTTP Basic Authentication Header String.
+   * 
+   * @param username
+   * @param password
+   * @return
+   */
+  public static String createBasicAuthHeader(String username, String password) {
+    String authorization = username + ":" + password;
+    String basic = new String(Base64.encode(authorization.getBytes(Charset.forName("UTF-8"))));
+    return "Basic " + basic;
+  }
+  
+  /**
+   * Hashes the specified password with BCrypt. The strength is the default (10), see
+   * {@link BCrypt#GENSALT_DEFAULT_LOG2_ROUNDS}.
+   * 
+   * @param rawPassword
+   * @return
+   */
+  public static String hashWithBCrypt(String rawPassword) {
+    return new BCryptPasswordEncoder().encode(rawPassword);
+  }
 }

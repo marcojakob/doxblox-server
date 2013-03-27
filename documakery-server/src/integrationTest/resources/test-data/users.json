@@ -6,7 +6,7 @@
   "email" : "user1@example.com",
   "emailConfirmed" : true,
   "nickname" : "nicknameUser1",
-  "password" : "$2a$10$qcYQfAt0.dtaQmunbrM2/eYfsU92PXOwS7qJ2HA7l4UkQN4y9vfvK",
+  "password" : "$2a$10$gyYcAmmdLOmyXP03pTHr/udwTbUzhYtCVcFfqJC42NJJkXgZI2t3K",
   "authorities" : [ ],
   "accountNonExpired" : true,
   "accountNonLocked" : true,
