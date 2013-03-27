@@ -17,7 +17,9 @@
 	<security:http pattern="/angular/**" security="none" />
 
 	<security:http pattern="/**" create-session="never" entry-point-ref="restAuthenticationEntryPoint">
-		<!-- Add the login digest filter to the Spring Security filter chain -->
+		<!-- Add the basic auth filter to the Spring Security filter chain -->
+		<security:custom-filter ref="basicAuthFilter" position="BASIC_AUTH_FILTER" />
+		<!-- Add the login filter to the Spring Security filter chain -->
 		<security:custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER" />
 		<!-- Add the logout filter to the Spring Security filter chain -->
 		<security:logout logout-url="/logout" delete-cookies="true"
@@ -39,6 +41,11 @@
 	<!-- Configure the authentication entry point -->
 	<bean id="restAuthenticationEntryPoint"
 		class="ch.documakery.security.authentication.RestAuthenticationEntryPoint" />
+
+	<!-- Configure a custom basic auth filter bean -->
+    <bean id="basicAuthFilter" class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+        <constructor-arg name="authenticationManager" ref="authenticationManager"/>
+    </bean>
 
 	<!-- Configure a custom login filter bean -->
     <bean id="loginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">

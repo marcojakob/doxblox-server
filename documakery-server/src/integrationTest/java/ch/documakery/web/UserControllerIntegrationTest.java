@@ -18,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -55,12 +56,46 @@ public class UserControllerIntegrationTest {
   public void setUp() throws Exception {
     mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter(springSecurityFilterChain)
-//            .alwaysDo(MockMvcResultHandlers.print()) 
+            .alwaysDo(MockMvcResultHandlers.print()) 
             .build();
     
     MongoDbTestUtils.cleanDb(template);
   }
   
+  @Test
+  public void GETusers_BasicAuthHeaderAndCorrectCredentials_ReturnsOk() throws Exception {
+    // given
+    MongoDbTestUtils.importTestUsers(template);
+    
+    // when
+    mockMvc.perform(get("/users")
+        .header("Authorization", MongoDbTestUtils.createBasicAuthHeader(
+            MongoDbTestUtils.USER1_EMAIL, MongoDbTestUtils.USER1_PASSWORD))
+        .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
+    )
+    // then
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$.email", is(MongoDbTestUtils.USER1_EMAIL)));
+  }
+  
+  @Test
+  public void GETusers_BasicAuthHeaderAndIncorrectCredentials_ReturnsUnauthorized() throws Exception {
+    // given
+    MongoDbTestUtils.importTestUsers(template);
+    
+    // when
+    mockMvc.perform(get("/users")
+        .header("Authorization", MongoDbTestUtils.createBasicAuthHeader(
+            MongoDbTestUtils.USER1_EMAIL, "wrongPassword"))
+            .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
+        )
+        // then
+        .andExpect(status().isUnauthorized());
+  }
+
+
+
   @Test
   public void GETusers_AsUser_ReturnsUserAsJson() throws Exception {
     // given
@@ -75,7 +110,6 @@ public class UserControllerIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.email", is(MongoDbTestUtils.USER1_EMAIL)));
-    
   }
 
   @Test
