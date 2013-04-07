@@ -1,4 +1,5 @@
 .settings/
 packages/
+web/out/
 .project
 .buildlog

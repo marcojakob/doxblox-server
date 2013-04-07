@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>documakery</title>
+  
+    <!-- Import Twitter Bootstrap css files 
+    -->   
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.0.2/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="documakery_client.css">
+    
+    <!-- import the web components -->
+    <link rel="components" href="packages/widget/components/dropdown.html">
+  </head>
+  <body>
+    <div id="header" class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <a class="brand" href="#">documakery</a>
+        <ul class="nav">
+          <li class="active"><a href="#"><i class="icon-home"></i> Home</a></li>
+          <li><a href="#">Link</a></li>
+          <li><a href="#">Link</a></li>
+        </ul>
+        <ul class="nav pull-right">
+          <x-dropdown>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Item 1</a></li>
+              <li><a href="#">Item 2</a></li>
+            </ul>
+          </x-dropdown>        
+        </ul>
+      </div>
+    </div>
+    
+    <div id="split-container" class="content"> 
+      <div id="content-navigation" class="content-navigation">
+        navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column 
+      </div>
+      <div id="content-digest" class="content-digest">
+        navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column 
+      </div>
+      <div id="content-editor" class="content-editor">
+        content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column content column 
+      </div>
+    </div>
+    
+    <script type="application/dart" src="documakery_client.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
