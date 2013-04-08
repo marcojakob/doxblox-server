@@ -1,8 +1,5 @@
 html, body {
   overflow: hidden;
-  margin: 0;
-  padding: 0;
-  height: 100%;
 }
 
 .content-navigation, .content-digest, .content-editor {
@@ -46,4 +43,80 @@ html, body {
   -webkit-user-select: none;
   user-select: none;
   cursor: default;
+}
+
+/**************************** x-dropdown in nav ***************************/
+.navbar .nav > x-dropdown {
+  float: left;
+}
+
+x-dropdown a.dropdown-toggle {
+  display: block;
+  float: none;
+  padding: 10px 15px 10px;
+  color: #777;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.navbar .nav > x-dropdown .dropdown-toggle .caret {
+  border-top-color: #777;
+  border-bottom-color: #777;
+}
+
+.navbar .nav > x-dropdown .dropdown-menu:before {
+  position: absolute;
+  top: -7px;
+  left: 9px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
+
+.navbar .nav > x-dropdown .dropdown-menu:after {
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  display: inline-block;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+  border-left: 6px solid transparent;
+  content: '';
+}
+
+.navbar .nav.pull-right > x-dropdown .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+.navbar .pull-right > x-dropdown .dropdown-menu,
+.navbar .nav > x-dropdown .dropdown-menu.pull-right {
+  right: 0;
+  left: auto;
+}
+
+.navbar .pull-right > x-dropdown .dropdown-menu:before,
+.navbar .nav > x-dropdown .dropdown-menu.pull-right:before {
+  right: 12px;
+  left: auto;
+}
+
+.navbar .pull-right > x-dropdown .dropdown-menu:after,
+.navbar .nav > x-dropdown .dropdown-menu.pull-right:after {
+  right: 13px;
+  left: auto;
+}
+
+.navbar .pull-right > x-dropdown .dropdown-menu .dropdown-menu,
+.navbar .nav > x-dropdown .dropdown-menu.pull-right .dropdown-menu {
+  right: 100%;
+  left: auto;
+  margin-right: -1px;
+  margin-left: 0;
+  -webkit-border-radius: 6px 0 6px 6px;
+     -moz-border-radius: 6px 0 6px 6px;
+          border-radius: 6px 0 6px 6px;
 }
