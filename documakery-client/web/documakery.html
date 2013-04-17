@@ -10,10 +10,18 @@
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.0.2/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="documakery_client.css">
+    <link rel="stylesheet" href="documakery.css">
+    
+    <!-- JS Tree -->
+    <!-- TODO: Remove dependency on jquery and jstree. 
+         Hopefully there will be a Tree widget in dart soon. -->
+    <script type="text/javascript" src="resources/jquery/jquery.js"></script>
+    <script type="text/javascript" src="resources/jquery/jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="resources/jstree/jquery.jstree.js"></script>
     
     <!-- import the web components -->
     <link rel="components" href="packages/widget/components/dropdown.html">
+    <link rel="components" href="ui/navigation/tree_view.html">
   </head>
   <body>
     <div id="header" class="navbar navbar-fixed-top">
@@ -25,20 +33,39 @@
           <li><a href="#">Link</a></li>
         </ul>
         <ul class="nav pull-right">
-          <x-dropdown>
+          <div is="x-dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="#">Item 1</a></li>
               <li><a href="#">Item 2</a></li>
             </ul>
-          </x-dropdown>        
+          </div>        
         </ul>
       </div>
     </div>
     
     <div id="split-container" class="content"> 
       <div id="content-navigation" class="content-navigation">
-        navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column 
+        <h5>Libraries</h5>
+        <ul class="unstyled">
+          <li><a href="#">Public Library</a></li>
+          <li><a href="#">Private Library</a></li>
+        </ul>
+        <h5>Documents</h5>
+        <div id="document-tree" is="tree-view">
+          <ul>
+            <li id="a">
+              <a href="#">Test Project</a>
+              <ul>
+                <li id="a1"><a href="#">Source File 1</a></li>
+                <li id="a2"><a href="#">Header File 1</a></li>
+              </ul>
+            </li>
+            <li id="b">
+              <a href="#">My Project 2</a>
+            </li>
+          </ul>
+        </div>
       </div>
       <div id="content-digest" class="content-digest">
         navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column navigation column 
@@ -48,7 +75,7 @@
       </div>
     </div>
     
-    <script type="application/dart" src="documakery_client.dart"></script>
+    <script type="application/dart" src="documakery.dart"></script>
     <script src="packages/browser/dart.js"></script>
   </body>
 </html>

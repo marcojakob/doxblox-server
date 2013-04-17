@@ -1,8 +1,17 @@
 import 'dart:html';
 import 'package:web_ui/web_ui.dart';
-import 'split_panel.dart';
+import 'dart:async';
+import 'ui/split_panel.dart';
+import 'ui/navigation/tree_view.dart';
 
 void main() {
+  // defer until the end of the event loop so that web components are loaded first
+  Timer.run(init);
+}
+
+init() {
+  TreeView documentTree = query('#document-tree').xtag;
+  documentTree.onNodeSelect.listen((id) => print(id));
   new LayoutManager();
 }
 
