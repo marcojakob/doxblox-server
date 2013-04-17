@@ -1,5 +1,13 @@
 .settings/
-packages/
-web/out/
 .project
 .buildlog
+packages/
+web/out/
+*.iml
+*.ipr
+*.iws
+.idea/
+*.dart.js
+*.js_
+*.js.deps
+*.js.map

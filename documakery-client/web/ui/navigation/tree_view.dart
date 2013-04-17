@@ -1,9 +1,16 @@
+library tree_view;
+
 import 'dart:async';
 import 'package:web_ui/web_ui.dart';
 import 'package:js/js.dart' as js;
 
 /**
  * A TreeView widget that wraps jsTree.
+ * 
+ * The following javascript libraries must be present:
+ * * jquery.jstree.js (version 1.0)
+ * * jquery.js
+ * * jquery.hotkeys.js
  * 
  * TODO: Replace jsTree with a Dart tree implementation.
  */
@@ -37,7 +44,7 @@ class TreeView extends WebComponent {
       }
     });
     
-    js.context.jQuery('#tree-host').jstree(options);
+    js.context.jQuery(_root).jstree(options);
   }
   
   /**
@@ -54,7 +61,7 @@ class TreeView extends WebComponent {
       });
       
       // Bind the callback function to the select node event.
-      js.context.jQuery('#tree-host').bind('select_node.jstree', nodeSelectCallback);  
+      js.context.jQuery(_root).bind('select_node.jstree', nodeSelectCallback);  
       
       _onNodeSelect = controller.stream;
     }
