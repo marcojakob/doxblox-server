@@ -19,16 +19,9 @@ class TreeView extends WebComponent {
   Stream<String> _onNodeSelect;
   
   /**
-   * Lifecycle method invoked whenever a component is added to the DOM.
-   */
-  inserted() {
-    _initJSTree();
-  }
-  
-  /**
    * Initialize the jsTree.
    */
-  void _initJSTree() {
+  void initTree() {
     var options = js.map({
       "plugins" : ["themes","html_data","ui","crrm","hotkeys","dnd"], 
       "core" : { 
@@ -48,7 +41,8 @@ class TreeView extends WebComponent {
   }
   
   /**
-   * Returns the stream of selected nodes. The stream contains the id attribute of the selected nodes.
+   * Returns the stream of selected nodes. The stream contains the id attribute 
+   * of the selected nodes.
    */
   Stream<String> get onNodeSelect {
     // lazy initialization

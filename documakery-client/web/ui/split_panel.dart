@@ -157,8 +157,8 @@ class SplitPanelContainer {
 }
 
 /**
- * A [SplitPanel] contains a [DivElement] with the panels content and a ratio for the relative 
- * size to other panels.
+ * A [SplitPanel] contains a [DivElement] with the panels content and a ratio 
+ * for the relative size to other panels.
  */
 class SplitPanel {
   // User provided container element to be placed in the panel's content area
@@ -172,8 +172,8 @@ class SplitPanel {
   int _cachedHeight = 0;
   
   /**
-   * Creates a [SplitPanel] for the [contentElement]. The [ratio] determines the initial
-   * size, relative to other panels. 
+   * Creates a [SplitPanel] for the [contentElement]. The [ratio] determines 
+   * the initial size, relative to other panels. 
    */
   SplitPanel(this.contentElement, this.ratio) {
     contentElementHost = new DivElement();

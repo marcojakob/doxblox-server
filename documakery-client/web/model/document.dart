@@ -1,6 +1,4 @@
-library document;
-
-import 'dart:json' as json;
+part of models;
 
 /**
  * Model object for a folder that contains documents or other child folders.
@@ -14,14 +12,17 @@ class DocumentFolder {
   String parentId;
   List<String> documentIds;
   
-  DocumentFolder(this.id, this.name, this.parentId, this.documentIds) {
+  /**
+   * Default constructor.
+   */
+  DocumentFolder() {
   }
   
   /**
    * Constructs a [DocumentFolder] from a JSON String.
    */
-  DocumentFolder.fromJson(String folderJson) {
-    var folder = json.parse(folderJson);
+  DocumentFolder.fromJson(String jsonString) {
+    var folder = json.parse(jsonString);
     id = folder['id'];
     name = folder['name'];
     parentId = folder['parentId'];
@@ -40,4 +41,6 @@ class DocumentFolder {
     };
   }
 }
+
+
 

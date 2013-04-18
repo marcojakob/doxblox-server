@@ -5,57 +5,39 @@ import 'dart:async';
 import 'package:web_ui/web_ui.dart';
 
 import 'tree_view.dart';
-import '../../model/document.dart';
+import '../../model/models.dart';
 
 class NavigationView extends WebComponent {
-  Element documentTreeElement;
-  TreeView documentTree;
+  Element documentFolderTreeElement;
+  TreeView documentFolderTree;
   
   /**
    * Lifecycle method invoked whenever a component is added to the DOM.
    */
   inserted() {
-    documentTreeElement = query('#document-tree');
-    documentTree = documentTreeElement.xtag;
-    
-    refreshView(_createDummyFolders());
-    
-    // defer until the end of the event loop so that web components are loaded first
-    Timer.run(() {
-      // Just for testing
-      documentTree.onNodeSelect.listen((id) => print(id));
-    });
-  }
-  
-  List<DocumentFolder> _createDummyFolders() {
-    return [
-        new DocumentFolder('1', '1', null, ['3333', '4444']),     
-        new DocumentFolder('1.1', '1.1', '1', ['3333', '4444']),     
-        new DocumentFolder('1.1.1', '1.1.1', '1.1', ['3333', '4444']),     
-        new DocumentFolder('1.1.2', '1.1.2', '1.1', ['3333', '4444']),     
-        new DocumentFolder('1.2', '1.2', '1', ['3333', '4444']),     
-        new DocumentFolder('1.3', '1.3', '1', ['3333', '4444']),     
-    ];
+    documentFolderTreeElement = query('#document-tree');
+    documentFolderTree = documentFolderTreeElement.xtag;
   }
   
   /**
    * Refreshes the view.
    */
-  void refreshView(List<DocumentFolder> folders) {
+  void refreshDocumentFolderTree(List<DocumentFolder> folders) {
     if (folders == null || folders.isEmpty) {
-      documentTreeElement = null;
+      documentFolderTreeElement = null;
       return;
     }
-    var builder = new DocumentTreeBuilder(folders);
-    builder.buildTree(documentTreeElement);
+    var builder = new DocumentFolderTreeBuilder(folders);
+    builder.buildHtmlTree(documentFolderTreeElement);
+    documentFolderTree.initTree();
   }
 }
 
 
 /**
- * Builds a document tree.
+ * Builds a document folder tree.
  */
-class DocumentTreeBuilder {
+class DocumentFolderTreeBuilder {
   /// Map with folder id as key and the list of child folders as value.
   Map<String, List<DocumentFolder>> _childFolderMap = new Map();
   
@@ -66,7 +48,7 @@ class DocumentTreeBuilder {
    * Constructs a tree builder for the specified [folders]. The [folders] must 
    * have exactly one root folder, i.e. a folter with parentId == null.
    */
-  DocumentTreeBuilder(List<DocumentFolder> folders) {
+  DocumentFolderTreeBuilder(List<DocumentFolder> folders) {
     _initChildFolderMapAndRoot(folders);
   }
   
@@ -74,7 +56,7 @@ class DocumentTreeBuilder {
    * Builds a tree with a hierarchical html list and adds it 
    * as a child to the [hostElement].
    */
-  void buildTree(Element hostElement) {
+  void buildHtmlTree(Element hostElement) {
     // Create a new <ul> element for the root.
     var rootUListElement = new UListElement();
     hostElement.children.add(rootUListElement);

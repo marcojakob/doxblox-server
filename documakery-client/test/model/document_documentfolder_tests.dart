@@ -1,8 +1,9 @@
 library document_tests;
 
-import 'package:unittest/unittest.dart';
 import 'dart:json' as json;
-import '../../web/model/document.dart';
+
+import 'package:unittest/unittest.dart';
+import '../../web/model/models.dart';
 
 const String DOCUMENT_FOLDER_JSON = '''
 {
@@ -16,7 +17,11 @@ const String DOCUMENT_FOLDER_JSON = '''
 }
 ''';
 
-constructorFromJson() {
+main() {
+  
+group('DocumentFolder Tests:', () {
+
+test('constructorFromJson_AllAttributesSet_ReturnsFolder', () {
   // when
   DocumentFolder folder = new DocumentFolder.fromJson(DOCUMENT_FOLDER_JSON);
   
@@ -28,23 +33,38 @@ constructorFromJson() {
   expect(folder.documentIds, equals([ 
     "51267930f5c7f925eaae04d1",
     "51267930f5c7f925eaae04d7"]));
-}
+});
 
-toJson_ViaJsonStringify() {
+test('constructorFromJson_EmptyJsonString_ReturnsFolderWithNullValues', () {
+  // when
+  DocumentFolder folder = new DocumentFolder.fromJson('{}');
+  
+  // then
+  expect(folder.id, isNull);
+  expect(folder.name, isNull);
+  expect(folder.parentId, isNull);
+  expect(folder.documentIds, isNull);
+});
+
+test('toJsonViaStringify_AllAttributesSet_ReturnsJsonString', () {
   // given
-  DocumentFolder folder = new DocumentFolder('1111', 'class 2d', '9999', ['3333', '4444']);
+  DocumentFolder folder = new DocumentFolder()
+      ..id = '1111'
+      ..name = 'class 2d'
+      ..parentId = '9999'
+      ..documentIds = ['3333', '4444'];
   
   // when
   String jsonString = json.stringify(folder);
   
   // then
-  expect(jsonString, equals('{"id":"1111","name":"class 2d","parentId":"9999","documentIds":["3333","4444"]}'));
-}
-
-main() {
-  group('DocumentFolder tests:', () {
-    test('constructorFromJson', constructorFromJson);
-    test('toJson_ViaJsonStringify', toJson_ViaJsonStringify);
-  });
+  DocumentFolder reconvertedFolder = new DocumentFolder.fromJson(jsonString);
+  expect(folder.id, equals('1111'));
+  expect(folder.name, equals('class 2d'));
+  expect(folder.parentId, equals('9999'));
+  expect(folder.documentIds, isList);
+  expect(folder.documentIds, equals(["3333", "4444"]));
+});
+});
 }
 

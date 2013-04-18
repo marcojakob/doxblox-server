@@ -5,7 +5,7 @@ import 'package:web_ui/web_ui.dart';
 
 import 'digest_cell.dart';
 
-import '../../model/document.dart';
+import '../../model/models.dart';
 
 class DigestView extends WebComponent {
   

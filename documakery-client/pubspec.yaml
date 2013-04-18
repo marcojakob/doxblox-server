@@ -2,8 +2,9 @@ name: documakery
 version: 0.0.1
 description: web client for documakery
 dependencies:
+  unittest: any
+  json_object: any
+  js: any
   browser: any
   web_ui: any
   widget: any
-  js: any
-  unittest: any
