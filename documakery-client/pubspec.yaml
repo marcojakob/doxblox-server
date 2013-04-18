@@ -7,4 +7,5 @@ dependencies:
   js: any
   browser: any
   web_ui: any
-  widget: any
+  widget:
+    git: kevmoo/widget.dart
