@@ -4,19 +4,19 @@ import 'dart:html';
 import 'dart:async';
 import 'package:web_ui/web_ui.dart';
 
-import 'tree_view.dart';
 import '../../model/models.dart';
 
 class NavigationView extends WebComponent {
-  Element documentFolderTreeElement;
+  // Cannot import [TreeView] because it creates ambiguity. TreeView 
+  // is automatically added through the reference in navigation_view.html.
+  // See also [issue 237](https://github.com/dart-lang/web-ui/issues/237)
   TreeView documentFolderTree;
   
   /**
    * Lifecycle method invoked whenever a component is added to the DOM.
    */
   inserted() {
-    documentFolderTreeElement = query('#document-tree');
-    documentFolderTree = documentFolderTreeElement.xtag;
+    documentFolderTree = query('#document-tree').xtag;
   }
   
   /**
@@ -24,11 +24,11 @@ class NavigationView extends WebComponent {
    */
   void refreshDocumentFolderTree(List<DocumentFolder> folders) {
     if (folders == null || folders.isEmpty) {
-      documentFolderTreeElement = null;
+      documentFolderTree.host = null;
       return;
     }
     var builder = new DocumentFolderTreeBuilder(folders);
-    builder.buildHtmlTree(documentFolderTreeElement);
+    builder.buildHtmlTree(documentFolderTree.host);
     documentFolderTree.initTree();
   }
 }

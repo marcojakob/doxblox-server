@@ -3,9 +3,8 @@ version: 0.0.1
 description: web client for documakery
 dependencies:
   unittest: any
-  json_object: any
   js: any
   browser: any
   web_ui: any
   widget:
-    git: kevmoo/widget.dart
+    git: https://github.com/kevmoo/widget.dart.git

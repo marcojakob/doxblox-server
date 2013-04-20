@@ -1,10 +1,9 @@
 library documakery;
 
 import 'dart:html';
-import 'package:web_ui/web_ui.dart';
 import 'dart:async';
+import 'package:web_ui/web_ui.dart';
 
-import 'ui/split_panel.dart';
 import 'ui/navigation/navigation_view.dart';
 import 'ui/digest/digest_view.dart';
 import 'ui/editor/editor_view.dart';
@@ -24,10 +23,11 @@ void main() {
   // defer until the end of the event loop so that web components are loaded first
   Timer.run(() {
     Element header = query("#header");
-    Element baseContainerElement = query("#split-container");
     
-    NavigationView navigationView = query('#navigation-view').xtag;
+    var baseContainer = query("#base-container").xtag;
+    
     DigestView digestView = query('#digest-view').xtag;
+    NavigationView navigationView = query('#navigation-view').xtag;
     EditorView editorView = query('#editor-view').xtag;
     
     // ////////////////////////////////////
@@ -36,7 +36,7 @@ void main() {
     DataAccess dataAccess = new MockDataAccess();
     
     // Initialize the controller.
-    _appController = new AppController(header, baseContainerElement, 
+    _appController = new AppController(header, baseContainer, 
         navigationView, digestView, editorView, dataAccess);
     
     appController.buildUi();

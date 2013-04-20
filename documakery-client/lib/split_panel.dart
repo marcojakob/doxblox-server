@@ -4,23 +4,37 @@ import 'dart:html';
 import 'dart:math' as math;
 import 'dart:async';
 
+import 'package:web_ui/web_ui.dart';
+
 /**
  * A panel that adds user-positioned splitters between each of its child panels.
  * It can be stacked horizontally or vertically.
  * 
  * This is a simplified version of the splitter_panel from [Dock Spawn](http://www.dockspawn.com/).
  */  
-class SplitPanelContainer {
+class SplitPanel extends WebComponent {
   const String CSS_SPLIT_PANEL_VERTICAL = "splitpanel-vertical";
   const String CSS_SPLIT_PANEL_HORIZONTAL = "splitpanel-horizontal";
   
-  DivElement containerElement;
-  List<SplitPanel> childPanels;
+  List<Panel> childPanels;
   List<SplitBar> splitBars;
-  bool stackedVertical;
+  bool stackedVertical = false;
   
-  SplitPanelContainer(this.containerElement, this.childPanels, {this.stackedVertical: false}) {
+  /**
+   * Lifecycle method invoked whenever a component is added to the DOM.
+   */
+  inserted() {
+    childPanels = new List<Panel>();
     splitBars = new List<SplitBar>();
+    
+    // Get all children that were passed to the component
+    // only SplitPanelChild components are allowed
+    for (Element splitPanelChild in host.children) {
+      // Get specified 'ratio' attribute and create a new child [Panel]
+      num ratio = splitPanelChild.xtag.ratio;
+      childPanels.add(new Panel(splitPanelChild, ratio));
+    }
+    
     _buildSplitPanelDOM();
     performLayoutWithRatios();
   }
@@ -37,15 +51,15 @@ class SplitPanelContainer {
       
       // Add the div element and split bar to the panel's base div element
       _insertIntoBaseElement(previousPanel);
-      containerElement.nodes.add(splitterBar.barElement);
+      host.nodes.add(splitterBar.barElement);
     }
     _insertIntoBaseElement(childPanels.last);
   }
 
-  void _insertIntoBaseElement(SplitPanel panel) {
-    panel.contentElementHost.remove();
-    containerElement.nodes.add(panel.contentElementHost);
-    panel.contentElementHost.classes.add(stackedVertical ? CSS_SPLIT_PANEL_VERTICAL : CSS_SPLIT_PANEL_HORIZONTAL);
+  void _insertIntoBaseElement(Panel panel) {
+    panel.contentElement.remove();
+    host.nodes.add(panel.contentElement);
+    panel.contentElement.classes.add(stackedVertical ? CSS_SPLIT_PANEL_VERTICAL : CSS_SPLIT_PANEL_HORIZONTAL);
   }
   
   /**
@@ -60,7 +74,7 @@ class SplitPanelContainer {
       totalRatios += panel.ratio;
     });
     
-    int containerSize = stackedVertical ? containerElement.clientHeight : containerElement.clientWidth;
+    int containerSize = stackedVertical ? host.clientHeight : host.clientWidth;
     int barSize = stackedVertical ? splitBars[0].height : splitBars[0].width;
     int totalBarSize = splitBars.length * barSize;
     
@@ -143,7 +157,7 @@ class SplitPanelContainer {
     if (roundingError != 0) {
       // Add rounding error pixels to a panel. Panels receiving the pixels should take turns. 
       var childIndex = targetTotalChildPanelSize % (childPanels.length);
-      SplitPanel child = childPanels[childIndex];
+      Panel child = childPanels[childIndex];
       if (stackedVertical) {
         child.height += roundingError;
       } else {
@@ -151,20 +165,17 @@ class SplitPanelContainer {
       }
     }
     
-    containerElement.style.width = "${width}px";
-    containerElement.style.height = "${height}px";
+    host.style.width = "${width}px";
+    host.style.height = "${height}px";
   }
 }
 
 /**
- * A [SplitPanel] contains a [DivElement] with the panels content and a ratio 
+ * A [Panel] contains a [DivElement] with the panels content and a ratio 
  * for the relative size to other panels.
  */
-class SplitPanel {
-  // User provided container element to be placed in the panel's content area
+class Panel {
   DivElement contentElement;
-  // Host element containing the content element.
-  DivElement contentElementHost;
   
   final num ratio;
   
@@ -172,19 +183,17 @@ class SplitPanel {
   int _cachedHeight = 0;
   
   /**
-   * Creates a [SplitPanel] for the [contentElement]. The [ratio] determines 
+   * Creates a [Panel] for the [contentElement]. The [ratio] determines 
    * the initial size, relative to other panels. 
    */
-  SplitPanel(this.contentElement, this.ratio) {
-    contentElementHost = new DivElement();
-    contentElementHost.nodes.add(contentElement);
+  Panel(this.contentElement, this.ratio) {
   }
   
   int get width => _cachedWidth;
   set width(int value) {
     if (_cachedWidth != value) {
       _cachedWidth = value;
-      contentElementHost.style.width = "${value}px";
+      contentElement.style.width = "${value}px";
     }
   }
   
@@ -192,7 +201,7 @@ class SplitPanel {
   set height(int value) {
     if (_cachedHeight != value) {
       _cachedHeight = value;
-      contentElementHost.style.height = "${value}px";
+      contentElement.style.height = "${value}px";
     }
   }
 }
@@ -207,8 +216,8 @@ class SplitBar {
   const String CSS_SPLIT_BAR_VERTICAL = "splitbar-vertical";
   const String CSS_DISABLE_SELECTION = "disable-selection";
   
-  SplitPanel previousPanel; // The panel to the left/top side of the bar, depending on the bar orientation
-  SplitPanel nextPanel;     // The panel to the right/bottom side of the bar, depending on the bar orientation
+  Panel previousPanel; // The panel to the left/top side of the bar, depending on the bar orientation
+  Panel nextPanel;     // The panel to the right/bottom side of the bar, depending on the bar orientation
   DivElement barElement;
   bool stackedVertical;
   StreamSubscription<MouseEvent> mouseMovedHandler;

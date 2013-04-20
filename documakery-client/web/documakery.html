@@ -22,6 +22,8 @@
     <!-- import the web components -->
     <link rel="components" href="packages/widget/components/dropdown.html">
     
+    <link rel="components" href="packages/documakery/split_panel.html">
+    <link rel="components" href="packages/documakery/split_panel_child.html">
     <link rel="components" href="ui/navigation/navigation_view.html">
     <link rel="components" href="ui/digest/digest_view.html">
     <link rel="components" href="ui/editor/editor_view.html">
@@ -47,11 +49,17 @@
       </div>
     </div>
     
-    <div id="split-container"> 
-      <navigation-view id="navigation-view" class="navigation-view"></navigation-view>
-      <digest-view id="digest-view" class="digest-view"></digest-view>
-      <editor-view id="editor-view" class="editor-view"></editor-view>
-    </div>
+    <split-panel id="base-container" stacked-vertical="{{false}}">
+      <split-panel-child ratio="{{0.2}}">
+        <navigation-view id="navigation-view" class="navigation-view"></navigation-view>
+      </split-panel-child>
+      <split-panel-child ratio="{{0.2}}">
+        <digest-view id="digest-view" class="digest-view"></digest-view>
+      </split-panel-child>
+      <split-panel-child ratio="{{0.6}}">
+        <editor-view id="editor-view" class="editor-view"></editor-view>
+      </split-panel-child>
+    </split-panel>
     
     <script type="application/dart" src="documakery.dart"></script>
     <script src="packages/browser/dart.js"></script>
