@@ -30,7 +30,9 @@ void main() {
     DigestView digestView = query('#digest-view').xtag;
     EditorView editorView = query('#editor-view').xtag;
     
-    // TODO: Replace with REST data access
+    // ////////////////////////////////////
+    // TODO: Replace Mock with REST data access
+    // /////////////////////////////////////
     DataAccess dataAccess = new MockDataAccess();
     
     // Initialize the controller.
