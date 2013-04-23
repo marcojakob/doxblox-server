@@ -37,14 +37,17 @@ class AppController {
   }
   
   void handleDocumentSelectNode(var selectedNode) {
-    print('selected: ${selectedNode.attr("id")}');
+    Document selectedDoc = dataAccess.getDocumentById(selectedNode.attr('id'));
     
-    QuestionBlock block = new QuestionBlock()
-    ..id = selectedNode.attr('id')
-    ..title = 'Lorem ipsum dolor sit amet'
-    ..introduction = 'consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    ..libraryType = 'PUBLIC';
-    digestView.setDigests([block, block, block, block, block, block]);
+    List<QuestionBlock> blocks = 
+        dataAccess.getQuestionBlocksByIds(selectedDoc.documentBlockIds);
+    
+    digestView.setDigests(blocks);
+//    QuestionBlock block = new QuestionBlock()
+//    ..id = selectedNode.attr('id')
+//    ..title = 'Lorem ipsum dolor sit amet'
+//    ..introduction = 'consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+//    ..libraryType = 'PUBLIC';
   }
   
   void handleDocumentFolderOpenNode(var selectedNode) {

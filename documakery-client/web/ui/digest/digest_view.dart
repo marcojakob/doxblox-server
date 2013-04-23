@@ -8,18 +8,23 @@ import 'digest_cell.dart';
 import '../../model/model.dart';
 
 class DigestView extends WebComponent {
+
+  DivElement digestContainer;
   
   /**
    * Lifecycle method invoked whenever a component is added to the DOM.
    */
   inserted() {
+    digestContainer = query('#digest-container');
   }
   
   /**
    * Sets and shows the digests.
    */
   void setDigests(List<QuestionBlock> questionBlocks) {
-    DivElement digestContainer = query('#digest-container');
+    // Delete all previous digests
+    digestContainer.children.clear();
+    
     for (QuestionBlock block in questionBlocks) {
       DigestCell cell = new DigestCell(block)
         ..host = new Element.html('<div is="digest-cell" class="digest"></div>');
