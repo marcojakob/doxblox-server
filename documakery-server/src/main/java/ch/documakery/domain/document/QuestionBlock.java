@@ -11,8 +11,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import ch.documakery.domain.document.question.Question;
 import ch.documakery.domain.document.question.Topic;
 
@@ -79,7 +77,6 @@ public class QuestionBlock implements DocumentBlock {
   /**
    * Reference to the user, i.e. owner.
    */
-  @JsonIgnore
   private ObjectId userId;
 
   public ObjectId getId() {

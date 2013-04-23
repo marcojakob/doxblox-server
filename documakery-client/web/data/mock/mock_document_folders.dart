@@ -1,42 +1,42 @@
-part of data_access;
+part of mock_data;
 
-List<DocumentFolder> mockDocumentFolders() {
-  return [
-      new DocumentFolder()
+Map<String, DocumentFolder> mockDocumentFolders() {
+  return {
+      '1' : new DocumentFolder()
       ..id='1' 
-      ..name='1' 
+      ..name='Folder 1' 
       ..parentId=null 
-      ..documentIds=['3333', '4444'],
+      ..documentIds=[],
       
-      new DocumentFolder()
-      ..id='1.1' 
-      ..name='1.1' 
+      '1-1' : new DocumentFolder()
+      ..id='1-1' 
+      ..name='Folder 1-1' 
       ..parentId='1'
-      ..documentIds=['3333', '4444'],
+      ..documentIds=['1'],
       
-      new DocumentFolder()
-      ..id='1.1.1' 
-      ..name='1.1.1' 
-      ..parentId='1.1'
-      ..documentIds=['3333', '4444'],
+      '1-1-1' : new DocumentFolder()
+      ..id='1-1-1' 
+      ..name='Folder 1-1-1' 
+      ..parentId='1-1'
+      ..documentIds=['1', '2'],
       
-      new DocumentFolder()
-      ..id='1.1.2' 
-      ..name='1.1.2' 
-      ..parentId='1.1'
-      ..documentIds=['3333', '4444'],
+      '1-1-2' : new DocumentFolder()
+      ..id='1-1-2' 
+      ..name='Folder 1-1-2' 
+      ..parentId='1-1'
+      ..documentIds=['1', '2', '3'],
       
-      new DocumentFolder()
-      ..id='1.2'
-      ..name='1.2' 
+      '1-2' : new DocumentFolder()
+      ..id='1-2'
+      ..name='Folder 1-2' 
       ..parentId='1'
-      ..documentIds=['3333', '4444'],
+      ..documentIds=['2', '3'],
       
-      new DocumentFolder()
-      ..id='1.3'
-      ..name='1.3' 
+      '1-3' : new DocumentFolder()
+      ..id='1-3'
+      ..name='Folder 1-3' 
       ..parentId='1'
-      ..documentIds=['3333', '4444']
-  ];
+      ..documentIds=[]
+  };
 }
 

@@ -1,15 +1,17 @@
 library navigation_view;
 
-import 'dart:html';
+import 'dart:html' hide Document;
 import 'dart:async';
 import 'package:web_ui/web_ui.dart';
 
-import '../../model/models.dart';
+// Cannot import [TreeView] because it creates ambiguity. TreeView 
+// is automatically added through the reference in navigation_view.html.
+// See also [issue 237](https://github.com/dart-lang/web-ui/issues/237)
+//import 'package:documakery/tree_view.dart';
+
+import '../../model/model.dart';
 
 class NavigationView extends WebComponent {
-  // Cannot import [TreeView] because it creates ambiguity. TreeView 
-  // is automatically added through the reference in navigation_view.html.
-  // See also [issue 237](https://github.com/dart-lang/web-ui/issues/237)
   TreeView documentFolderTree;
   
   /**
@@ -20,16 +22,17 @@ class NavigationView extends WebComponent {
   }
   
   /**
-   * Refreshes the view.
+   * Refreshes the tree.
    */
-  void refreshDocumentFolderTree(List<DocumentFolder> folders) {
+  void refreshDocumentFolderTree(List<DocumentFolder> folders, 
+                                 List<Document> documents) {
     if (folders == null || folders.isEmpty) {
       documentFolderTree.host = null;
       return;
     }
-    var builder = new DocumentFolderTreeBuilder(folders);
-    builder.buildHtmlTree(documentFolderTree.host);
-    documentFolderTree.initTree();
+    var builder = new DocumentFolderTreeBuilder(folders, documents);
+    TreeNode rootNode = builder.buildJsonTree();
+    documentFolderTree.initTree(rootNode);
   }
 }
 
@@ -38,29 +41,62 @@ class NavigationView extends WebComponent {
  * Builds a document folder tree.
  */
 class DocumentFolderTreeBuilder {
-  /// Map with folder id as key and the list of child folders as value.
+  /// Map with document id as [key] and the document as [value].
+  Map<String, Document> _documentMap = new Map();
+  /// Map with folder id of parent as [key] and the list of child folders as [value].
   Map<String, List<DocumentFolder>> _childFolderMap = new Map();
-  
   /// The root folder
   DocumentFolder _rootFolder;
   
   /**
-   * Constructs a tree builder for the specified [folders]. The [folders] must 
-   * have exactly one root folder, i.e. a folter with parentId == null.
+   * Constructs a tree builder for the specified [folders] and [documents]. 
+   * The [folders] must have exactly one root folder, i.e. a folter with 
+   * parentId == null.
    */
-  DocumentFolderTreeBuilder(List<DocumentFolder> folders) {
+  DocumentFolderTreeBuilder(List<DocumentFolder> folders, 
+      List<Document> documents) {
     _initChildFolderMapAndRoot(folders);
+    _initDocumentMap(documents);
   }
   
   /**
-   * Builds a tree with a hierarchical html list and adds it 
-   * as a child to the [hostElement].
+   * Builds a tree with [TreeNode]s. Returns the root node.
    */
-  void buildHtmlTree(Element hostElement) {
-    // Create a new <ul> element for the root.
-    var rootUListElement = new UListElement();
-    hostElement.children.add(rootUListElement);
-    _addChildFolder(rootUListElement, _rootFolder);
+  TreeNode buildJsonTree() {
+    TreeNode rootNode = new TreeNode(_rootFolder.id, _rootFolder.name, 'folder');
+    _addChildFolders(rootNode, _rootFolder);
+    
+    return rootNode;
+  }
+  
+  /**
+   * Recursive function to add the child [folder]s to the [node].
+   */
+  void _addChildFolders(TreeNode node, DocumentFolder folder) {
+    // Recursively add child folders.
+    List childFolders = _childFolderMap[folder.id];
+    if (childFolders != null) {
+      for (DocumentFolder childFolder in childFolders) {
+        TreeNode childNode = new TreeNode(childFolder.id, childFolder.name, 'folder');
+        node.children.add(childNode);
+        // Recursive call to add children of [childFolder]
+        _addChildFolders(childNode, childFolder);
+      }
+    }
+    
+    // Add the child documents.
+    _addChildDocuments(node, folder);
+  }
+  
+  /**
+   * Adds the documents of the [folder] to the [node].
+   */
+  void _addChildDocuments(TreeNode node, DocumentFolder folder) {
+    for (String id in folder.documentIds) {
+      Document doc = _documentMap[id];
+      TreeNode docNode = new TreeNode(id, doc.name, 'document');
+      node.children.add(docNode);
+    }
   }
   
   /**
@@ -80,34 +116,12 @@ class DocumentFolderTreeBuilder {
   }
   
   /**
-   * Recursive function to add the [folder] and its children to the [parentElement].
+   * Populates the document map.
    */
-  void _addChildFolder(UListElement parentElement, DocumentFolder folder) {
-    // Add a <li> element for the folder and add it to the [parentElement].
-    var liElement = _createListItem(folder);
-    parentElement.children.add(liElement);
-    
-    // Recursively add child folders.
-    List children = _childFolderMap[folder.id];
-    if (children != null) {
-      // Create a new <ul> element for the children.
-      var childUListElement = new UListElement();
-      liElement.children.add(childUListElement);
-      
-      for (DocumentFolder child in children) {
-        _addChildFolder(childUListElement, child);
-      }
+  void _initDocumentMap(List<Document> documents) {
+    for (Document document in documents) {
+      _documentMap[document.id] = document;
     }
-  }
-  
-  /**
-   * Creates a list item from the specified [folder].
-   */
-  Element _createListItem(DocumentFolder folder) {
-    return new Element.html('''
-        <li id="${folder.id}">
-            <a href="#">${folder.name}</a>
-        </li>''');
   }
 }
 

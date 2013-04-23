@@ -7,6 +7,8 @@ class AppController {
   
   final Element header;
   
+  // Cannot import [SplitPanel] because it creates ambiguity. SplitPanel is
+  // automatically added see [issue 237](https://github.com/dart-lang/web-ui/issues/237)
   final SplitPanel baseContainer;
   final NavigationView navigationView;
   final DigestView digestView;
@@ -28,10 +30,32 @@ class AppController {
     _onResized(null); // call resize for the first time
     
     // Initialize the navigation view
-    navigationView.refreshDocumentFolderTree(dataAccess.documentFolders);
-    navigationView.documentFolderTree.onNodeSelect.listen((id) => print(id));
+    navigationView.refreshDocumentFolderTree(dataAccess.getDocumentFolders(),
+        dataAccess.getDocuments());
+    navigationView.documentFolderTree.onSelectNode.listen(handleDocumentSelectNode);
+    navigationView.documentFolderTree.onOpenNode.listen(handleDocumentFolderOpenNode);
   }
-
+  
+  void handleDocumentSelectNode(var selectedNode) {
+    print('selected: ${selectedNode.attr("id")}');
+    
+    QuestionBlock block = new QuestionBlock()
+    ..id = selectedNode.attr('id')
+    ..title = 'Lorem ipsum dolor sit amet'
+    ..introduction = 'consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    ..libraryType = 'PUBLIC';
+    digestView.setDigests([block, block, block, block, block, block]);
+  }
+  
+  void handleDocumentFolderOpenNode(var selectedNode) {
+    print('opened: ${selectedNode.attr("id")}');
+//    DocumentFolder openedFolder = dataAccess.getDocumentFolderById(selectedNode.attr('id'));
+//    List<Document> documents = dataAccess.getDocumentsByIds(openedFolder.documentIds);
+//    for (Document document in documents) {
+//      navigationView.documentFolderTree.addNodeToParentJsNode(selectedNode, document.id, document.name, "document");
+//    }
+  }
+  
   /**
    * Handles window resize events.
    */

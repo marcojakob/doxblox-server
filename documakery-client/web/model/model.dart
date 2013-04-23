@@ -1,4 +1,4 @@
-library models;
+library model;
 
 import 'dart:json' as json;
 

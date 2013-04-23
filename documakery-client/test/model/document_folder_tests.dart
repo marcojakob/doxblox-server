@@ -1,9 +1,9 @@
-library document_tests;
+library document_folder_tests;
 
 import 'dart:json' as json;
 
 import 'package:unittest/unittest.dart';
-import '../../web/model/models.dart';
+import '../../web/model/model.dart';
 
 const String DOCUMENT_FOLDER_JSON = '''
 {
@@ -59,11 +59,26 @@ test('toJsonViaStringify_AllAttributesSet_ReturnsJsonString', () {
   
   // then
   DocumentFolder reconvertedFolder = new DocumentFolder.fromJson(jsonString);
-  expect(folder.id, equals('1111'));
-  expect(folder.name, equals('class 2d'));
-  expect(folder.parentId, equals('9999'));
-  expect(folder.documentIds, isList);
-  expect(folder.documentIds, equals(["3333", "4444"]));
+  expect(reconvertedFolder.id, equals('1111'));
+  expect(reconvertedFolder.name, equals('class 2d'));
+  expect(reconvertedFolder.parentId, equals('9999'));
+  expect(reconvertedFolder.documentIds, isList);
+  expect(reconvertedFolder.documentIds, equals(["3333", "4444"]));
+});
+
+test('toString', () {
+  // given
+  DocumentFolder folder = new DocumentFolder()
+  ..id = '1111'
+  ..name = 'class 2d'
+  ..parentId = '9999'
+  ..documentIds = ['3333', '4444'];
+  
+  // when
+  String str = folder.toString();
+  
+  // then
+  expect(str, equals('{"id":"1111","name":"class 2d","parentId":"9999","documentIds":["3333","4444"]}'));
 });
 });
 }

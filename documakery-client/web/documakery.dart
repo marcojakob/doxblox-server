@@ -1,6 +1,6 @@
 library documakery;
 
-import 'dart:html';
+import 'dart:html' hide Document;
 import 'dart:async';
 import 'package:web_ui/web_ui.dart';
 
@@ -8,8 +8,9 @@ import 'ui/navigation/navigation_view.dart';
 import 'ui/digest/digest_view.dart';
 import 'ui/editor/editor_view.dart';
 
-import 'model/models.dart';
-import 'data/data_access.dart';
+import 'model/model.dart';
+import 'data/data.dart';
+import 'data/mock/mock_data.dart';
 
 part 'app.dart';
 
