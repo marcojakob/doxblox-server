@@ -17,9 +17,6 @@ import 'package:js/js.dart' as js;
  */
 class TreeView extends WebComponent {
   
-  Stream<js.Proxy> _onSelectNode;
-  Stream<js.Proxy> _onOpenNode;
-  
   /**
    * Initialize the jsTree.
    */
@@ -98,49 +95,41 @@ class TreeView extends WebComponent {
   }
   
   /**
-   * Returns the stream of selected nodes. The stream sends data events 
+   * Returns a stream of selected nodes. The stream sends data events 
    * containing the javascript node that was opened. 
    * To get the id attribute of the javascript node, for example, use `.attr('id')`.
    */
-  Stream<js.Proxy> get onSelectNode {
-    // lazy initialization
-    if (_onSelectNode == null) {
-      StreamController<js.Proxy> controller = new StreamController<js.Proxy>();
-      
-      // Create a JavaScript callback that forwards to the stream controller.
-      var selectNodeCallback = new js.Callback.many((event, data) {
-        controller.add(data.rslt.obj);
-      });
-      
-      // Bind the callback function to the event.
-      js.context.jQuery(_root).bind('select_node.jstree', selectNodeCallback);  
+  Stream<js.Proxy> onSelectNode() {
+    StreamController<js.Proxy> controller = new StreamController<js.Proxy>();
     
-      _onSelectNode = controller.stream;
-    }
-    return _onSelectNode;
+    // Create a JavaScript callback that forwards to the stream controller.
+    var selectNodeCallback = new js.Callback.many((event, data) {
+      controller.add(data.rslt.obj);
+    });
+    
+    // Bind the callback function to the event.
+    js.context.jQuery(_root).on('select_node.jstree', selectNodeCallback);  
+  
+    return controller.stream;
   }
   
   /**
-   * Returns the stream of opened nodes. The stream sends data events 
+   * Returns a stream of opened nodes. The stream sends data events 
    * containing the javascript node that was opened. 
    * To get the id attribute of the javascript node, for example, use `.attr('id')`.
    */
-  Stream<js.Proxy> get onOpenNode {
-    // lazy initialization
-    if (_onOpenNode == null) {
-      StreamController<js.Proxy> controller = new StreamController<js.Proxy>();
-      
-      // Create a JavaScript callback that forwards to the stream controller.
-      var openNodeCallback = new js.Callback.many((event, data) {
-        controller.add(data.rslt.obj);
-      });
-      
-      // Bind the callback function to the event.
-      js.context.jQuery(_root).bind('open_node.jstree', openNodeCallback);  
-      
-      _onOpenNode = controller.stream;
-    }
-    return _onOpenNode;
+  Stream<js.Proxy> onOpenNode() {
+    StreamController<js.Proxy> controller = new StreamController<js.Proxy>();
+    
+    // Create a JavaScript callback that forwards to the stream controller.
+    var openNodeCallback = new js.Callback.many((event, data) {
+      controller.add(data.rslt.obj);
+    });
+    
+    // Bind the callback function to the event.
+    js.context.jQuery(_root).on('open_node.jstree', openNodeCallback);  
+    
+    return controller.stream;
   }
 }
 

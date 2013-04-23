@@ -5,7 +5,7 @@ import '../data.dart';
 
 part 'mock_document_folders.dart';
 part 'mock_documents.dart';
-part 'mock_question_blocks.dart';
+part 'mock_document_blocks.dart';
 
 /**
  * Mock implmenentation of [DataAccess].
@@ -13,12 +13,12 @@ part 'mock_question_blocks.dart';
 class MockDataAccess implements DataAccess {
   Map<String, DocumentFolder> _documentFolders;
   Map<String, Document> _documents;
-  Map<String, QuestionBlock> _questionBlocks;
+  Map<String, DocumentBlock> _documentBlocks;
   
   MockDataAccess() {
     _documentFolders = mockDocumentFolders();
     _documents = mockDocuments();
-    _questionBlocks = mockQuestionBlocks();
+    _documentBlocks = mockQuestionBlocks();
   }
   
   // DocumentFolder
@@ -47,11 +47,11 @@ class MockDataAccess implements DataAccess {
     return result;
   }
   
-  // QuestionBlock
-  List<QuestionBlock> getQuestionBlocksByIds(List<String> questionBlockIds) {
-    List<QuestionBlock> result = new List();
-    for (String id in questionBlockIds) {
-      result.add(_questionBlocks[id]);
+  // DocumentBlock
+  List<DocumentBlock> getDocumentBlocksByIds(List<String> documentBlockIds) {
+    List<DocumentBlock> result = new List();
+    for (String id in documentBlockIds) {
+      result.add(_documentBlocks[id]);
     }
     return result;
   }

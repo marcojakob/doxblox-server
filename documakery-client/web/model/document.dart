@@ -85,54 +85,15 @@ class Document {
 }
 
 /**
- * Model object for a block of [Question]s.
+ * A block used inside a [Document].
  */
-class QuestionBlock {
+abstract class DocumentBlock {
   String id;
-  String title;
-  String introduction;
-  List<String> questions;
-  List<String> topics;
-  String libraryType;
-  String userId;
   
-  /**
-   * Default constructor.
-   */
-  QuestionBlock();
-  
-  /**
-   * Constructs a [QuestionBlock] from a JSON String.
-   */
-  QuestionBlock.fromJson(String jsonString) {
-    var obj = json.parse(jsonString);
-    id = obj['id'];
-    title = obj['title'];
-    introduction = obj['introduction'];
-    questions = obj['questions'];
-    topics = obj['topics'];
-    libraryType = obj['libraryType'];
-    userId = obj['userId'];
-  }
-  
-  /**
-   * Converts this object to a JSON map.
-   */
-  Map toJson() {
-    return {
-      'id': id,
-      'title': title, 
-      'introduction': introduction,
-      'questions': questions,
-      'topics': topics,
-      'libraryType': libraryType,
-      'userId': userId
-    };
-  }
-  
-  String toString() {
-    return json.stringify(this);
-  }
+  /// The title used for the digest
+  String get digestTitle;
+  /// The snippet used for the digest
+  String get digestSnippet;
 }
 
 

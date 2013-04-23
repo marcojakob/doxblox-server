@@ -12,6 +12,8 @@ abstract class DataAccess {
   List<Document> getDocuments();
   List<Document> getDocumentsByIds(List<String> documentIds);
   
-  // QuestionBlock
-  List<QuestionBlock> getQuestionBlocksByIds(List<String> questionBlockIds);
+  // DocumentBlock
+  List<DocumentBlock> getDocumentBlocksByIds(List<String> documentBlockIds);
+  
+  
 }
