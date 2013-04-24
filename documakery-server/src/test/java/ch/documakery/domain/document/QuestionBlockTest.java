@@ -9,6 +9,8 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import ch.documakery.domain.document.question.QuestionBlock;
+
 import com.google.common.base.Strings;
 
 /**

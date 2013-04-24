@@ -5,7 +5,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import ch.documakery.domain.document.QuestionBlock;
+import ch.documakery.domain.document.question.QuestionBlock;
 
 /**
  * Repository to access {@link QuestionBlock}s in MongoDB.

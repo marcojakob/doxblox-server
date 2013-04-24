@@ -1,4 +1,4 @@
-package ch.documakery.domain.document;
+package ch.documakery.domain.document.question;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import ch.documakery.domain.document.question.Question;
-import ch.documakery.domain.document.question.Topic;
+import ch.documakery.domain.document.DocumentBlock;
 
 /**
  * The domain object for a block of {@link Question}s. 

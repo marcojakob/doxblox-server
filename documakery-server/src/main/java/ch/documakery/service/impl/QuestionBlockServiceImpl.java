@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
-import ch.documakery.domain.document.QuestionBlock;
+import ch.documakery.domain.document.question.QuestionBlock;
 import ch.documakery.domain.user.User;
 import ch.documakery.repository.QuestionBlockRepository;
 import ch.documakery.security.util.SecurityContextUtil;

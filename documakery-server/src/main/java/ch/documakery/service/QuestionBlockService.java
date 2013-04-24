@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import ch.documakery.domain.document.QuestionBlock;
+import ch.documakery.domain.document.question.QuestionBlock;
 
 
 /**

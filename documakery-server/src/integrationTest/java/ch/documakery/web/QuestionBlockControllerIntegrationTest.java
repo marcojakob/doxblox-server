@@ -23,7 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import ch.documakery.JsonTestUtils;
 import ch.documakery.MongoDbTestUtils;
-import ch.documakery.domain.document.QuestionBlock;
+import ch.documakery.domain.document.question.QuestionBlock;
 import ch.documakery.repository.QuestionBlockRepository;
 
 /**
@@ -174,7 +174,7 @@ public class QuestionBlockControllerIntegrationTest {
   }
   
   @Test
-  public void POSTquestionblocks_IllegalUserIdSet_QuestionBlockSavedButUserIdIsIgnored() throws Exception {
+  public void POSTquestionblocks_IllegalUserIdSet_QuestionBlockSavedWithCurrentUsersId() throws Exception {
     // given
     MongoDbTestUtils.importTestUsers(template);
     
@@ -183,13 +183,13 @@ public class QuestionBlockControllerIntegrationTest {
     mockMvc.perform(post("/questionblocks")
         .with(userDetailsService(MongoDbTestUtils.USER1_EMAIL))
         .contentType(JsonTestUtils.APPLICATION_JSON_UTF8)
-        .content("{\"id\":\"666666666666666666666666\",\"title\":\"just a title\",\"userId\":{\"$oid\":\"aaaaaaaaaaaaaaaaaaaaaaaa\"}}")
+        .content("{\"id\":\"666666666666666666666666\",\"title\":\"just a title\",\"userId\":\"aaaaaaaaaaaaaaaaaaaaaaaa\"}")
     )
     // then
         .andExpect(status().isOk())
         .andExpect(content().contentType(JsonTestUtils.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.id", is("666666666666666666666666")))
-        .andExpect(jsonPath("$.userId").doesNotExist())
+        .andExpect(jsonPath("$.userId", is("111111111111111111111111")))
         .andExpect(jsonPath("$.title", is("just a title")));
     
     QuestionBlock savedEntity = template.findById("666666666666666666666666", QuestionBlock.class);

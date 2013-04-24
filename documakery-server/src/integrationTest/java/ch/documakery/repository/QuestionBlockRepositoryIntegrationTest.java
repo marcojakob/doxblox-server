@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import ch.documakery.MongoDbTestUtils;
-import ch.documakery.domain.document.QuestionBlock;
+import ch.documakery.domain.document.question.QuestionBlock;
 
 /**
  * Test class for {@link QuestionBlockRepository}.
