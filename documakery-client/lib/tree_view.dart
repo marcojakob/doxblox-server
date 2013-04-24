@@ -24,7 +24,7 @@ class TreeView extends WebComponent {
     var options = js.map({
       "plugins" : ["themes","json_data","ui","crrm","hotkeys","dnd","types"], 
       "json_data" : {
-        "data" : rootNode.toJsonMap(),
+        "data" : rootNode.toJson(),
       },
       "core" : { 
         "animation" : 0
@@ -71,7 +71,7 @@ class TreeView extends WebComponent {
    */
   void addNode(String parentId, String parentType, String id, String text, String type) {
     TreeNode newNode = new TreeNode(id, text, type);
-    var newNodeMap = js.map(newNode.toJsonMap());
+    var newNodeMap = js.map(newNode.toJson());
     
     var parentNode = js.context.jQuery('#${parentId}[rel="${parentType}"]');
     if (parentNode != null) {
@@ -86,7 +86,7 @@ class TreeView extends WebComponent {
    */
   void addNodeToParentJsNode(var parentJsNode, String id, String text, String type) {
     TreeNode newNode = new TreeNode(id, text, type);
-    var newNodeMap = js.map(newNode.toJsonMap());
+    var newNodeMap = js.map(newNode.toJson());
     
     if (parentJsNode != null) {
       js.context.jQuery(_root).jstree('create', parentJsNode, 'inside',  
@@ -144,15 +144,16 @@ class TreeNode {
   
   TreeNode(this.id, this.text, this.type);
   
-  Map toJsonMap() {
+  /// Converts this [TreeNode] to a JSON map.
+  Map toJson() {
     return {
       'data' : text,
       'attr' : { 
         'id' : id, 
         'rel' : type
       },
-      // Apply toJsonMap() to all the children.
-      'children' : children.map((TreeNode node) => node.toJsonMap()).toList()
+      // Apply toJson() to all the children.
+      'children' : children.map((TreeNode node) => node.toJson()).toList()
     };
   }
 }

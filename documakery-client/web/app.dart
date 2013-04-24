@@ -19,6 +19,7 @@ class AppController {
   AppController(this.header, this.baseContainer, this.navigationView, 
       this.digestView, this.editorView, this._dataAccess);
   
+  /// The data access
   DataAccess get dataAccess => _dataAccess;
   
   /**
@@ -29,12 +30,12 @@ class AppController {
     window.onResize.listen(_onResized);
     _onResized(null); // call resize for the first time
     
-    // Initialize the navigation view
+    // Initialize the navigation view and its selection listener
     navigationView.refreshDocumentFolderTree(dataAccess.getDocumentFolders(),
         dataAccess.getDocuments());
     navigationView.documentFolderTree.onSelectNode().listen(handleDocumentSelectNode);
     
-    // Initialize digest view
+    // Initialize digest view and its selection listener
     digestView.onDigestSelection().listen((cell) => print(cell));
     ////////////////// TODO: display questions in editor
     

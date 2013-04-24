@@ -11,7 +11,6 @@ class DigestCell extends WebComponent {
   String title;
   @observable
   String snippet;
-  @observable
     
   DigestCell(this.documentBlock) {
     title = documentBlock.digestTitle;
