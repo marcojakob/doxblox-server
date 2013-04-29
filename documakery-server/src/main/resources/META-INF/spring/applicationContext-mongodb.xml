@@ -11,6 +11,8 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- Scans the base package and sub-packages for interfaces extending Repository and creates beans
+		with names derived from the interface name. -->
 	<mongo:repositories base-package="ch.documakery.repository"
 		mongo-template-ref="mongoTemplate" />
 		
