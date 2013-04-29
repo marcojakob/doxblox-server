@@ -10,15 +10,24 @@ import 'package:web_ui/web_ui.dart';
 //import 'package:documakery/tree_view.dart';
 
 import '../../model/model.dart';
+import '../../events.dart' as events;
 
 class NavigationView extends WebComponent {
+  /// The Tree with folders and documents
   TreeView documentFolderTree;
+  /// A map with document id as [key] and the document as [value].
+  Map<String, Document> documentMap;
   
   /**
    * Lifecycle method invoked whenever a component is added to the DOM.
    */
   inserted() {
     documentFolderTree = query('#document-tree').xtag;
+    
+    // Forward node selection as an event on event bus
+    documentFolderTree.onSelectNode().listen((node) {
+      events.eventBus.fire(events.navigationViewDocumentSelected, documentMap[node.attr('id')]);
+    });
   }
   
   /**
@@ -33,6 +42,9 @@ class NavigationView extends WebComponent {
     var builder = new DocumentFolderTreeBuilder(folders, documents);
     TreeNode rootNode = builder.buildJsonTree();
     documentFolderTree.initTree(rootNode);
+    
+    // Save the documentMap for later.
+    documentMap = builder._documentMap;
   }
 }
 

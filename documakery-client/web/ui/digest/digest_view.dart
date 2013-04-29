@@ -7,12 +7,11 @@ import 'package:web_ui/web_ui.dart';
 import 'digest_cell.dart';
 
 import '../../model/model.dart';
+import '../../events.dart' as events;
 
 class DigestView extends WebComponent {
 
   DivElement digestContainer;
-  
-  StreamController<DigestCell> _digestSelectionStreamController;
   
   /**
    * Lifecycle method invoked whenever a component is added to the DOM.
@@ -41,23 +40,11 @@ class DigestView extends WebComponent {
     }
   }
   
-  /**
-   * Returns a stream of selected [DigetsCell]s.
-   */
-  Stream<DigestCell> onDigestSelection() {
-    if (_digestSelectionStreamController == null) {
-      _digestSelectionStreamController = new StreamController<DigestCell>();
-    }
-    return _digestSelectionStreamController.stream;
-  }
-  
   void _handleDigestSelection(DigestCell digestCell) {
     deselectAllDigests();
     digestCell.host.classes.add('selected');
-    // Inform listeners
-    if (_digestSelectionStreamController != null) {
-      _digestSelectionStreamController.add(digestCell);
-    }
+    // Fire event
+    events.eventBus.fire(events.digestViewDocumentBlockSelected, digestCell.documentBlock);
   }
   
   void deselectAllDigests() {

@@ -12,6 +12,8 @@ import 'model/model.dart';
 import 'data/data.dart';
 import 'data/mock/mock_data.dart';
 
+import 'events.dart' as events;
+
 part 'app.dart';
 
 

@@ -33,17 +33,15 @@ class AppController {
     // Initialize the navigation view and its selection listener
     navigationView.refreshDocumentFolderTree(dataAccess.getDocumentFolders(),
         dataAccess.getDocuments());
-    navigationView.documentFolderTree.onSelectNode().listen(handleDocumentSelectNode);
     
-    // Initialize digest view and its selection listener
-    digestView.onDigestSelection().listen((cell) => print(cell));
+    // Initialize listeners
+    events.eventBus.on(events.navigationViewDocumentSelected).listen(handleDocumentSelected);
+    events.eventBus.on(events.digestViewDocumentBlockSelected).listen((DocumentBlock block) => print(block));
     ////////////////// TODO: display questions in editor
     
   }
   
-  void handleDocumentSelectNode(var selectedNode) {
-    Document selectedDoc = dataAccess.getDocumentById(selectedNode.attr('id'));
-    
+  void handleDocumentSelected(var selectedDoc) {
     // Get the question blocks of the selected document
     List<DocumentBlock> blocks = 
         dataAccess.getDocumentBlocksByIds(selectedDoc.documentBlockIds);

@@ -123,12 +123,12 @@ html, body {
   cursor: default;
 }
 
-/**************************** x-dropdown in nav ***************************/
-.navbar .nav > * {
+/**************************** fix for x-dropdown in nav ***************************/
+.navbar .nav > [is=x-dropdown] {
   float: left;
 }
 
-* a.dropdown-toggle {
+[is=x-dropdown] a.dropdown-toggle {
   display: block;
   float: none;
   padding: 10px 15px 10px;
@@ -137,7 +137,57 @@ html, body {
   text-shadow: 0 1px 0 #fff;
 }
 
-.navbar .nav > * .dropdown-toggle .caret {
+/* instead of .navbar .nav li.dropdown > .dropdown-toggle .caret */
+.navbar .nav > [is=x-dropdown] .dropdown-toggle .caret {
   border-top-color: #777;
   border-bottom-color: #777;
+}
+
+/* instead of .navbar .nav > li > .dropdown-menu:before */
+.navbar .nav > [is=x-dropdown] > div > .dropdown-menu:before {
+  position: absolute;
+  top: -7px;
+  left: 9px;
+  display: inline-block;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-left: 7px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  content: '';
+}
+
+/* instead of .navbar .nav > li > .dropdown-menu:after */
+.navbar .nav > [is=x-dropdown] > div > .dropdown-menu:after {
+  position: absolute;
+  top: -6px;
+  left: 10px;
+  display: inline-block;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+  border-left: 6px solid transparent;
+  content: '';
+}
+
+/* instead of .pull-right > .dropdown-menu */
+.pull-right > * > .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+/* instead of .navbar .pull-right > li > .dropdown-menu */
+.navbar .pull-right > [is=x-dropdown] > div > .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+/* instead of .navbar .pull-right > li > .dropdown-menu:before */
+.navbar .pull-right > [is=x-dropdown] > div > .dropdown-menu:before {
+  right: 12px;
+  left: auto;
+}
+
+/* .navbar .pull-right > li > .dropdown-menu:after */
+.navbar .pull-right > [is=x-dropdown] > div > .dropdown-menu:after {
+  right: 13px;
+  left: auto;
 }

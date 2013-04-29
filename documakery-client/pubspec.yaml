@@ -2,6 +2,7 @@ name: documakery
 version: 0.0.1
 description: web client for documakery
 dependencies:
+  event_bus: any
   unittest: any
   js: any
   browser: any
