@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <element name="text-answer-question-editor" extends="div" apply-author-styles>
+      <template>
+        <form>
+          <label>Text</label>
+          <textarea id="text" class="span5" rows="8">{{question.text}}</textarea>
+          
+          <label>Correction Notes</label>
+          <textarea id="correction-notes" class="span5" rows="5">{{question.correctionNotes}}</textarea>
+          
+          <label>Points</label>
+          <input id="points" class="span1" type="text" value="{{question.points.toString()}}">
+          
+          <label>Empty Answer Lines</label>
+          <input id="empty-answer-lines" class="span1" type="text" value="{{question.emptyAnswerLines.toString()}}">
+        </form>      
+      </template>
+      <script type="application/dart" src="text_answer_question_editor.dart"></script>
+    </element>
+  </body>
+</html>

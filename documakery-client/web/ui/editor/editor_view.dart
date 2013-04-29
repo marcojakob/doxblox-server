@@ -1,22 +1,39 @@
 library editor_view;
 
 import 'dart:html';
+import 'dart:async';
 import 'package:web_ui/web_ui.dart';
 
 import '../../model/model.dart';
+import '../../events.dart' as events;
 
 class EditorView extends WebComponent {
+  
+  @observable
+  List<Question> questions = new List();
+  
+  StreamSubscription documentSelectionSubscription;
   
   /**
    * Lifecycle method invoked whenever a component is added to the DOM.
    */
   inserted() {
-    refreshView();
+    // Subscribe to document block selection changes
+    documentSelectionSubscription = events.eventBus.on(events.digestViewDocumentBlockSelected).listen((DocumentBlock block) {
+      if (block is QuestionBlock) {
+        questions = block.questions;
+      }
+    });
   }
   
   /**
-   * Refreshes the view.
+   * Lifecycle method invoked whenever a component is removed from the DOM.
    */
-  void refreshView() {
+  removed() {
+    // Cancel subscription.
+    if (documentSelectionSubscription != null) {
+      documentSelectionSubscription.cancel();
+    }
   }
+  
 }

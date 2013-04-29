@@ -36,9 +36,6 @@ class AppController {
     
     // Initialize listeners
     events.eventBus.on(events.navigationViewDocumentSelected).listen(handleDocumentSelected);
-    events.eventBus.on(events.digestViewDocumentBlockSelected).listen((DocumentBlock block) => print(block));
-    ////////////////// TODO: display questions in editor
-    
   }
   
   void handleDocumentSelected(var selectedDoc) {
