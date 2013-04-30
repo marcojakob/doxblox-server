@@ -6,7 +6,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '1' 
   ..title = 'QuestionBlock 1' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextAnswerQuestion('1a'), mockTextAnswerQuestion('1b')]
+  ..questions = [mockTextQuestion('1a'), mockTextQuestion('1b')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -15,7 +15,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '2' 
   ..title = 'QuestionBlock 2' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextAnswerQuestion('2a'), mockTextAnswerQuestion('2b')]
+  ..questions = [mockTextQuestion('2a'), mockTextQuestion('2b')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -24,7 +24,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '3' 
   ..title = 'QuestionBlock 3' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextAnswerQuestion('3a'), mockTextAnswerQuestion('3b')]
+  ..questions = [mockTextQuestion('3a'), mockTextQuestion('3b')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -33,7 +33,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '4' 
   ..title = 'QuestionBlock 4' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextAnswerQuestion('4a'), mockTextAnswerQuestion('4b')]
+  ..questions = [mockTextQuestion('4a'), mockTextQuestion('4b')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -42,7 +42,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '5' 
   ..title = 'QuestionBlock 5' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextAnswerQuestion('5a'), mockTextAnswerQuestion('5b')]
+  ..questions = [mockTextQuestion('5a'), mockTextQuestion('5b')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -51,7 +51,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '6' 
   ..title = 'QuestionBlock 6' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextAnswerQuestion('6a'), mockTextAnswerQuestion('6b')]
+  ..questions = [mockTextQuestion('6a'), mockTextQuestion('6b')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -60,7 +60,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '7' 
   ..title = 'QuestionBlock 7' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextAnswerQuestion('7a'), mockTextAnswerQuestion('7b')]
+  ..questions = [mockTextQuestion('7a'), mockTextQuestion('7b')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -69,7 +69,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '8' 
   ..title = 'QuestionBlock 8' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextAnswerQuestion('8a'), mockTextAnswerQuestion('8b')]
+  ..questions = [mockTextQuestion('8a'), mockTextQuestion('8b')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -78,7 +78,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '9' 
   ..title = 'QuestionBlock 9' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextAnswerQuestion('9a'), mockTextAnswerQuestion('9b')]
+  ..questions = [mockTextQuestion('9a'), mockTextQuestion('9b')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -86,13 +86,13 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
 }
 
 /**
- * Creates a mock for [TextAnswerQuestion] appending [str].
+ * Creates a mock for [TextQuestion] appending [str].
  */
-TextAnswerQuestion mockTextAnswerQuestion(String str) {
-  return new TextAnswerQuestion()
+TextQuestion mockTextQuestion(String str) {
+  return new TextQuestion()
   ..text = 'Question Text $str'
-  ..correctionNotes = 'Correction Notes $str'
   ..points = 3
+  ..solution = 'Solution $str'
   ..emptyAnswerLines = 5;
 }
 

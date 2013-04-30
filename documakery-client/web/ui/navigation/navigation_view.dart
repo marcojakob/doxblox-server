@@ -15,7 +15,7 @@ import '../../events.dart' as events;
 class NavigationView extends WebComponent {
   /// The Tree with folders and documents
   TreeView documentFolderTree;
-  /// A map with document id as [key] and the document as [value].
+  /// A map with document id as `key` and the document as `value`.
   Map<String, Document> documentMap;
   
   /**
@@ -53,9 +53,9 @@ class NavigationView extends WebComponent {
  * Builds a document folder tree.
  */
 class DocumentFolderTreeBuilder {
-  /// Map with document id as [key] and the document as [value].
+  /// Map with document id as key and the document as value.
   Map<String, Document> _documentMap = new Map();
-  /// Map with folder id of parent as [key] and the list of child folders as [value].
+  /// Map with folder id of parent as key and the list of child folders as value.
   Map<String, List<DocumentFolder>> _childFolderMap = new Map();
   /// The root folder
   DocumentFolder _rootFolder;

@@ -64,30 +64,30 @@ class QuestionBlock implements DocumentBlock {
  */
 abstract class Question {
   String text;
-  String correctionNotes;
   int points;
 }
 
 /**
  * The model object for a question with a simple text answer.
  */
-class TextAnswerQuestion extends Question {
+class TextQuestion extends Question {
+  String solution;
   int emptyAnswerLines;
   
   /**
    * Default constructor.
    */
-  TextAnswerQuestion();
+  TextQuestion();
   
   /**
-   * Constructs a [TextAnswerQuestion] from a JSON String.
+   * Constructs a [TextQuestion] from a JSON String.
    */
-  TextAnswerQuestion.fromJson(String jsonString) {
+  TextQuestion.fromJson(String jsonString) {
     var obj = json.parse(jsonString);
     text = obj['text'];
-    correctionNotes = obj['correctionNotes'];
     points = obj['points'];
     emptyAnswerLines = obj['emptyAnswerLines'];
+    solution = obj['solution'];
   }
   
   /**
@@ -96,9 +96,9 @@ class TextAnswerQuestion extends Question {
   Map toJson() {
     return {
       'text': text,
-      'correctionNotes': correctionNotes, 
       'points': points,
-      'emptyAnswerLines': emptyAnswerLines
+      'emptyAnswerLines': emptyAnswerLines,
+      'solution': solution
     };
   }
   
