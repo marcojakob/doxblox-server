@@ -2,6 +2,11 @@ library documakery;
 
 import 'dart:html' hide Document;
 import 'dart:async';
+
+// Cannot import [SplitPanel] because it creates ambiguity. SplitPanel is
+// automatically added see [issue 237](https://github.com/dart-lang/web-ui/issues/237)
+//import 'package:documakery/split_panel.dart';
+
 import 'package:web_ui/web_ui.dart';
 import 'package:web_ui/watcher.dart' as watchers; 
 import 'package:event_bus/event_bus.dart';

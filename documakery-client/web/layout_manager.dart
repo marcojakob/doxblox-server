@@ -7,9 +7,7 @@ class LayoutManager {
   
   final Element header;
   
-  // Cannot import [SplitPanel] because it creates ambiguity. SplitPanel is
-  // automatically added see [issue 237](https://github.com/dart-lang/web-ui/issues/237)
-  final SplitPanel baseContainer;
+  final /*SplitPanel*/ baseContainer;
   
   LayoutManager(this.header, this.baseContainer);
   

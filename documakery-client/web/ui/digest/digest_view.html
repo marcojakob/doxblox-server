@@ -10,7 +10,7 @@
     <element name="digest-view" extends="div" apply-author-styles>
       <template>
         <template iterate="documentBlock in _getDocumentBlocks()">
-          <digest-cell class="{{_getDigestClasses(documentBlock)}}" document-block="{{documentBlock}}"
+          <digest-cell document-block="{{documentBlock}}" selected="{{documentBlock == selectedDocumentBlock}}"
               on-click="_handleDigestSelection(documentBlock)">
           </digest-cell>
         </template>
