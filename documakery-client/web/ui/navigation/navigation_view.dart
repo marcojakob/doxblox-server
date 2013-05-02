@@ -23,7 +23,10 @@ class NavigationView extends WebComponent {
     
     // Forward node selection as an event on event bus
     _documentFolderTree.onSelectNode().listen((TreeNode node) {
-      urls.router.gotoUrl(urls.document, [node.id], 'documakery');
+      // Only react to [TreeNode.DOCOUMENT_TYPE] selections.
+      if (node.type == TreeNode.DOCUMENT_TYPE) {
+        urls.router.gotoUrl(urls.document, [node.id], 'documakery');
+      }
     });
     
     createDocumentFolderTree();

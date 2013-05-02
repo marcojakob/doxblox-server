@@ -38,10 +38,18 @@ class TreeView extends WebComponent {
     });
   }
   
+  
   /**
    * Initialize the jsTree.
    */
   void initTree(TreeNode rootNode) {
+    var selectNodeCallback = new js.Callback.many(($this, event) {
+      if($this.data.ui.hovered != null) { 
+        $this.data.ui.hovered.children("a:eq(0)").click(); 
+      } 
+      return false; // means do not bubble event up to browser
+    }, withThis: true);
+    
     var options = js.map({
       "plugins" : ["themes","json_data","ui","crrm","hotkeys","dnd","types"], 
       "json_data" : {
@@ -76,23 +84,32 @@ class TreeView extends WebComponent {
             "icon" : {
               "image" : "../resources/folder.png"
             },
-            "select_node" : false,
+            "select_node" : true,
             "open_node" : true
           }
         }
+      },
+      "hotkeys" : {
+        "return" : selectNodeCallback
       }
     });
     js.context.jQuery(_root).jstree(options);
     
     // Bind to the loaded event and select node when it is loaded. Needed in 
     // case the tree was not loaded when a node was selected.
-    var loadedCallback = new js.Callback.many((event, data) {
+    var loadedCallback = new js.Callback.once((event, data) {
       if (selectedNode != null) {
         js.context.jQuery(_root).jstree('select_node', '#${selectedNode.id}[rel="${selectedNode.type}"]', true);
       }
     });
-    // Bind the callback function to the event.
     js.context.jQuery(_root).on('loaded.jstree', loadedCallback);
+    
+    // Use double-click event to open/close a node
+    var openCloseNodeCallback = new js.Callback.many((event) {
+      var node = js.context.jQuery(event.target).closest("li");
+      js.context.jQuery(_root).jstree('toggle_node', node);
+    });
+    js.context.jQuery(_root).on("dblclick.jstree", openCloseNodeCallback);
   }
   
   /**
@@ -141,7 +158,7 @@ class TreeView extends WebComponent {
   
   /**
    * Returns a stream of selected nodes. The stream sends data events 
-   * containing the [TreeNode] node that was selected. 
+   * containing the [TreeNode] node that was selected.
    */
   Stream<TreeNode> onSelectNode() {
     StreamController<TreeNode> controller = new StreamController<TreeNode>();
