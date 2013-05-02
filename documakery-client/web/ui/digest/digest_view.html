@@ -9,6 +9,11 @@
   <body>
     <element name="digest-view" extends="div" apply-author-styles>
       <template>
+        <template iterate="documentBlock in _getDocumentBlocks()">
+          <digest-cell class="{{_getDigestClasses(documentBlock)}}" document-block="{{documentBlock}}"
+              on-click="_handleDigestSelection(documentBlock)">
+          </digest-cell>
+        </template>
         <div id="digest-container">
         </div>
       </template>

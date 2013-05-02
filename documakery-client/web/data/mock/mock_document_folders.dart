@@ -6,31 +6,31 @@ Map<String, DocumentFolder> mockDocumentFolders() {
   ..id = '1' 
   ..name = 'Folder 1' 
   ..parentId = null 
-  ..documentIds = [],
+  ..documentIds = ['1'],
   
   '1-1' : new DocumentFolder()
   ..id = '1-1' 
   ..name = 'Folder 1-1' 
   ..parentId = '1'
-  ..documentIds = ['1'],
+  ..documentIds = ['2', '3'],
   
   '1-1-1' : new DocumentFolder()
   ..id = '1-1-1' 
   ..name = 'Folder 1-1-1' 
   ..parentId = '1-1'
-  ..documentIds = ['1', '2'],
+  ..documentIds = [],
   
   '1-1-2' : new DocumentFolder()
   ..id = '1-1-2' 
   ..name = 'Folder 1-1-2' 
   ..parentId = '1-1'
-  ..documentIds = ['1', '2', '3'],
+  ..documentIds = [],
   
   '1-2' : new DocumentFolder()
   ..id = '1-2'
   ..name = 'Folder 1-2' 
   ..parentId = '1'
-  ..documentIds = ['2', '3'],
+  ..documentIds = [],
   
   '1-3' : new DocumentFolder()
   ..id = '1-3'

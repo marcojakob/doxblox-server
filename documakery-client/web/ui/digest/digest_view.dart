@@ -1,53 +1,65 @@
 library digest_view;
 
-import 'dart:html';
+import 'dart:html' hide Document;
 import 'dart:async';
 import 'package:web_ui/web_ui.dart';
 
 import 'digest_cell.dart';
 
 import '../../model/model.dart';
+import '../../data/data.dart' as data;
 import '../../events.dart' as events;
+import '../../urls.dart' as urls;
 
 class DigestView extends WebComponent {
-
   DivElement digestContainer;
   
+  /// The [Document] displayed in this view.
+  @observable
+  Document document;
+  
+  /// Current selected digest.
+  @observable
+  DocumentBlock selectedDocumentBlock;
+  
   /**
-   * Lifecycle method invoked whenever a component is added to the DOM.
+   * Invoked whenever component is added to the DOM.
    */
   inserted() {
     digestContainer = query('#digest-container');
+    
+    // Initialize listeners
+    events.eventBus.on(events.documentAndBlockSelect).listen((List documentAndBlock) {
+      this.document = documentAndBlock[0];
+      this.selectedDocumentBlock = documentAndBlock[1];
+    });
   }
   
   /**
-   * Sets and shows the digests for the [documentBlocks].
+   * Returns the css classes of the digest for the [documentBlock].
    */
-  void setDigests(List<DocumentBlock> documentBlocks) {
-    // Delete all previous digests
-    digestContainer.children.clear();
-    
-    for (DocumentBlock block in documentBlocks) {
-      DigestCell cell = new DigestCell(block)
-        ..host = new Element.html('<div is="digest-cell" class="digest"></div>');
-      
-      var lifecycleCaller = new ComponentItem(cell)..create();
-      digestContainer.children.add(cell.host);
-      lifecycleCaller.insert();
-      
-      // Add click handler for digest selections
-      cell.onClick.listen((_) => _handleDigestSelection(cell));
+  List<String> _getDigestClasses(DocumentBlock documentBlock) {
+    if (documentBlock == selectedDocumentBlock) {
+      return ['digest', 'selected'];
+    } else {
+      return ['digest'];
     }
   }
   
-  void _handleDigestSelection(DigestCell digestCell) {
-    deselectAllDigests();
-    digestCell.host.classes.add('selected');
-    // Fire event
-    events.eventBus.fire(events.digestViewDocumentBlockSelected, digestCell.documentBlock);
+  /**
+   * Returns the list of [DocumentBlock]s of the [document] in this view.
+   */
+  List<DocumentBlock> _getDocumentBlocks() {
+    if (document == null || document.documentBlockIds == null) {
+      return [];
+    } else {
+      return data.dataAccess.getDocumentBlocksByIds(document.documentBlockIds);
+    }
   }
   
-  void deselectAllDigests() {
-    digestContainer.children.forEach((digest) => digest.classes.remove('selected'));
+  void _handleDigestSelection(DocumentBlock documentBlock) {
+    // Fire url change
+    urls.router.gotoUrl(urls.documentBlock, 
+        [document.id, documentBlock.id], 'documakery');
   }
 }  

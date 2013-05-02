@@ -2,6 +2,7 @@ library tree_view;
 
 import 'dart:async';
 import 'dart:json' as json;
+import 'package:meta/meta.dart';
 import 'package:web_ui/web_ui.dart';
 import 'package:js/js.dart' as js;
 
@@ -16,6 +17,26 @@ import 'package:js/js.dart' as js;
  * TODO: Replace jsTree with a Dart tree implementation.
  */
 class TreeView extends WebComponent {
+  
+  @observable
+  TreeNode rootNode;
+  
+  /// The currently selected node
+  TreeNode selectedNode;
+  
+  /**
+   * Invoked when component is added to the DOM.
+   */
+  inserted() {
+    if (rootNode != null) {
+      initTree(rootNode);
+    }
+    
+    // Create observer to watch for rootNode changes.
+    observe(() => rootNode, (ChangeNotification e) {
+      initTree(rootNode);
+    });
+  }
   
   /**
    * Initialize the jsTree.
@@ -38,10 +59,10 @@ class TreeView extends WebComponent {
           "select_limit" : 1
       },
       "types" : {
-        "valid_children" : [ "folder" ],
+        "valid_children" : [ TreeNode.FOLDER_TYPE ],
         "types" : {
           // the 'document' type
-          "document" : {
+          "${TreeNode.DOCUMENT_TYPE}" : {
             "valid_children" : "none",
             "icon" : {
               "image" : "../resources/file.png"
@@ -50,8 +71,8 @@ class TreeView extends WebComponent {
             "open_node" : false
           },
           // the 'folder' type
-          "folder" : {
-            "valid_children" : [ "document", "folder" ],
+          "${TreeNode.FOLDER_TYPE}" : {
+            "valid_children" : [ TreeNode.DOCUMENT_TYPE, TreeNode.FOLDER_TYPE ],
             "icon" : {
               "image" : "../resources/folder.png"
             },
@@ -61,8 +82,17 @@ class TreeView extends WebComponent {
         }
       }
     });
-    
     js.context.jQuery(_root).jstree(options);
+    
+    // Bind to the loaded event and select node when it is loaded. Needed in 
+    // case the tree was not loaded when a node was selected.
+    var loadedCallback = new js.Callback.many((event, data) {
+      if (selectedNode != null) {
+        js.context.jQuery(_root).jstree('select_node', '#${selectedNode.id}[rel="${selectedNode.type}"]', true);
+      }
+    });
+    // Bind the callback function to the event.
+    js.context.jQuery(_root).on('loaded.jstree', loadedCallback);
   }
   
   /**
@@ -95,16 +125,40 @@ class TreeView extends WebComponent {
   }
   
   /**
-   * Returns a stream of selected nodes. The stream sends data events 
-   * containing the javascript node that was opened. 
-   * To get the id attribute of the javascript node, for example, use `.attr('id')`.
+   * Selects the node with [id] and [type] inside the tree.
    */
-  Stream<js.Proxy> onSelectNode() {
-    StreamController<js.Proxy> controller = new StreamController<js.Proxy>();
+  void selectNode(String id, String type) {
+    var newSelectedNodeJs = js.context.jQuery('#${id}[rel="${type}"]');
+    String text = newSelectedNodeJs.attr('data');
+    TreeNode newSelectedNode = new TreeNode(id, text, type);
+    
+    // Prevent firing select event in a loop.
+    if (selectedNode != newSelectedNode) {
+      selectedNode = newSelectedNode;
+      js.context.jQuery(_root).jstree('select_node', '#${id}[rel="${type}"]', true);
+    }
+  }
+  
+  /**
+   * Returns a stream of selected nodes. The stream sends data events 
+   * containing the [TreeNode] node that was selected. 
+   */
+  Stream<TreeNode> onSelectNode() {
+    StreamController<TreeNode> controller = new StreamController<TreeNode>();
     
     // Create a JavaScript callback that forwards to the stream controller.
     var selectNodeCallback = new js.Callback.many((event, data) {
-      controller.add(data.rslt.obj);
+      var newSelectedNodeJs = data.rslt.obj;
+      String id = newSelectedNodeJs.attr('id');
+      String text = newSelectedNodeJs.attr('data');
+      String type = newSelectedNodeJs.attr('rel');
+      TreeNode newSelectedNode = new TreeNode(id, text, type);
+      
+      // Prevent firing select event in a loop.
+      if (selectedNode != newSelectedNode) {
+        selectedNode = newSelectedNode;
+        controller.add(newSelectedNode);
+      }
     });
     
     // Bind the callback function to the event.
@@ -115,15 +169,19 @@ class TreeView extends WebComponent {
   
   /**
    * Returns a stream of opened nodes. The stream sends data events 
-   * containing the javascript node that was opened. 
-   * To get the id attribute of the javascript node, for example, use `.attr('id')`.
+   * containing the [TreeNode] node that was opened. 
    */
-  Stream<js.Proxy> onOpenNode() {
-    StreamController<js.Proxy> controller = new StreamController<js.Proxy>();
+  Stream<TreeNode> onOpenNode() {
+    StreamController<TreeNode> controller = new StreamController<TreeNode>();
     
     // Create a JavaScript callback that forwards to the stream controller.
     var openNodeCallback = new js.Callback.many((event, data) {
-      controller.add(data.rslt.obj);
+      var openedNodeJs = data.rslt.obj;
+      String id = openedNodeJs.attr('id');
+      String text = openedNodeJs.attr('data');
+      String type = openedNodeJs.attr('rel');
+      TreeNode openedNode = new TreeNode(id, text, type);
+      controller.add(openedNode);
     });
     
     // Bind the callback function to the event.
@@ -137,6 +195,9 @@ class TreeView extends WebComponent {
  * Tree node that can be converted to json for jsTree.
  */
 class TreeNode {
+  static const String DOCUMENT_TYPE = 'document';
+  static const String FOLDER_TYPE = 'folder';
+  
   String id;
   String text;
   String type;
@@ -155,6 +216,24 @@ class TreeNode {
       // Apply toJson() to all the children.
       'children' : children.map((TreeNode node) => node.toJson()).toList()
     };
+  }
+  
+  @override
+  int get hashCode {
+    int result = 17;
+    result = 37 * result + id.hashCode;
+    result = 37 * result + text.hashCode;
+    result = 37 * result + type.hashCode;
+    return result;
+  }
+
+  @override
+  bool operator==(other) {
+    if (identical(other, this)) return true;
+    return (other is TreeNode
+        && other.id == id 
+        && other.text == text
+        && other.type == type);
   }
 }
 

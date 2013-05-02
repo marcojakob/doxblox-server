@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <!-- import the web components -->
-    <link rel="import" href="packages/documakery/tree_view.html">
+    <link rel="import" href="tree_view.html">
   </head>
   <body>
     <element name="navigation-view" extends="div" apply-author-styles>
@@ -15,8 +15,7 @@
           <li><a href="#">Private Library</a></li>
         </ul>
         <h5>Documents</h5>
-        <tree-view id="document-tree">
-        </tree-view>
+        <tree-view id="document-tree" root-node="{{documentTreeRootNode}}"></tree-view>
       </template>
       <script type="application/dart" src="navigation_view.dart"></script>
     </element>

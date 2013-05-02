@@ -3,6 +3,8 @@ version: 0.0.1
 description: web client for documakery
 dependencies:
   event_bus: any
+  route: 
+    git: https://github.com/dart-lang/route.git
   unittest: any
   js: any
   browser: any

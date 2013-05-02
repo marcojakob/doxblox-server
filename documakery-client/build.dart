@@ -2,5 +2,8 @@ import 'dart:io';
 import 'package:web_ui/component_build.dart';
 
 void main() {
-  build(new Options().arguments, ['web/documakery.html']);
+  var args = new List.from(new Options().arguments);
+  args.addAll(['--']);
+  
+  build(args, ['web/documakery.html']);
 }

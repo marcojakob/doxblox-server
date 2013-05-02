@@ -4,47 +4,52 @@ import 'dart:html' hide Document;
 import 'dart:async';
 import 'package:web_ui/web_ui.dart';
 
-// Cannot import [TreeView] because it creates ambiguity. TreeView 
-// is automatically added through the reference in navigation_view.html.
-// See also [issue 237](https://github.com/dart-lang/web-ui/issues/237)
-//import 'package:documakery/tree_view.dart';
-
+import 'tree_view.dart';
 import '../../model/model.dart';
+import '../../data/data.dart' as data;
 import '../../events.dart' as events;
+import '../../urls.dart' as urls;
 
 class NavigationView extends WebComponent {
-  /// The Tree with folders and documents
-  TreeView documentFolderTree;
-  /// A map with document id as `key` and the document as `value`.
-  Map<String, Document> documentMap;
+  
+  @observable
+  TreeNode documentTreeRootNode;
   
   /**
-   * Lifecycle method invoked whenever a component is added to the DOM.
+   * Invoked when component is added to the DOM.
    */
   inserted() {
-    documentFolderTree = query('#document-tree').xtag;
+    TreeView _documentFolderTree = query('#document-tree').xtag;
     
     // Forward node selection as an event on event bus
-    documentFolderTree.onSelectNode().listen((node) {
-      events.eventBus.fire(events.navigationViewDocumentSelected, documentMap[node.attr('id')]);
+    _documentFolderTree.onSelectNode().listen((TreeNode node) {
+      urls.router.gotoUrl(urls.document, [node.id], 'documakery');
+    });
+    
+    createDocumentFolderTree();
+    
+    // Init listener.
+    events.eventBus.on(events.documentAndBlockSelect).listen((List documentAndBlock) {
+      Document document = documentAndBlock[0];
+      if (document != null) {
+        _documentFolderTree.selectNode(document.id, TreeNode.DOCUMENT_TYPE);
+      }
     });
   }
   
   /**
    * Refreshes the tree.
    */
-  void refreshDocumentFolderTree(List<DocumentFolder> folders, 
-                                 List<Document> documents) {
+  void createDocumentFolderTree() {
+    List<DocumentFolder> folders = data.dataAccess.getDocumentFolders();
+    List<Document> documents = data.dataAccess.getDocuments();
+    
     if (folders == null || folders.isEmpty) {
-      documentFolderTree.host = null;
       return;
     }
-    var builder = new DocumentFolderTreeBuilder(folders, documents);
-    TreeNode rootNode = builder.buildJsonTree();
-    documentFolderTree.initTree(rootNode);
     
-    // Save the documentMap for later.
-    documentMap = builder._documentMap;
+    var builder = new DocumentFolderTreeBuilder(folders, documents);
+    documentTreeRootNode = builder.buildJsonTree();
   }
 }
 
@@ -75,7 +80,7 @@ class DocumentFolderTreeBuilder {
    * Builds a tree with [TreeNode]s. Returns the root node.
    */
   TreeNode buildJsonTree() {
-    TreeNode rootNode = new TreeNode(_rootFolder.id, _rootFolder.name, 'folder');
+    TreeNode rootNode = new TreeNode(_rootFolder.id, _rootFolder.name, TreeNode.FOLDER_TYPE);
     _addChildFolders(rootNode, _rootFolder);
     
     return rootNode;
@@ -89,7 +94,7 @@ class DocumentFolderTreeBuilder {
     List childFolders = _childFolderMap[folder.id];
     if (childFolders != null) {
       for (DocumentFolder childFolder in childFolders) {
-        TreeNode childNode = new TreeNode(childFolder.id, childFolder.name, 'folder');
+        TreeNode childNode = new TreeNode(childFolder.id, childFolder.name, TreeNode.FOLDER_TYPE);
         node.children.add(childNode);
         // Recursive call to add children of [childFolder]
         _addChildFolders(childNode, childFolder);
@@ -106,7 +111,7 @@ class DocumentFolderTreeBuilder {
   void _addChildDocuments(TreeNode node, DocumentFolder folder) {
     for (String id in folder.documentIds) {
       Document doc = _documentMap[id];
-      TreeNode docNode = new TreeNode(id, doc.name, 'document');
+      TreeNode docNode = new TreeNode(id, doc.name, TreeNode.DOCUMENT_TYPE);
       node.children.add(docNode);
     }
   }

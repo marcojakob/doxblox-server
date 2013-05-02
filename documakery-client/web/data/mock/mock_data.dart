@@ -22,8 +22,8 @@ class MockDataAccess implements DataAccess {
   }
   
   // DocumentFolder
-  DocumentFolder getDocumentFolderById(String id) {
-    return _documentFolders[id];
+  DocumentFolder getDocumentFolderById(String documentFolderId) {
+    return _documentFolders[documentFolderId];
   }
   
   List<DocumentFolder> getDocumentFolders() {
@@ -31,8 +31,8 @@ class MockDataAccess implements DataAccess {
   }
   
   // Document
-  Document getDocumentById(String id) {
-    return _documents[id];  
+  Document getDocumentById(String documentId) {
+    return _documents[documentId];  
   }
   
   List<Document> getDocuments() {
@@ -48,6 +48,14 @@ class MockDataAccess implements DataAccess {
   }
   
   // DocumentBlock
+  DocumentBlock getDocumentBlockById(String documentBlockId) {
+    return _documentBlocks[documentBlockId];
+  }
+  
+  List<DocumentBlock> getDocumentBlocks() {
+    return _documentBlocks.values.toList();
+  }
+  
   List<DocumentBlock> getDocumentBlocksByIds(List<String> documentBlockIds) {
     List<DocumentBlock> result = new List();
     for (String id in documentBlockIds) {

@@ -6,15 +6,5 @@ import '../../model/model.dart';
 
 class DigestCell extends WebComponent {
   DocumentBlock documentBlock;
-  
-  @observable
-  String title;
-  @observable
-  String snippet;
-    
-  DigestCell(this.documentBlock) {
-    title = documentBlock.digestTitle;
-    snippet = documentBlock.digestSnippet;
-  }
 }
 

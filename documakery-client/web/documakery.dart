@@ -3,45 +3,62 @@ library documakery;
 import 'dart:html' hide Document;
 import 'dart:async';
 import 'package:web_ui/web_ui.dart';
+import 'package:web_ui/watcher.dart' as watchers; 
+import 'package:event_bus/event_bus.dart';
+import 'package:route/client.dart';
 
 import 'ui/navigation/navigation_view.dart';
 import 'ui/digest/digest_view.dart';
 import 'ui/editor/editor_view.dart';
 
 import 'model/model.dart';
-import 'data/data.dart';
 import 'data/mock/mock_data.dart';
 
+import 'data/data.dart' as data;
 import 'events.dart' as events;
+import 'urls.dart' as urls;
 
-part 'app.dart';
-
-
-/// Holds the running app
-AppController _appController;
-AppController get appController => _appController;
-
+part 'layout_manager.dart';
 
 void main() {
-  // defer until the end of the event loop so that web components are loaded first
+  // ////////////////////////////////////
+  // TODO: Replace Mock with REST data access
+  // /////////////////////////////////////
+  data.init(new MockDataAccess());
+  
+  events.init(new EventBus());
+  
+  
+  // Defer until the end of the event loop so that web components are loaded first.
   Timer.run(() {
+    
     Element header = query("#header");
-    
     var baseContainer = query("#base-container").xtag;
-    
-    DigestView digestView = query('#digest-view').xtag;
-    NavigationView navigationView = query('#navigation-view').xtag;
-    EditorView editorView = query('#editor-view').xtag;
-    
-    // ////////////////////////////////////
-    // TODO: Replace Mock with REST data access
-    // /////////////////////////////////////
-    DataAccess dataAccess = new MockDataAccess();
-    
     // Initialize the controller.
-    _appController = new AppController(header, baseContainer, 
-        navigationView, digestView, editorView, dataAccess);
+    LayoutManager layoutManager = new LayoutManager(header, baseContainer);
+    layoutManager.buildUi();
     
-    appController.buildUi();
+    initRouter();
   });
+}
+
+void initRouter() {
+  // Start listening for window history events.
+  urls.init(new Router(useFragment: true));
+  urls.router
+  ..addHandler(urls.home, (_) {
+    events.eventBus.fire(events.documentAndBlockSelect, [null, null]);  
+  })
+  ..addHandler(urls.document, (path) {
+    String docId = urls.document.parse(path)[0];
+    Document document = data.dataAccess.getDocumentById(docId);
+    events.eventBus.fire(events.documentAndBlockSelect, [document, null]);  
+  })
+  ..addHandler(urls.documentBlock, (path) {
+    List<String> groups = urls.documentBlock.parse(path);
+    Document document = data.dataAccess.getDocumentById(groups[0]);
+    DocumentBlock documentBlock = data.dataAccess.getDocumentBlockById(groups[1]);
+    events.eventBus.fire(events.documentAndBlockSelect, [document, documentBlock]);  
+  })
+  ..listen(ignoreClick: true);
 }
