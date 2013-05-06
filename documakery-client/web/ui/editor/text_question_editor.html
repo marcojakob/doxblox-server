@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <meta charset="utf-8">
-  </head>
-  <body>
-    <element name="text-question-editor" extends="div" apply-author-styles>
-      <template>
-        <form>
-          <label>{{indexLetter()}})</label>
-          <textarea id="text" style="width: 100%" rows="8">{{question.text}}</textarea>
-          
-          <label>Points</label>
-          <input id="points" class="span1" type="text" value="{{question.points.toString()}}">
-          
-          <label>Solution</label>
-          <textarea id="correction-notes" class="span5" rows="5">{{question.solution}}</textarea>
-          
-          <label>Empty Answer Lines</label>
-          <input id="empty-answer-lines" class="span1" type="text" value="{{question.emptyAnswerLines.toString()}}">
-        </form>      
-      </template>
-      <script type="application/dart" src="text_question_editor.dart"></script>
-    </element>
-  </body>
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+<element name="text-question-editor" extends="div" apply-author-styles>
+  <template>
+    <form>
+      <div class="controls controls-row">
+        <label for="{{letter}}-text" class="span1">{{letter}})</label>
+        <input id="{{letter}}-points" type="number" value="{{question.points.toString()}}" class="span1">
+      </div>
+      <textarea id="{{letter}}-text" rows="8" class="input-block-level">{{question.text}}</textarea>
+        
+      <div class="controls controls-row offset1">
+        <label for="{{letter}}-solution">Solution</label>
+      </div>
+      
+      <div class="controls controls-row offset1">
+        <textarea id="{{letter}}-solution" rows="5" class="span6">{{question.solution}}</textarea>
+        <input id="{{letter}}-empty-answer-lines" type="number" class="span1" value="{{question.emptyAnswerLines.toString()}}">
+      </div>
+        
+    </form>
+    
+    <style scoped>
+    </style>      
+  </template>
+  <script type="application/dart" src="text_question_editor.dart"></script>
+</element>
+</body>
 </html>

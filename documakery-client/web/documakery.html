@@ -6,8 +6,8 @@
     <title>documakery</title>
   
     <!-- Import Twitter Bootstrap css files -->   
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.0.2/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.0.2/css/font-awesome.css">
 
     <link rel="stylesheet" href="documakery.css">
     
@@ -19,8 +19,6 @@
     <script type="text/javascript" src="resources/jstree/jquery.jstree.js"></script>
     
     <!-- import the web components -->
-    <link rel="import" href="packages/widget/components/dropdown.html">
-    
     <link rel="import" href="packages/documakery/split_panel.html">
     <link rel="import" href="packages/documakery/split_panel_child.html">
     <link rel="import" href="ui/navigation/navigation_view.html">
@@ -37,16 +35,18 @@
           <li><a href="#">Link</a></li>
         </ul>
         <ul class="nav pull-right">
-          <x-dropdown>
+          <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="#">Item 1</a></li>
               <li><a href="#">Item 2</a></li>
             </ul>
-          </x-dropdown>        
+          </li>
         </ul>
       </div>
+      <!-- /.navbar-inner -->
     </div>
+    <!-- /.navbar -->
     
     <split-panel id="base-container" stacked-vertical="{{false}}">
       <split-panel-child ratio="{{0.2}}">

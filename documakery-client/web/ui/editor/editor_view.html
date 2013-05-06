@@ -8,7 +8,9 @@
   <body>
     <element name="editor-view" extends="div" apply-author-styles>
       <template>
-        <question-block-editor question-block="{{questionBlock}}"></question-block-editor>
+        <template instantiate="if questionBlock != null">
+          <question-block-editor question-block="{{questionBlock}}"></question-block-editor>
+        </template>
       </template>
       <script type="application/dart" src="editor_view.dart"></script>
     </element>

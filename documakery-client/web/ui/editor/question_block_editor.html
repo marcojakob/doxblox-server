@@ -8,11 +8,9 @@
   <body>
     <element name="question-block-editor" extends="div" apply-author-styles>
       <template>
-        <template instantiate="if questionBlock != null && questionBlock.questions != null">
-          <template iterate="question in questionBlock.questions">
-            <text-question-editor question="{{question}}" index="{{$index}}">
-            </text-question-editor>
-          </template>
+        <template iterate="question in questionBlock.questions">
+          <text-question-editor question="{{question}}" letter="{{letters[$index]}}">
+          </text-question-editor>
         </template>
       </template>
       <script type="application/dart" src="question_block_editor.dart"></script>

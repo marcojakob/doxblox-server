@@ -9,5 +9,5 @@ dependencies:
   js: any
   browser: any
   web_ui: any
-  widget:
-    git: https://github.com/kevmoo/widget.dart.git
+  bootjack:
+    git: git://github.com/rikulo/bootjack.git

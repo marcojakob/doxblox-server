@@ -11,6 +11,7 @@ import 'package:web_ui/web_ui.dart';
 import 'package:web_ui/watcher.dart' as watchers; 
 import 'package:event_bus/event_bus.dart';
 import 'package:route/client.dart';
+import 'package:bootjack/bootjack.dart';
 
 import 'ui/navigation/navigation_view.dart';
 import 'ui/digest/digest_view.dart';
@@ -26,6 +27,8 @@ import 'urls.dart' as urls;
 part 'layout_manager.dart';
 
 void main() {
+  initBootjackWidgets();
+  
   // ////////////////////////////////////
   // TODO: Replace Mock with REST data access
   // /////////////////////////////////////
@@ -45,6 +48,17 @@ void main() {
     
     initRouter();
   });
+}
+
+/// Initializes the Bootstrap widgets that need some Dart code to work.
+void initBootjackWidgets() {
+  Dropdown.use();
+  // Prevent default action for click events on dropdown-toggles.
+  // Otherwise the link to "#" is followed by the browser.
+  List<Element> dropdownToggles = queryAll(".dropdown-toggle");
+  for (Element toggle in dropdownToggles) {
+    toggle.onClick.listen((Event e) => e.preventDefault());
+  }
 }
 
 void initRouter() {

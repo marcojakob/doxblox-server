@@ -18,13 +18,13 @@ class DigestCell extends WebComponent {
   inserted() {
     // Create observer to watch for selection changes.
     observe(() => selected, (ChangeNotification e) {
-      _refreshSelection();
+      _refreshSelected();
     });
     
-    _refreshSelection();
+    _refreshSelected();
   }
   
-  void _refreshSelection() {
+  void _refreshSelected() {
     if (selected) {
       host.style.backgroundColor = '#789e35';
       host.style.color = 'white';
