@@ -7,25 +7,60 @@
 <body>
 <element name="text-question-editor" extends="div" apply-author-styles>
   <template>
-    <form>
-      <div class="controls controls-row">
-        <label for="{{letter}}-text" class="span1">{{letter}})</label>
-        <input id="{{letter}}-points" type="number" value="{{question.points.toString()}}" class="span1">
+    <form class="question-form">
+      <div class="form-inline form-row">
+        <label for="{{letter}}-text" class="control-label label-vertical-center"><strong>{{letter}})</strong></label>
+        <button class="btn action-button offset2" type="button"><i class="icon-trash"></i></button>
+        <div class="pull-right">
+          <label for="{{letter}}-points" class="control-label">Points</label>
+          <input id="{{letter}}-points" type="number" value="{{question.points.toString()}}" class="span1">
+        </div>
       </div>
       <textarea id="{{letter}}-text" rows="8" class="input-block-level">{{question.text}}</textarea>
         
-      <div class="controls controls-row offset1">
-        <label for="{{letter}}-solution">Solution</label>
+      <div class="form-inline form-row">
+        <label for="{{letter}}-solution" class="control-label label-vertical-center">Solution</label>
+        <div class="pull-right">
+          <label for="{{letter}}-empty-answer-lines" class="control-label">Empty Answer Lines</label>
+          <input id="{{letter}}-empty-answer-lines" type="number" class="span1" value="{{question.emptyAnswerLines.toString()}}">
+        </div>
       </div>
-      
-      <div class="controls controls-row offset1">
-        <textarea id="{{letter}}-solution" rows="5" class="span6">{{question.solution}}</textarea>
-        <input id="{{letter}}-empty-answer-lines" type="number" class="span1" value="{{question.emptyAnswerLines.toString()}}">
-      </div>
-        
+      <textarea id="{{letter}}-solution" rows="5" class="input-block-level">{{question.solution}}</textarea>
     </form>
     
     <style scoped>
+div[is=text-question-editor] {
+  cursor: move;
+}
+
+div[is=text-question-editor]:hover {
+  background-color: rgb(120, 158, 53); /* #f5f5f5; gray */
+  -webkit-transition: background-color linear .15s;
+     -moz-transition: background-color linear .15s;
+       -o-transition: background-color linear .15s;
+          transition: background-color linear .15s;
+}
+
+div[is=text-question-editor] .action-button {
+  display: none;
+}
+
+div[is=text-question-editor]:hover .action-button {
+  display: inline-block;
+}
+
+.question-form {
+  padding: 10px 5px 10px 5px;
+  margin: 0;
+}
+
+.label-vertical-center {
+  line-height: 30px;
+}
+
+.form-row {
+  margin-bottom: 5px;
+}
     </style>      
   </template>
   <script type="application/dart" src="text_question_editor.dart"></script>
