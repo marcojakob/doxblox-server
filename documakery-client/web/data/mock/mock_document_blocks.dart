@@ -6,7 +6,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '1' 
   ..title = 'QuestionBlock 1' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextQuestion('1a'), mockTextQuestion('1b')]
+  ..questions = [mockTextQuestion('1a'), mockTextQuestion('1b'), mockTextQuestion('1c'), mockTextQuestion('1d')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -15,7 +15,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '2' 
   ..title = 'QuestionBlock 2' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextQuestion('2a'), mockTextQuestion('2b')]
+  ..questions = [mockTextQuestion('2a'), mockTextQuestion('2b'), mockTextQuestion('2c'), mockTextQuestion('2d')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',
@@ -24,7 +24,7 @@ Map<String, QuestionBlock> mockQuestionBlocks() {
   ..id = '3' 
   ..title = 'QuestionBlock 3' 
   ..introduction = 'QuestionBlock Intro' 
-  ..questions = [mockTextQuestion('3a'), mockTextQuestion('3b')]
+  ..questions = [mockTextQuestion('3a'), mockTextQuestion('3b'), mockTextQuestion('3c'), mockTextQuestion('3d')]
   ..topics = ['1', '2']
   ..libraryType = 'PUBLIC'
   ..userId = '9999',

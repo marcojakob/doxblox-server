@@ -93,23 +93,23 @@ class TreeView extends WebComponent {
         "return" : selectNodeCallback
       }
     });
-    js.context.jQuery(_root).jstree(options);
+    js.context.jQuery(host).jstree(options);
     
     // Bind to the loaded event and select node when it is loaded. Needed in 
     // case the tree was not loaded when a node was selected.
     var loadedCallback = new js.Callback.once((event, data) {
       if (selectedNode != null) {
-        js.context.jQuery(_root).jstree('select_node', '#${selectedNode.id}[rel="${selectedNode.type}"]', true);
+        js.context.jQuery(host).jstree('select_node', '#${selectedNode.id}[rel="${selectedNode.type}"]', true);
       }
     });
-    js.context.jQuery(_root).on('loaded.jstree', loadedCallback);
+    js.context.jQuery(host).on('loaded.jstree', loadedCallback);
     
     // Use double-click event to open/close a node
     var openCloseNodeCallback = new js.Callback.many((event) {
       var node = js.context.jQuery(event.target).closest("li");
-      js.context.jQuery(_root).jstree('toggle_node', node);
+      js.context.jQuery(host).jstree('toggle_node', node);
     });
-    js.context.jQuery(_root).on("dblclick.jstree", openCloseNodeCallback);
+    js.context.jQuery(host).on("dblclick.jstree", openCloseNodeCallback);
   }
   
   /**
@@ -122,7 +122,7 @@ class TreeView extends WebComponent {
     
     var parentNode = js.context.jQuery('#${parentId}[rel="${parentType}"]');
     if (parentNode != null) {
-      js.context.jQuery(_root).jstree('create', parentNode, 'inside',  
+      js.context.jQuery(host).jstree('create', parentNode, 'inside',  
           newNodeMap, false, true);
     }
   }
@@ -136,7 +136,7 @@ class TreeView extends WebComponent {
     var newNodeMap = js.map(newNode.toJson());
     
     if (parentJsNode != null) {
-      js.context.jQuery(_root).jstree('create', parentJsNode, 'inside',  
+      js.context.jQuery(host).jstree('create', parentJsNode, 'inside',  
           newNodeMap, false, true);
     }
   }
@@ -152,7 +152,7 @@ class TreeView extends WebComponent {
     // Prevent firing select event in a loop.
     if (selectedNode != newSelectedNode) {
       selectedNode = newSelectedNode;
-      js.context.jQuery(_root).jstree('select_node', '#${id}[rel="${type}"]', true);
+      js.context.jQuery(host).jstree('select_node', '#${id}[rel="${type}"]', true);
     }
   }
   
@@ -179,7 +179,7 @@ class TreeView extends WebComponent {
     });
     
     // Bind the callback function to the event.
-    js.context.jQuery(_root).on('select_node.jstree', selectNodeCallback);  
+    js.context.jQuery(host).on('select_node.jstree', selectNodeCallback);  
   
     return controller.stream;
   }
@@ -202,7 +202,7 @@ class TreeView extends WebComponent {
     });
     
     // Bind the callback function to the event.
-    js.context.jQuery(_root).on('open_node.jstree', openNodeCallback);  
+    js.context.jQuery(host).on('open_node.jstree', openNodeCallback);  
     
     return controller.stream;
   }

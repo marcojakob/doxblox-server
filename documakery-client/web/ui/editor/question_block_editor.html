@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="import" href="text_question_editor.html">
-  </head>
-  <body>
-    <element name="question-block-editor" extends="div" apply-author-styles>
-      <template>
-        <template iterate="question in questionBlock.questions">
-          <text-question-editor question="{{question}}" letter="{{letters[$index]}}">
-          </text-question-editor>
-        </template>
-      </template>
-      <script type="application/dart" src="question_block_editor.dart"></script>
-    </element>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <link rel="import" href="text_question_editor.html">
+</head>
+<body>
+<element name="question-block-editor" extends="div" apply-author-styles>
+  <template>
+    <template iterate="question in questionBlock.questions">
+      <text-question-editor question="{{question}}" letter="{{letters[$index]}}" 
+          draggable="true">
+      </text-question-editor>
+    </template>
+    
+    <style scoped>
+.drag-over {
+  border: 2px dashed #000;
+}
+
+.drag-moving {
+  opacity: 0.5;
+}      
+    </style>
+  </template>
+  <script type="application/dart" src="question_block_editor.dart"></script>
+</element>
+</body>
 </html>
