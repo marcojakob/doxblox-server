@@ -26,34 +26,45 @@ class QuestionBlockEditor extends WebComponent {
    * Invoked this component is added to the DOM.
    */
   inserted() {
-    // Add drag and drop listeners.
+    // Create observer to watch for [questionBlock] changes.
+    observe(() => questionBlock, (ChangeNotification e) {
+      // Defer until the end of the event loop so that web components are loaded first.
+      Timer.run(() {
+        installDragAndDrop();
+      });
+    });
+    
     // Defer until the end of the event loop so that web components are loaded first.
     Timer.run(() {
-      List<Element> questionEditorElements = queryAll('[is="text-question-editor"]');
-      for (Element editorElement in questionEditorElements) {
-        TextQuestionEditor editor = editorElement.xtag;
-        
-        // Set relative positioning so that child elements with absolute 
-        // positioning will be positioned relative to this element.
-        editorElement.style.position = 'relative';
-        
-        // Listen for drag start
-        editorElement.onDragStart.listen(_onDragStart);
-        editorElement.onDragEnd.listen(_onDragEnd);
-        
-        DivElement dropzoneOverlay = 
-            _createDropzoneOverlay('${editor.letter}-dropzone-overlay');
-        
-        // Add overlay as the first child to the editor
-        editorElement.children.insert(0, dropzoneOverlay);
-            
-        // The overlay must listen to all other drag events
-        dropzoneOverlay.onDragEnter.listen(_onDragEnter);
-        dropzoneOverlay.onDragOver.listen(_onDragOver);
-        dropzoneOverlay.onDragLeave.listen(_onDragLeave);
-        dropzoneOverlay.onDrop.listen(_onDrop);
-      }
+      installDragAndDrop();
     });
+  }
+  
+  void installDragAndDrop() {
+    List<Element> questionEditorElements = queryAll('[is="text-question-editor"]');
+    for (Element editorElement in questionEditorElements) {
+      TextQuestionEditor editor = editorElement.xtag;
+      
+      // Set relative positioning so that child elements with absolute 
+      // positioning will be positioned relative to this element.
+      editorElement.style.position = 'relative';
+      
+      // Listen for drag start
+      editorElement.onDragStart.listen(_onDragStart);
+      editorElement.onDragEnd.listen(_onDragEnd);
+      
+      DivElement dropzoneOverlay = 
+          _createDropzoneOverlay('${editor.letter}-dropzone-overlay');
+      
+      // Add overlay as the first child to the editor
+      editorElement.children.insert(0, dropzoneOverlay);
+      
+      // The overlay must listen to all other drag events
+      dropzoneOverlay.onDragEnter.listen(_onDragEnter);
+      dropzoneOverlay.onDragOver.listen(_onDragOver);
+      dropzoneOverlay.onDragLeave.listen(_onDragLeave);
+      dropzoneOverlay.onDrop.listen(_onDrop);
+    }
   }
   
   /**
