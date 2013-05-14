@@ -54,13 +54,10 @@ html, body {
           user-select: none;
 }
 
-.dropzone-overlay {
-  display: none;
-  
-  z-index: 2;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.dnd-over {
+  border: 2px dashed #000;
 }
+
+.dnd-moving {
+  opacity: 0.5;
+}  

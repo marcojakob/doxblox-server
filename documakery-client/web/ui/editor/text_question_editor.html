@@ -10,7 +10,10 @@
     <form class="question-form">
       <div class="form-inline form-row">
         <label for="{{letter}}-text" class="control-label label-vertical-center"><strong>{{letter}})</strong></label>
-        <button class="btn action-button offset2" type="button"><i class="icon-trash"></i></button>
+        <div class="action-buttons offset2">
+          <button class="btn" type="button"><i class="icon-trash"></i></button>
+          <button class="btn" type="button"><i class="icon-edit"></i></button>
+        </div>
         <div class="pull-right">
           <label for="{{letter}}-points" class="control-label">Points</label>
           <input id="{{letter}}-points" type="number" value="{{question.points.toString()}}" class="span1">
@@ -31,6 +34,7 @@
     <style scoped>
 div[is=text-question-editor] {
   cursor: move;
+  /* position: relative;  must be relative for drag and drop overlay */
 }
 
 div[is=text-question-editor]:hover {
@@ -41,11 +45,11 @@ div[is=text-question-editor]:hover {
           transition: background-color linear .15s;
 }
 
-div[is=text-question-editor] .action-button {
+div[is=text-question-editor] .action-buttons {
   display: none;
 }
 
-div[is=text-question-editor]:hover .action-button {
+div[is=text-question-editor]:hover .action-buttons {
   display: inline-block;
 }
 

@@ -1,12 +1,12 @@
 library tree_node_tests;
 
 import 'package:unittest/unittest.dart';
-import 'package:unittest/html_config.dart';
+import 'package:unittest/html_enhanced_config.dart';
 
 import '../../../web/ui/navigation/tree_view.dart';
 
 main() {
-useHtmlConfiguration();
+useHtmlEnhancedConfiguration();
   
 group('TreeNode Tests:', () {
 
