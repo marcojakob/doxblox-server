@@ -11,3 +11,4 @@ dependencies:
   web_ui: any
   bootjack:
     git: git://github.com/rikulo/bootjack.git
+  logging_handlers: any

@@ -5,19 +5,25 @@ library drag_and_drop;
 
 import 'dart:html';
 import 'dart:async';
+import 'package:meta/meta.dart';
 import 'package:js/js.dart' as js;
-import 'package:event_bus/event_bus.dart' show BroadcastStreamController;
+import 'package:logging/logging.dart';
+
+final _logger = new Logger("drag_and_drop");
 
 /**
- * Helper class for drag and drop. There are [draggableElements] that can be 
- * dropped inside [dropzoneElements]. 
+ * Helper class for drag and drop. There are draggable elements that can be 
+ * dropped inside dropzone elements. 
  * 
  * ## CSS Classes ##
- * * The element beeing dragged gets the CSS class [:dnd-moving:].
- * * The dropzone element over which a dragged element is gets [:dnd-over:].
+ * * .dnd-moving: The draggable element beeing dragged.
+ * * .dnd-over: The dropzone element over which a draggable element is.
+ * * .dnd-involved: All drag and drop elements involved during a drag. This
+ *   is helpful to disable hovering during a drag by using the css selector 
+ *   :not(.dnd-involved):hover
  * 
  * ## Events ##
- * There is a [Stream] for all six drag-and-drop events:
+ * Subclasses must implement the following drag-and-drop events:
  * * onDragStart
  * * onDragEnd
  * * onDragEnter
@@ -25,70 +31,60 @@ import 'package:event_bus/event_bus.dart' show BroadcastStreamController;
  * * onDragLeave
  * * onDrop
  * 
- * There are some predefined static handler methods that may be used as handler 
- * for the events:
- * * move
- * * swap 
+ * ## Disable Hovering ##
+ * 
  */
-class DragAndDrop {
+abstract class DragAndDrop {
   const String CSS_CLASS_MOVING = 'dnd-moving';
   const String CSS_CLASS_OVER = 'dnd-over';
-  
-  // The stream controllers.
-  BroadcastStreamController<DragAndDropEvent> _onDragStartController = new BroadcastStreamController<DragAndDropEvent>();
-  BroadcastStreamController<DragAndDropEvent> _onDragEndController = new BroadcastStreamController<DragAndDropEvent>();
-  BroadcastStreamController<DragAndDropEvent> _onDragEnterController = new BroadcastStreamController<DragAndDropEvent>();
-  BroadcastStreamController<DragAndDropEvent> _onDragOverController = new BroadcastStreamController<DragAndDropEvent>();
-  BroadcastStreamController<DragAndDropEvent> _onDragLeaveController = new BroadcastStreamController<DragAndDropEvent>();
-  BroadcastStreamController<DragAndDropEvent> _onDropController = new BroadcastStreamController<DragAndDropEvent>();
-  
-  /// The elements that can be dragged.
-  List<Element> draggableElements;
-  
-  /// The elements on which a dragged element can be dropped.
-  List<Element> dropzoneElements;
+  const String CSS_CLASS_INVOLVED = 'dnd-involved';
   
   /// Currently dragged element.
   Element _currentDragElement;
+ 
+  /// Keeps track of all draggable and dropzone elements.
+  Set<Element> _dndElements = new Set<Element>();
   
   /**
-   * Cunstructs and initializes drag and drop for the specified 
-   * [draggableElements] and [dropzoneElements]. 
+   * Installs listeners on the [draggableElement].
    */
-  DragAndDrop(this.draggableElements, this.dropzoneElements) {
+  void installDraggable(Element draggableElement) {
+    _dndElements.add(draggableElement);
     
-    // Add listeners to draggable elements.
-    for (Element draggableElement in draggableElements) {
-      _installDraggableListeners(draggableElement);
-    }
-    
-    // Add listeners to dropzone elements.
-    for (Element dropzoneElement in dropzoneElements) {
-      _installDropzoneListeners(dropzoneElement);
-    }
-  }
-
-  void _installDraggableListeners(Element draggableElement) {
     // Drag Start.
     draggableElement.onDragStart.listen((MouseEvent event) {
-      draggableElement.classes.add(CSS_CLASS_MOVING);
+      // Add CSS classes
+      _addCssClass(draggableElement, CSS_CLASS_MOVING);
+      _dndElements.forEach((Element e) => _addCssClass(e, CSS_CLASS_INVOLVED));
+      
       _currentDragElement = draggableElement;
       
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', draggableElement.innerHtml);
+      event.dataTransfer.effectAllowed = getEffectAllowedFor(draggableElement);
+      getDataFor(draggableElement).forEach((String type, String data) {
+        event.dataTransfer.setData(type, data);
+      });
       
-      _fireEvent(_onDragStartController, draggableElement);
+      onDragStart(new DragAndDropEvent(draggableElement));
     });
     
     // Drag End.
     draggableElement.onDragEnd.listen((MouseEvent event) {
-      draggableElement.classes.remove(CSS_CLASS_MOVING);
+      // Remove CSS classes.
+      _removeCssClass(draggableElement, CSS_CLASS_MOVING);
+      _dndElements.forEach((Element e) => _removeCssClass(e, CSS_CLASS_INVOLVED));
       
-      _fireEvent(_onDragEndController, draggableElement);
+      _currentDragElement = null;
+      
+      onDragEnd(new DragAndDropEvent(draggableElement));
     });
   }
   
-  void _installDropzoneListeners(Element dropzoneElement) {
+  /**
+   * Installs listeners on the [dropzoneElement].
+   */
+  void installDropzone(Element dropzoneElement) {
+    _dndElements.add(dropzoneElement);
+    
     // Keep track of elements where dragEnter or dragLeave has been fired on.
     // This is necessary as a dragEnter or dragLeave event is not only fired
     // on the [dropzoneElement] but also on its children. Now, whenever the 
@@ -98,146 +94,131 @@ class DragAndDrop {
     
     // Drag Enter.
     dropzoneElement.onDragEnter.listen((MouseEvent event) {
+      // Do nothing if no element of this dnd is dragged.
+      if (_currentDragElement == null) return;
+      
       // This is necessary for IE.
       event.preventDefault();
       
-      // Only handle the dropzone element and not on any of its children.
+      // Only handle on dropzone element and not on any of its children.
       if (dragOverElements.length == 0) {
-        dropzoneElement.classes.add(CSS_CLASS_OVER);
-                
-        _fireEvent(_onDragEnterController, _currentDragElement, dropzoneElement);
+        _addCssClass(dropzoneElement, CSS_CLASS_OVER);
+             
+        onDragEnter(new DragAndDropEvent(_currentDragElement, dropzoneElement));
       }
       dragOverElements.add(event.target);
     });
     
     // Drag Over.
     dropzoneElement.onDragOver.listen((MouseEvent event) {
+      // Do nothing if no element of this dnd is dragged.
+      if (_currentDragElement == null) return;
+      
       // This is necessary to allow us to drop.
       event.preventDefault();
-      event.dataTransfer.dropEffect = 'move';
       
-      _fireEvent(_onDragOverController, _currentDragElement, dropzoneElement);
+      event.dataTransfer.dropEffect = 
+          getDropEffectFor(_currentDragElement, dropzoneElement);
+      
+      onDragOver(new DragAndDropEvent(_currentDragElement, dropzoneElement));
     });
     
     // Drag Leave.
     dropzoneElement.onDragLeave.listen((MouseEvent event) {
+      // Do nothing if no element of this dnd is dragged.
+      if (_currentDragElement == null) return;
+      
       // Firefox fires too many onDragLeave events. This condition fixes it. 
       if (event.target != event.relatedTarget) {
         dragOverElements.remove(event.target);
       }
       
-      // Only handle the dropzone element and not on any of its children.
+      // Only handle on dropzone element and not on any of its children.
       if (dragOverElements.length == 0) {
-        dropzoneElement.classes.remove(CSS_CLASS_OVER);
+        _removeCssClass(dropzoneElement, CSS_CLASS_OVER);
         
-        _fireEvent(_onDragLeaveController, _currentDragElement, dropzoneElement);
+        onDragLeave(new DragAndDropEvent(_currentDragElement, dropzoneElement));
       }
     });
     
     // Drop.
     dropzoneElement.onDrop.listen((MouseEvent event) {
+      // Do nothing if no element of this dnd is dragged.
+      if (_currentDragElement == null) return;
+      
       // Stop the browser from redirecting.
       event.preventDefault();
       
-      dropzoneElement.classes.remove(CSS_CLASS_OVER);
-      
+      _removeCssClass(dropzoneElement, CSS_CLASS_OVER);
       dragOverElements.clear();
       
-      _fireEvent(_onDropController, _currentDragElement, dropzoneElement);
+      onDrop(new DragAndDropEvent(_currentDragElement, dropzoneElement));
     });
   }
   
-  Stream<DragAndDropEvent> get onDragStart => _onDragStartController.stream;
-  Stream<DragAndDropEvent> get onDragEnd => _onDragEndController.stream;
-  Stream<DragAndDropEvent> get onDragEnter => _onDragEnterController.stream;
-  Stream<DragAndDropEvent> get onDragOver => _onDragOverController.stream;
-  Stream<DragAndDropEvent> get onDragLeave => _onDragLeaveController.stream;
-  Stream<DragAndDropEvent> get onDrop => _onDropController.stream;
+  void onDragStart(DragAndDropEvent event);
+  void onDragEnd(DragAndDropEvent event);
+  void onDragEnter(DragAndDropEvent event);
+  void onDragOver(DragAndDropEvent event);
+  void onDragLeave(DragAndDropEvent event);
+  void onDrop(DragAndDropEvent event);
   
   /**
-   * Fires a [DragAndDropEvent] on [streamController]. The [dragElement]
-   * must always be provided. The [dropzoneElement] is optional.
+   * Restricts what 'type of drag' the user can perform on the [dragElement]. 
+   * It is used in the drag-and-drop processing model to initialize the 
+   * dropEffect during the dragenter and dragover events. The property can be 
+   * set to the following values: none, copy, copyLink, copyMove, link, 
+   * linkMove, move, all, and uninitialized.
    */
-  void _fireEvent(BroadcastStreamController streamController, 
-                  Element dragElement, [Element dropzoneElement = null]) {
-    if (streamController.hasListener && !streamController.isClosed 
-        && !streamController.isPaused) {
-      
-      streamController.add(new DragAndDropEvent(dragElement, dropzoneElement));
+  String getEffectAllowedFor(Element dragElement);
+  
+  /**
+   * Controls the feedback that the user is given during the dragenter and 
+   * dragover events. When the user hovers over a target element, the browser's
+   * cursor will indicate what type of operation is going to take place (e.g. a 
+   * copy, a move, etc.). The effect can take on one of the following values: 
+   * none, copy, link, move.
+   */
+  String getDropEffectFor(Element dragElement, Element dropzoneElement);
+  
+  /**
+   * Creates data for [:dataTransfer.setData:] on the event. The result is a map
+   * with the type as key and the data as value.
+   */
+  Map<String, String> getDataFor(Element dragElement);
+  
+  void _addCssClass(Element element, String cssClass) {
+    element.classes.add(cssClass);
+    
+    // Workaround for scoped css inside web components.
+    if (element.attributes.containsKey('is')) {
+      String scopedCssPrefix = '${element.attributes['is']}_';
+      element.classes.add(scopedCssPrefix + cssClass);
     }
   }
   
-  /**
-   * Moves the drag element to the position of the dropzone element. If the 
-   * dropzone element is null, it will be moved to the first position of its parent.
-   */
-  static void move(DragAndDropEvent event) {
-    if (event.dragElement == event.dropzoneElement) {
-      return;
-    }
+  void _removeCssClass(Element element, String cssClass) {
+    element.classes.remove(cssClass);
     
-    if (event.dropzoneElement == null) {
-      // Insert in first position of its parent.
-      Element parent1 = event.dragElement.parent;
-      event.dragElement.remove();
-      parent1.children.insert(0, event.dragElement);      
-    } else {
-      // Insert at position of [e2].
-      Element parent2 = event.dropzoneElement.parent;
-      int index2 = _getElementIndexInParent(event.dropzoneElement);
-      
-      event.dragElement.remove();
-      parent2.children.insert(index2, event.dragElement);      
+    // Workaround for scoped css inside web components.
+    if (element.attributes.containsKey('is')) {
+      String scopedCssPrefix = '${element.attributes['is']}_';
+      element.classes.remove(scopedCssPrefix + cssClass);
     }
   }
-  
-  /**
-   * Swaps dragElement and drozoneElement.
-   */
-  static void swap(DragAndDropEvent event) {
-    Element e1 = event.dragElement;
-    Element e2 = event.dropzoneElement;
-    
-    if (e1 == e2) {
-      return;
-    }
-    
-    int index1 = _getElementIndexInParent(e1);
-    int index2 = _getElementIndexInParent(e2);
-    
-    Element parent1 = e1.parent;
-    Element parent2 = e2.parent;
-    
-    e1.remove();
-    parent2.children.insert(index2, e1);
-    
-    e2.remove();
-    parent1.children.insert(index1, e2);
+}
+
+/**
+ * Calculates the index of the Element [e1] in its parent.
+ */
+int _getElementIndexInParent(Element e1) {
+  int index = 0;
+  var previous = e1.previousElementSibling;
+  while (previous != null) {
+    index++;
+    previous = previous.previousElementSibling;
   }
-  
-  /**
-   * Calculates the index of the Element [e1] in its parent.
-   */
-  static int _getElementIndexInParent(Element e1) {
-    int index = 0;
-    var previous = e1.previousElementSibling;
-    while (previous != null) {
-      index++;
-      previous = previous.previousElementSibling;
-    }
-    return index;
-  }
-  
-//  /**
-//   * Lazy initialization of a [BroadcastStreamController].
-//   */
-//  BroadcastStreamController<DragAndDropEvent> _lazyInit(
-//      BroadcastStreamController<DragAndDropEvent> controller) {
-//    if (controller == null) {
-//      controller = new BroadcastStreamController();
-//    }
-//    return controller;
-//  }
+  return index;
 }
 
 /**
@@ -253,7 +234,139 @@ class DragAndDropEvent {
   /// The dropzone element. May be null.
   Element dropzoneElement;
   
-  DragAndDropEvent(this.dragElement, this.dropzoneElement);
+  /**
+   * Creates a [DragAndDropEvent]. The [dragElement] must always be provided. 
+   * The [dropzoneElement] is optional.
+   */
+  DragAndDropEvent(this.dragElement, [this.dropzoneElement=null]);
+}
+
+/**
+ * Callback function used to report that a drag and drop operation with the 
+ * [dragElement] has been completed. It has the [newIndex] inside its new 
+ * parent. Also provides info about the [originalParent] and [originalIndex] in 
+ * the [originalParent].
+ */
+typedef void DragAndDropComplete(Element dragElement, int newIndex, 
+                                 Element originalParent, int originalIndex);
+
+/**
+ * Drag and Drop for reordering elements.
+ */
+class DragAndDropSortable extends DragAndDrop {
+  
+  /// Index of the draggable element in its parent before dragging.
+  int _originalIndex;
+  
+  /// Parent of the draggable element before dragging.
+  Element _originalParent;
+  
+  /// Index of the draggable element in its parent after dragging.
+  int _newIndex;
+  
+  /// Indicates (for the [onDragEnd] event) if the drag element has been dropped. 
+  /// If false, no real drop on a dropzone element has happened, i.e. the user 
+  /// aborted the dnd.
+  bool _dropped;
+
+  /// Callback function that is called when the drag is ended by a drop.
+  /// If the user aborted the drag, the function is not called.
+  DragAndDropComplete sortableCompleteHandler;
+  
+  /**
+   * Cunstructs and initializes sortable drag and drop for the specified 
+   * [draggableElements] and [dropzoneElements]. 
+   */
+  DragAndDropSortable(List<Element> draggableElements, 
+      List<Element> dropzoneElements) {
+    // Install draggable elements.
+    for (Element draggableElement in draggableElements) {
+      installDraggable(draggableElement);
+    }
+    
+    // Install dropzone elements.
+    for (Element dropzoneElement in dropzoneElements) {
+      installDropzone(dropzoneElement);
+    }
+  }
+  
+  @override
+  void onDragStart(DragAndDropEvent event) {
+    _originalIndex = _getElementIndexInParent(event.dragElement);
+    _originalParent = event.dragElement.parent;
+    _newIndex = _originalIndex;
+    _dropped = false;
+  }
+  
+  @override
+  void onDragEnd(DragAndDropEvent event) {
+    if (!_dropped) {
+      // Not dropped: reset to state before dragging.
+      _moveTo(event.dragElement, _originalParent, _originalIndex);
+    }
+  }
+  
+  @override
+  void onDragEnter(DragAndDropEvent event) {
+    if (event.dragElement == event.dropzoneElement) {
+      return;
+    }
+    
+    Element newParent = event.dropzoneElement.parent;
+    _newIndex = _getElementIndexInParent(event.dropzoneElement);
+    
+    _moveTo(event.dragElement, newParent, _newIndex);
+  }
+  
+  @override
+  void onDragOver(DragAndDropEvent event) {
+  }
+  
+  @override
+  void onDragLeave(DragAndDropEvent event) {
+  }
+  
+  @override
+  void onDrop(DragAndDropEvent event) {
+    _dropped = true;
+    
+    if (sortableCompleteHandler != null) {
+      sortableCompleteHandler(event.dragElement, _newIndex, _originalParent,
+                              _originalIndex);
+    }
+  }
+  
+  @override
+  String getEffectAllowedFor(Element dragElement) {
+    // Only allow move effect.
+    return 'move';
+  }
+  
+  @override
+  String getDropEffectFor(Element dragElement, Element dropzoneElement) {
+    return 'move';
+  }
+  
+  @override
+  Map<String, String> getDataFor(Element dragElement) {
+    return {
+      // 'text/html' doesn't seem to work in ie.
+      'text': dragElement.innerHtml
+    };
+  }
+
+  /**
+   * Moves the [element] to the specified [index] in the [parent] element.
+   * 
+   * Note: The maximum [index] is the number of children of the parent. If the 
+   * move happens inside the same parent, the maximum [index] is children minus 
+   * 1. This is because the [element] itself is removed from its parent before 
+   * it is added again and thus there is one less child when it is inserted.
+   */
+  void _moveTo(Element element, Element parent, int index) {
+    element.remove();
+    parent.children.insert(index, element); 
+  }
 }
 
 

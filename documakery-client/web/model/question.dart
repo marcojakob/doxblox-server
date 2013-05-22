@@ -3,11 +3,12 @@ part of model;
 /**
  * Model object for a block of [Question]s.
  */
-class QuestionBlock implements DocumentBlock {
+class QuestionBlock extends DocumentBlock {
   String id;
   String title;
   String introduction;
   List<Question> questions;
+  
   List<String> topics;
   String libraryType;
   String userId;
@@ -62,7 +63,7 @@ class QuestionBlock implements DocumentBlock {
 /**
  * The model object for a question, always embedded inside a [QuestionBlock].
  */
-abstract class Question {
+abstract class Question extends Object with Persistable {
   String text;
   int points;
 }

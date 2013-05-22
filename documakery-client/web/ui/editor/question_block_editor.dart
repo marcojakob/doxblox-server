@@ -9,6 +9,10 @@ import '../../model/model.dart';
 import '../util/drag_and_drop.dart';
 import 'text_question_editor.dart';
 
+import 'package:logging/logging.dart';
+
+final _logger = new Logger("question_block_editor");
+
 /**
  * Editor for a [QuestionBlock].
  */
@@ -21,31 +25,61 @@ class QuestionBlockEditor extends WebComponent {
   @observable
   QuestionBlock questionBlock;
   
-  Element _dragSourceElement;
-  
   /**
-   * Invoked this component is added to the DOM.
+   * Invoked when this component is added to the DOM.
    */
   inserted() {
     // Create observer to watch for [questionBlock] changes.
-    observe(() => questionBlock, (ChangeNotification e) {
-      // Defer until the end of the event loop so that web components are loaded first.
-      Timer.run(() {
-        _installDragAndDrop();
-      });
-    });
+    observe(() => questionBlock, (_) => _asyncInstallDragAndDrop());
     
-    // Defer until the end of the event loop so that web components are loaded first.
+    // First installation.
+    _asyncInstallDragAndDrop();
+  }
+  
+  
+  /**
+   * Install Drag and Drop. Defer until the end of the event loop so that web 
+   * components are loaded first.
+   */
+  void _asyncInstallDragAndDrop() {
     Timer.run(() {
       _installDragAndDrop();
     });
   }
   
+  /**
+   * Install Drag and Drop.
+   */
   void _installDragAndDrop() {
-    List<Element> questionEditorElements = queryAll('[is="text-question-editor"]');
-    DragAndDrop dnd = new DragAndDrop(questionEditorElements, questionEditorElements);
-    dnd.onDrop.listen(DragAndDrop.move);
-//    dnd.onDrop.listen(DragAndDrop.swap);
+    List<Element> questionEditorElements = host.queryAll('[is="text-question-editor"]');
+    
+    DragAndDropSortable dnd = new DragAndDropSortable(questionEditorElements, 
+        questionEditorElements);
+    
+    dnd.sortableCompleteHandler = (Element dragElement, int newIndex, 
+        Element originalParent, int originalIndex) {
+      
+      // Fix the indexes if the first dom child is <template>.
+      if (dragElement.parent.children.first.tagName.toLowerCase() == 'template') {
+        originalIndex--;
+        newIndex--;  
+      }
+      _logger.fine('drag-and-drop completed with originalIndex=$originalIndex, newIndex=$newIndex');
+      
+      // Move question inside the questionBlock.
+      var draggedQuestion = questionBlock.questions.removeAt(originalIndex);
+      questionBlock.questions.insert(newIndex, draggedQuestion);
+      
+      _refreshLetters();
+    };
+  }
+  
+  void _refreshLetters() {
+    List<Element> questionEditorElements = host.queryAll('[is="text-question-editor"]');
+    
+    for (int i = 0; i < questionEditorElements.length; i++) {
+      (questionEditorElements[i].xtag as TextQuestionEditor).letter = letters[i];
+    }
   }
 }
 

@@ -6,7 +6,7 @@ part of model;
  * The folders are hierarchical. Every folder contains a reference to its parent
  * folder or null if it is a root folder.
  */
-class DocumentFolder {
+class DocumentFolder extends Object with Persistable {
   String id;
   String name;
   String parentId;
@@ -48,7 +48,7 @@ class DocumentFolder {
 /**
  * Model object for a document.
  */
-class Document {
+class Document extends Object with Persistable {
   String id;
   String name;
   List<String> documentBlockIds;
@@ -87,7 +87,7 @@ class Document {
 /**
  * A block used inside a [Document].
  */
-abstract class DocumentBlock {
+abstract class DocumentBlock extends Object with Persistable {
   String id;
   
   /// The title used for the digest

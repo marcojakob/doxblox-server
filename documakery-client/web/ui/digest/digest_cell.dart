@@ -16,22 +16,7 @@ class DigestCell extends WebComponent {
    */
   @override
   inserted() {
-    // Create observer to watch for selection changes.
-    observe(() => selected, (ChangeNotification e) {
-      _refreshSelected();
-    });
-    
-    _refreshSelected();
-  }
-  
-  void _refreshSelected() {
-    if (selected) {
-      host.style.backgroundColor = '#789e35';
-      host.style.color = 'white';
-    } else {
-      host.style.backgroundColor = null;
-      host.style.color = null;
-    }
+    bindCssClasses(this, () => selected ? 'digest-cell_selected' : null);
   }
 }
 

@@ -12,6 +12,8 @@ import 'package:web_ui/watcher.dart' as watchers;
 import 'package:event_bus/event_bus.dart';
 import 'package:route/client.dart';
 import 'package:bootjack/bootjack.dart';
+import 'package:logging/logging.dart';
+import 'package:logging_handlers/logging_handlers_shared.dart';
 
 import 'ui/navigation/navigation_view.dart';
 import 'ui/digest/digest_view.dart';
@@ -27,6 +29,7 @@ import 'urls.dart' as urls;
 part 'layout_manager.dart';
 
 void main() {
+  initLogging();
   initBootjackWidgets();
   
   // ////////////////////////////////////
@@ -48,6 +51,13 @@ void main() {
     
     initRouter();
   });
+}
+
+/// Initializes the logging handler and log level.
+void initLogging() {
+  // Default PrintHandler prints output to console.
+  Logger.root.onRecord.listen(new PrintHandler());
+  Logger.root.level = Level.FINEST;
 }
 
 /// Initializes the Bootstrap widgets that need some Dart code to work.

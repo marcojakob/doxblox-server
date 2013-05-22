@@ -34,10 +34,9 @@
     <style scoped>
 div[is=text-question-editor] {
   cursor: move;
-  /* position: relative;  must be relative for drag and drop overlay */
 }
 
-div[is=text-question-editor]:hover {
+div[is=text-question-editor]:not(.dnd-involved):hover {
   background-color: rgb(120, 158, 53); /* #f5f5f5; gray */
   -webkit-transition: background-color linear .15s;
      -moz-transition: background-color linear .15s;
@@ -49,7 +48,7 @@ div[is=text-question-editor] .action-buttons {
   display: none;
 }
 
-div[is=text-question-editor]:hover .action-buttons {
+div[is=text-question-editor]:not(.dnd-involved):hover .action-buttons {
   display: inline-block;
 }
 

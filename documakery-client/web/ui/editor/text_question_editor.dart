@@ -12,6 +12,8 @@ import '../../model/model.dart';
 class TextQuestionEditor extends WebComponent {
   
   TextQuestion question;
+  
+  @observable
   String letter;
   
   /**
