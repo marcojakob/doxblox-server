@@ -30,9 +30,6 @@ final _logger = new Logger("drag_and_drop");
  * * onDragOver
  * * onDragLeave
  * * onDrop
- * 
- * ## Disable Hovering ##
- * 
  */
 abstract class DragAndDrop {
   const String CSS_CLASS_MOVING = 'dnd-moving';
@@ -242,13 +239,20 @@ class DragAndDropEvent {
 }
 
 /**
- * Callback function used to report that a drag and drop operation with the 
- * [dragElement] has been completed. It has the [newIndex] inside its new 
- * parent. Also provides info about the [originalParent] and [originalIndex] in 
+ * Result used to carry information about a completed drag-and-drop operation.
+ * The [dragElement] was moved and has the [newIndex] inside its new parent. 
+ * Also provides info about the [originalParent] and [originalIndex] in 
  * the [originalParent].
  */
-typedef void DragAndDropComplete(Element dragElement, int newIndex, 
-                                 Element originalParent, int originalIndex);
+class DragAndDropResult {
+  Element dragElement;
+  int newIndex;
+  Element originalParent;
+  int originalIndex;
+  
+  DragAndDropResult(this.dragElement, this.newIndex, this.originalParent,
+      this.originalIndex);
+}
 
 /**
  * Drag and Drop for reordering elements.
@@ -271,7 +275,8 @@ class DragAndDropSortable extends DragAndDrop {
 
   /// Callback function that is called when the drag is ended by a drop.
   /// If the user aborted the drag, the function is not called.
-  DragAndDropComplete sortableCompleteHandler;
+  StreamController<DragAndDropResult> _onSortableCompleteController = 
+      new StreamController<DragAndDropResult>();
   
   /**
    * Cunstructs and initializes sortable drag and drop for the specified 
@@ -288,6 +293,17 @@ class DragAndDropSortable extends DragAndDrop {
     for (Element dropzoneElement in dropzoneElements) {
       installDropzone(dropzoneElement);
     }
+  }
+  
+  /**
+   * Returns the stream of completed sortable drag-and-drop events.
+   * If the user aborted the drag, no event is fired.
+   */
+  Stream<DragAndDropResult> get onSortableCompleteController {
+    if (_onSortableCompleteController == null) {
+      _onSortableCompleteController = new StreamController<DragAndDropResult>();
+    }
+    return _onSortableCompleteController.stream;
   }
   
   @override
@@ -330,9 +346,13 @@ class DragAndDropSortable extends DragAndDrop {
   void onDrop(DragAndDropEvent event) {
     _dropped = true;
     
-    if (sortableCompleteHandler != null) {
-      sortableCompleteHandler(event.dragElement, _newIndex, _originalParent,
-                              _originalIndex);
+    if (_onSortableCompleteController != null 
+        && _onSortableCompleteController.hasListener
+        && !_onSortableCompleteController.isClosed
+        && !_onSortableCompleteController.isPaused) {
+      
+      _onSortableCompleteController.add(new DragAndDropResult(event.dragElement, 
+          _newIndex, _originalParent, _originalIndex));
     }
   }
   

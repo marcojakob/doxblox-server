@@ -56,13 +56,13 @@ class QuestionBlockEditor extends WebComponent {
     DragAndDropSortable dnd = new DragAndDropSortable(questionEditorElements, 
         questionEditorElements);
     
-    dnd.sortableCompleteHandler = (Element dragElement, int newIndex, 
-        Element originalParent, int originalIndex) {
-      
+    dnd.onSortableCompleteController.listen((DragAndDropResult result) {
+      int originalIndex = result.originalIndex;
+      int newIndex = result.newIndex;
       // Fix the indexes if the first dom child is <template>.
-      if (dragElement.parent.children.first.tagName.toLowerCase() == 'template') {
+      if (result.dragElement.parent.children.first.tagName.toLowerCase() == 'template') {
         originalIndex--;
-        newIndex--;  
+        newIndex--;
       }
       _logger.fine('drag-and-drop completed with originalIndex=$originalIndex, newIndex=$newIndex');
       
@@ -71,7 +71,7 @@ class QuestionBlockEditor extends WebComponent {
       questionBlock.questions.insert(newIndex, draggedQuestion);
       
       _refreshLetters();
-    };
+    });
   }
   
   void _refreshLetters() {
