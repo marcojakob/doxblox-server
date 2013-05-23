@@ -48,6 +48,8 @@ abstract class DragAndDrop {
   void installDraggable(Element draggableElement) {
     _dndElements.add(draggableElement);
     
+    _enableIE9drag(draggableElement);
+    
     // Drag Start.
     draggableElement.onDragStart.listen((MouseEvent event) {
       // Add CSS classes
@@ -75,6 +77,25 @@ abstract class DragAndDrop {
       onDragEnd(new DragAndDropEvent(draggableElement));
     });
   }
+  
+  /**
+   * Workaround to enable drag-and-drop elements other than links and images in
+   * Internet Explorer 9.
+   */
+  void _enableIE9drag(Element element) {
+    if (element.draggable == null) {
+      // HTML5 draggable support is not available --> try to use workaround.
+      _logger.finest('Draggable is null, installing dragDrop() workaround');
+      
+      element.onSelectStart.listen((MouseEvent event) {
+        // Prevent selection of text.
+        event.preventDefault();
+        
+        js.context.callDragDrop(element);
+      });
+    }
+  }
+  
   
   /**
    * Installs listeners on the [dropzoneElement].
