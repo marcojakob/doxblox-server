@@ -14,9 +14,10 @@ import '../../urls.dart' as urls;
 class DigestView extends WebComponent {
   DivElement digestContainer;
   
-  /// The [Document] displayed in this view.
+  /// The [Document] displayed in this view. Called [doc] to not interfere with
+  /// getters from [WebComponent].
   @observable
-  Document document;
+  Document doc;
   
   /// Current selected digest.
   @observable
@@ -30,19 +31,19 @@ class DigestView extends WebComponent {
     
     // Initialize listeners
     events.eventBus.on(events.documentAndBlockSelect).listen((List documentAndBlock) {
-      this.document = documentAndBlock[0];
+      this.doc = documentAndBlock[0];
       this.selectedDocumentBlock = documentAndBlock[1];
     });
   }
   
   /**
-   * Returns the list of [DocumentBlock]s of the [document] in this view.
+   * Returns the list of [DocumentBlock]s of the [doc] in this view.
    */
   List<DocumentBlock> _getDocumentBlocks() {
-    if (document == null || document.documentBlockIds == null) {
+    if (doc == null || doc.documentBlockIds == null) {
       return [];
     } else {
-      return data.dataAccess.getDocumentBlocksByIds(document.documentBlockIds);
+      return data.dataAccess.getDocumentBlocksByIds(doc.documentBlockIds);
     }
   }
   
@@ -53,6 +54,6 @@ class DigestView extends WebComponent {
     this.selectedDocumentBlock = documentBlock;
     // Fire url change
     urls.router.gotoUrl(urls.documentBlock, 
-        [document.id, documentBlock.id], 'documakery');
+        [doc.id, documentBlock.id], 'documakery');
   }
 }  
