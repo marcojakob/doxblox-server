@@ -4,9 +4,10 @@ import 'dart:html';
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:web_ui/web_ui.dart';
+import 'package:html5_dnd/html5_dnd.dart';
+import 'package:html5_dnd/html5_sortable.dart';
 
 import '../../model/model.dart';
-import '../util/drag_and_drop.dart';
 import 'text_question_editor.dart';
 
 import 'package:logging/logging.dart';
@@ -53,14 +54,13 @@ class QuestionBlockEditor extends WebComponent {
   void _installDragAndDrop() {
     List<Element> questionEditorElements = host.queryAll('[is="text-question-editor"]');
     
-    DragAndDropSortable dnd = new DragAndDropSortable(questionEditorElements, 
-        questionEditorElements);
-    
-    dnd.onSortableCompleteController.listen((DragAndDropResult result) {
-      int originalIndex = result.originalIndex;
-      int newIndex = result.newIndex;
+    SortableGroup dndGroup = new SortableGroup()
+    ..installAll(questionEditorElements)
+    ..onSortUpdate.listen((SortableEvent event) {
+      int originalIndex = event.originalPosition.index;
+      int newIndex = event.newPosition.index;
       // Fix the indexes if the first dom child is <template>.
-      if (result.dragElement.parent.children.first.tagName.toLowerCase() == 'template') {
+      if (event.draggable.parent.children.first.tagName.toLowerCase() == 'template') {
         originalIndex--;
         newIndex--;
       }

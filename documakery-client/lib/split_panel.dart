@@ -13,8 +13,8 @@ import 'package:web_ui/web_ui.dart';
  * This is a simplified version of the splitter_panel from [Dock Spawn](http://www.dockspawn.com/).
  */  
 class SplitPanel extends WebComponent {
-  const String CSS_SPLIT_PANEL_VERTICAL = "splitpanel-vertical";
-  const String CSS_SPLIT_PANEL_HORIZONTAL = "splitpanel-horizontal";
+  static const String CSS_SPLIT_PANEL_VERTICAL = "splitpanel-vertical";
+  static const String CSS_SPLIT_PANEL_HORIZONTAL = "splitpanel-horizontal";
   
   List<Panel> childPanels;
   List<SplitBar> splitBars;
@@ -212,9 +212,9 @@ class Panel {
  * [SplitBar] is inspired by the splitter_bar of [Dock Spawn](http://www.dockspawn.com/).
  */
 class SplitBar {
-  const String CSS_SPLIT_BAR_HORIZONTAL = "splitbar-horizontal";
-  const String CSS_SPLIT_BAR_VERTICAL = "splitbar-vertical";
-  const String CSS_DISABLE_SELECTION = "disable-selection";
+  static const String CSS_SPLIT_BAR_HORIZONTAL = "splitbar-horizontal";
+  static const String CSS_SPLIT_BAR_VERTICAL = "splitbar-vertical";
+  static const String CSS_DISABLE_SELECTION = "disable-selection";
   
   Panel previousPanel; // The panel to the left/top side of the bar, depending on the bar orientation
   Panel nextPanel;     // The panel to the right/bottom side of the bar, depending on the bar orientation

@@ -9,7 +9,6 @@ import 'dart:async';
 
 import 'package:web_ui/web_ui.dart';
 import 'package:web_ui/watcher.dart' as watchers; 
-import 'package:event_bus/event_bus.dart';
 import 'package:route/client.dart';
 import 'package:bootjack/bootjack.dart';
 import 'package:logging/logging.dart';
@@ -37,7 +36,7 @@ void main() {
   // /////////////////////////////////////
   data.init(new MockDataAccess());
   
-  events.init(new EventBus());
+  events.init(new events.EventBus());
   
   
   // Defer until the end of the event loop so that web components are loaded first.
@@ -56,7 +55,7 @@ void main() {
 /// Initializes the logging handler and log level.
 void initLogging() {
   // Default PrintHandler prints output to console.
-  Logger.root.onRecord.listen(new PrintHandler());
+  Logger.root.onRecord.listen(new PrintHandler().call);
   Logger.root.level = Level.FINEST;
 }
 

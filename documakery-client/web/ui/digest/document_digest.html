@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- import the web components -->
+    <link rel="import" href="document_block_digest.html">
+  </head>
+  <body>
+    <element name="document-digest" extends="div" apply-author-styles>
+      <template>
+        <div class="document-title">
+          {{doc.name}}
+        </div>
+        
+        <template iterate="documentBlock in _getDocumentBlocks()">
+          <document-block-digest document-block="{{documentBlock}}" selected="{{documentBlock == selectedDocumentBlock}}"
+              on-click="_handleDigestSelection(documentBlock)">
+          </document-block-digest>
+        </template>
+        
+        <style scoped>
+.document-title {
+  border-bottom: 1px solid #b5b5b5;
+  font-size: 16px;
+  padding: 4px;
+}
+        </style>
+      </template>
+      <script type="application/dart" src="document_digest.dart"></script>
+    </element>
+  </body>
+</html>

@@ -1,11 +1,14 @@
-library digest_cell;
+library document_block_digest;
 
 import 'package:web_ui/web_ui.dart';
 import 'package:meta/meta.dart';
 
 import '../../model/model.dart';
 
-class DigestCell extends WebComponent {
+/**
+ * A cell displaying a digest version of a document block.
+ */
+class DocumentBlockDigest extends WebComponent {
   DocumentBlock documentBlock;
   
   @observable
@@ -16,7 +19,7 @@ class DigestCell extends WebComponent {
    */
   @override
   inserted() {
-    bindCssClasses(this, () => selected ? 'digest-cell_selected' : null);
+    bindCssClasses(this, () => selected ? 'selected' : null);
   }
 }
 

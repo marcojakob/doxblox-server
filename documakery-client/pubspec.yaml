@@ -2,13 +2,14 @@ name: documakery
 version: 0.0.1
 description: web client for documakery
 dependencies:
+  bootjack: any
+  browser: any
   event_bus: any
-  route: 
+  html5_dnd:
+    git: https://github.com/marcojakob/dart-html5-dnd.git
+  js: any
+  logging_handlers: any
+  route:
     git: https://github.com/dart-lang/route.git
   unittest: any
-  js: any
-  browser: any
   web_ui: any
-  bootjack:
-    git: git://github.com/rikulo/bootjack.git
-  logging_handlers: any

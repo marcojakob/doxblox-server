@@ -4,18 +4,15 @@
   <head>
     <meta charset="utf-8">
     <!-- import the web components -->
-    <link rel="import" href="digest_cell.html">
+    <link rel="import" href="document_digest.html">
   </head>
   <body>
     <element name="digest-view" extends="div" apply-author-styles>
       <template>
-        <template iterate="documentBlock in _getDocumentBlocks()">
-          <digest-cell document-block="{{documentBlock}}" selected="{{documentBlock == selectedDocumentBlock}}"
-              on-click="_handleDigestSelection(documentBlock)">
-          </digest-cell>
+        <template instantiate="if doc != null">
+          <document-digest doc="{{doc}}" selected-document-block="{{selectedDocumentBlock}}">
+          </document-digest>
         </template>
-        <div id="digest-container">
-        </div>
       </template>
       <script type="application/dart" src="digest_view.dart"></script>
     </element>

@@ -8,7 +8,6 @@ html, body {
 
 
 .navigation-view, .digest-view, .editor-view {
-  background: #bada55;
   overflow: auto;
   height: 100%;
 }
@@ -16,11 +15,7 @@ html, body {
 .navigation-view {
   padding-left: 5px;
   padding-right: 5px;
-}
-
-.footer {
-  background: #f00;
-  height: 20px;
+  background-color: #eaedef;
 }
 
 /**************************** Splitter *********************************/
@@ -29,8 +24,8 @@ html, body {
 }
 
 .splitbar-vertical { 
-  background-color: #000000; 
-  width:5px; 
+  background-color: #b5b5b5; 
+  width:3px; 
   height:100%; 
   float:left; 
   cursor:e-resize; 
@@ -46,18 +41,43 @@ html, body {
 }
 
 /*************************** Drag and Drop **************************/
-/* Prevent the text contents of draggable elements from being selectable. */
-[draggable] {
-  -webkit-user-select: none;
-   -khtml-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+.dnd-placeholder {
+  border: 2px dashed #b3b3b3;
+  -webkit-box-sizing: border-box; 
+     -moz-box-sizing: border-box; 
+          box-sizing: border-box;
 }
 
-.dnd-over {
-  
-}
-
-.dnd-moving {
+.dnd-dragging {
   opacity: 0.5;
-}  
+} 
+
+/*************************** Digest View **************************/
+div[is=document-block-digest].selected {
+  background-color: #ecf0f3;
+}
+
+div[is=document-block-digest]:hover {
+  background-color: #d1d4d7;
+}
+
+/*************************** Editor View **************************/
+div[is=text-question-editor]:not(.dnd-drag-occurring):hover {
+  background-color: #f5f5f5; /* @ */
+  -webkit-transition: background-color linear .15s;
+     -moz-transition: background-color linear .15s;
+       -o-transition: background-color linear .15s;
+          transition: background-color linear .15s;
+}
+
+div[is=text-question-editor] .action-buttons {
+  display: none;
+}
+
+div[is=text-question-editor]:not(.dnd-drag-occurring):hover .action-buttons {
+  display: inline-block;
+}
+
+div[is=text-question-editor] {
+  cursor: move;
+}
