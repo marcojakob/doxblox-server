@@ -1,0 +1,41 @@
+library digest_view;
+
+import 'dart:html' hide Document;
+import 'dart:async';
+import 'package:web_ui/web_ui.dart';
+
+import 'document_block_digest.dart';
+
+import '../../model/model.dart';
+import '../../data/data.dart' as data;
+import '../../events.dart' as events;
+import '../../urls.dart' as urls;
+
+/**
+ * View displaying a list of [DocumentBlock]s from a library or a  
+ */
+class DigestView extends WebComponent {
+  DivElement digestContainer;
+  
+  /// The [Document] displayed in this view. [doc] is null if a library is 
+  /// displayed. Called [doc] to not interfere with getters from [WebComponent].
+  @observable
+  Document doc;
+  
+  /// [DocumentBlock] that is currently selected.
+  @observable
+  DocumentBlock selectedDocumentBlock;
+  
+  /**
+   * Invoked when component is added to the DOM.
+   */
+  inserted() {
+    digestContainer = query('#digest-container');
+    
+    // Initialize listeners
+    events.eventBus.on(events.documentAndBlockSelect).listen((List documentAndBlock) {
+      this.doc = documentAndBlock[0];
+      this.selectedDocumentBlock = documentAndBlock[1];
+    });
+  }
+}  

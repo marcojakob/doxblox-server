@@ -1,4 +1,4 @@
-rootProject.name = "documakery"
+rootProject.name = "doxblox"
 
-include "documakery-server"
-include "documakery-client"
+include "doxblox-server"
+include "doxblox-client"
