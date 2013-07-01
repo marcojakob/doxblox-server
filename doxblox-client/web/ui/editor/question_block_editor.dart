@@ -1,18 +1,17 @@
-library question_block_editor;
+library doxblox.question_block_editor;
 
 import 'dart:html';
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:web_ui/web_ui.dart';
 import 'package:html5_dnd/html5_dnd.dart';
-import 'package:html5_dnd/html5_sortable.dart';
 
 import '../../model/model.dart';
 import 'text_question_editor.dart';
 
 import 'package:logging/logging.dart';
 
-final _logger = new Logger("question_block_editor");
+final _logger = new Logger("doxblox.question_block_editor");
 
 /**
  * Editor for a [QuestionBlock].
@@ -49,7 +48,7 @@ class QuestionBlockEditor extends WebComponent {
   }
   
   /**
-   * Install Drag and Drop.
+   * Install drag and drop to enable reordering of questions.
    */
   void _installDragAndDrop() {
     List<Element> questionEditorElements = host.queryAll('[is="text-question-editor"]');

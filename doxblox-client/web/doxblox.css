@@ -43,9 +43,6 @@ html, body {
 /*************************** Drag and Drop **************************/
 .dnd-placeholder {
   border: 2px dashed #b3b3b3;
-  -webkit-box-sizing: border-box; 
-     -moz-box-sizing: border-box; 
-          box-sizing: border-box;
 }
 
 .dnd-dragging {
@@ -53,6 +50,13 @@ html, body {
 } 
 
 /*************************** Digest View **************************/
+div[is=document-block-digest] {
+  min-width: 100px;
+  padding: 4px 10px 4px 4px; /* 4px padding, but a bit extra on the RHS. */
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
 div[is=document-block-digest].selected {
   background-color: #ecf0f3;
 }

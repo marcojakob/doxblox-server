@@ -20,22 +20,25 @@ packages:
   csslib:
     description: csslib
     source: hosted
-    version: "0.4.7+6"
+    version: "0.4.7+7"
   dquery:
     description: dquery
     source: hosted
     version: "0.5.1"
   event_bus:
-    description: event_bus
-    source: hosted
-    version: "0.2.0"
+    description:
+      ref: null
+      resolved-ref: dee177e5b73cd152cedd252ffa544d4fb91cf883
+      url: "https://github.com/marcojakob/dart-event-bus.git"
+    source: git
+    version: "0.2.1"
   html5_dnd:
     description:
       ref: null
-      resolved-ref: bffbc9d9781623ee7437ff3f9346710612c1ae83
+      resolved-ref: dfc8d42e85df47620ad0f578e52b4682b04aa261
       url: "https://github.com/marcojakob/dart-html5-dnd.git"
     source: git
-    version: "0.3.0"
+    version: "0.3.2"
   html5lib:
     description: html5lib
     source: hosted
@@ -67,14 +70,14 @@ packages:
   rikulo_commons:
     description: rikulo_commons
     source: hosted
-    version: "0.7.8+1"
+    version: "0.7.8+2"
   route:
     description:
       ref: null
-      resolved-ref: efa7cfa1d1362b41e027603e69889c6e9ba84f35
+      resolved-ref: b5d62bc4c3b5deff6602ff6f5dcdee720e652e5c
       url: "https://github.com/dart-lang/route.git"
     source: git
-    version: "0.4.5"
+    version: "0.4.5+1"
   source_maps:
     description: source_maps
     source: hosted
@@ -86,4 +89,4 @@ packages:
   web_ui:
     description: web_ui
     source: hosted
-    version: "0.4.12+2"
+    version: "0.4.13+2"

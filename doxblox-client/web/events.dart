@@ -1,7 +1,7 @@
 /**
  * Sets up [EventBus] and events used by the [EventBus].
  */
-library events;
+library doxblox.events;
 
 import 'package:event_bus/event_bus.dart';
 export 'package:event_bus/event_bus.dart';
@@ -19,7 +19,8 @@ void init(EventBus eventBus) {
   _eventBus = eventBus;
 }
 
-/// Either a [Document], a [Document] and a [DocumentBlock], or none was 
-/// selected. First element of the [List] is the [Document] or [:null:], the 
-/// second element is the [DocumentBlock] or [:null:].
-final EventType<List> documentAndBlockSelect = new EventType<List>();
+/// A [Document] was selected. If a selection was cleared, the data is null.
+final EventType<Document> documentSelect = new EventType<Document>();
+
+/// A [DocumentBlock] was selected. If a selection was cleared, the data is null.
+final EventType<DocumentBlock> documentBlockSelect = new EventType<DocumentBlock>();

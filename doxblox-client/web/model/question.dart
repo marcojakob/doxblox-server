@@ -1,4 +1,4 @@
-part of model;
+part of doxblox.model;
 
 /**
  * Model object for a block of [Question]s.
@@ -63,7 +63,7 @@ class QuestionBlock extends DocumentBlock {
 /**
  * The model object for a question, always embedded inside a [QuestionBlock].
  */
-abstract class Question extends Object with Persistable {
+abstract class Question {
   String text;
   int points;
 }

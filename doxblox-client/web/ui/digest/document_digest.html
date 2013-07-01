@@ -13,9 +13,9 @@
           {{doc.name}}
         </div>
         
-        <template iterate="documentBlock in _getDocumentBlocks()">
-          <document-block-digest document-block="{{documentBlock}}" selected="{{documentBlock == selectedDocumentBlock}}"
-              on-click="_handleDigestSelection(documentBlock)">
+        <template iterate="docBlock in docBlocks">
+          <document-block-digest doc-block="{{docBlock}}" selected="{{docBlock == selectedDocBlock}}"
+              on-click="_handleDigestSelection(docBlock)">
           </document-block-digest>
         </template>
         

@@ -4,7 +4,8 @@ description: web client for doxblox
 dependencies:
   bootjack: any
   browser: any
-  event_bus: any
+  event_bus:
+    git: https://github.com/marcojakob/dart-event-bus.git
   html5_dnd:
     git: https://github.com/marcojakob/dart-html5-dnd.git
   js: any

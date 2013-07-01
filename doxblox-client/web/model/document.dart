@@ -1,54 +1,9 @@
-part of model;
-
-/**
- * Model object for a folder that contains documents or other child folders.
- * 
- * The folders are hierarchical. Every folder contains a reference to its parent
- * folder or null if it is a root folder.
- */
-class DocumentFolder extends Object with Persistable {
-  String id;
-  String name;
-  String parentId;
-  List<String> documentIds;
-  
-  /**
-   * Default constructor.
-   */
-  DocumentFolder();
-  
-  /**
-   * Constructs a [DocumentFolder] from a JSON String.
-   */
-  DocumentFolder.fromJson(String jsonString) {
-    var obj = json.parse(jsonString);
-    id = obj['id'];
-    name = obj['name'];
-    parentId = obj['parentId'];
-    documentIds = obj['documentIds'];
-  }
-  
-  /**
-   * Converts this object to a JSON map.
-   */
-  Map toJson() {
-    return {
-      'id': id,
-      'name': name, 
-      'parentId': parentId,
-      'documentIds': documentIds
-    };
-  }
-  
-  String toString() {
-    return json.stringify(this);
-  }
-}
+part of doxblox.model;
 
 /**
  * Model object for a document.
  */
-class Document extends Object with Persistable {
+class Document implements Persistable {
   String id;
   String name;
   List<String> documentBlockIds;
@@ -68,9 +23,12 @@ class Document extends Object with Persistable {
     documentBlockIds = obj['documentBlockIds'];
   }
   
-  /**
-   * Converts this object to a JSON map.
-   */
+  @override
+  static FromJsonFactory get fromJsonFactory {
+    return (jsonString) => new Document.fromJson(jsonString);
+  }
+  
+  @override
   Map toJson() {
     return {
       'id': id,
@@ -83,18 +41,5 @@ class Document extends Object with Persistable {
     return json.stringify(this);
   }
 }
-
-/**
- * A block used inside a [Document].
- */
-abstract class DocumentBlock extends Object with Persistable {
-  String id;
-  
-  /// The title used for the digest
-  String get digestTitle;
-  /// The snippet used for the digest
-  String get digestSnippet;
-}
-
 
 

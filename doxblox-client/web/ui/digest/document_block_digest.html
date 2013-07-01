@@ -19,9 +19,9 @@
         </div>
       </div>
       <div class="text">
-        <span class="unread title">{{documentBlock.digestTitle}}</span>
+        <span class="unread title">{{docBlock.digestTitle}}</span>
         —
-        <span class="snippet">{{documentBlock.digestSnippet}}</span>
+        <span class="snippet">{{docBlock.digestSnippet}}</span>
       </div>
     </div>
     
@@ -37,13 +37,6 @@
  *    |________________________________4px______________________________|
  *    |=============(border)============================================|
  */
-div[is=document-block-digest] {
-  min-width: 100px;
-  padding: 4px 10px 4px 4px; /* 4px padding, but a bit extra on the RHS. */
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
 .inner {
   line-height: 16px;
   height: 32px;  /* Exactly 2 lines of text. */

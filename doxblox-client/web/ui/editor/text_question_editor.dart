@@ -1,4 +1,4 @@
-library text_answer_question_editor;
+library doxblox.text_answer_question_editor;
 
 import 'dart:html';
 import 'package:meta/meta.dart';

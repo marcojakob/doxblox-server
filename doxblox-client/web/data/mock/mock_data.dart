@@ -1,66 +1,116 @@
-library mock_data;
+library doxblox.mock_data;
+
+import 'dart:async';
 
 import '../../model/model.dart';
 import '../data.dart';
 
-part 'mock_document_folders.dart';
-part 'mock_documents.dart';
-part 'mock_document_blocks.dart';
+part 'mock_document_dao.dart';
+part 'mock_document_folder_dao.dart';
+part 'mock_document_block_dao.dart';
 
 /**
  * Mock implmenentation of [DataAccess].
  */
 class MockDataAccess implements DataAccess {
-  Map<String, DocumentFolder> _documentFolders;
-  Map<String, Document> _documents;
-  Map<String, DocumentBlock> _documentBlocks;
+  DocumentDao documents = new MockDocumentDao();
+  DocumentFolderDao documentFolders = new MockDocumentFolderDao();
+  DocumentBlockDao documentBlocks = new MockDocumentBlockDao();
+}
+
+/**
+ * Abstract base class for Data Access Objects.
+ * Type [T] is the type of the data that is accessed.
+ */
+abstract class MockDao<T extends Persistable> extends Dao<T> {
+  /// In-memory mock data.
+  Map<String, T> data = {};
   
-  MockDataAccess() {
-    _documentFolders = mockDocumentFolders();
-    _documents = mockDocuments();
-    _documentBlocks = mockQuestionBlocks();
+  int _idCounter = 0;
+  
+  /// Creates a new id and returns it.
+  String newId() {
+    _idCounter++;
+    return _idCounter.toString();
   }
   
-  // DocumentFolder
-  DocumentFolder getDocumentFolderById(String documentFolderId) {
-    return _documentFolders[documentFolderId];
+  /// Returns the last created id.
+  String lastId() {
+    return _idCounter.toString();
   }
   
-  List<DocumentFolder> getDocumentFolders() {
-    return _documentFolders.values.toList();
+  Future<T> create(T entity) {
+    entity.id = newId();
+    data[entity.id] = entity;
+    return new Future.value(entity);
   }
   
-  // Document
-  Document getDocumentById(String documentId) {
-    return _documents[documentId];  
+  /**
+   * Creates the new [entities]. Returns a list of the saved entities with the 
+   * newly assigned ids.
+   */
+  Future<List<T>> createAll(List<T> entities) {
+    entities.forEach((T entity) {
+      entity.id = newId();
+      data[entity.id] = entity;
+    });
+    return new Future.value(entities);
   }
   
-  List<Document> getDocuments() {
-    return _documents.values.toList();
+  /**
+   * Returns the entity identified by the given [id].
+   */
+  Future<T> getById(String id) {
+    return new Future.value(data[id]);
   }
   
-  List<Document> getDocumentsByIds(List<String> documentIds) {
-    List<Document> result = new List();
-    for (String id in documentIds) {
-      result.add(_documents[id]);
+  /**
+   * Returns all entities.
+   */
+  Future<List<T>> getAll() {
+    return new Future.value(data.values.toList());
+  }
+  
+  /**
+   * Returns all entities with the given ids.
+   */
+  Future<List<T>> getAllByIds(List<String> ids) {
+    List<T> result = new List();
+    for (String id in ids) {
+      result.add(data[id]);
     }
-    return result;
+    return new Future.value(result);
   }
   
-  // DocumentBlock
-  DocumentBlock getDocumentBlockById(String documentBlockId) {
-    return _documentBlocks[documentBlockId];
+  /**
+   * Updates the given [entity].
+   */
+  Future<bool> update(T entity) {
+    data[entity.id] = entity;
+    return new Future.value(true);
   }
   
-  List<DocumentBlock> getDocumentBlocks() {
-    return _documentBlocks.values.toList();
+  /**
+   * Updates the given [entities].
+   */
+  Future<bool> updateAll(List<T> entities) {
+    entities.forEach((T e) => data[e.id] = e);
+    return new Future.value(true);
+  }
+
+  /**
+   * Deletes the given [entity].
+   */
+  Future<bool> delete(T entity) {
+    data.remove(entity.id);
+    return new Future.value(true);
   }
   
-  List<DocumentBlock> getDocumentBlocksByIds(List<String> documentBlockIds) {
-    List<DocumentBlock> result = new List();
-    for (String id in documentBlockIds) {
-      result.add(_documentBlocks[id]);
-    }
-    return result;
+  /**
+   * Deletes the entity with the given [id].
+   */
+  Future<bool> deleteById(String id) {
+    data.remove(id);
+    return new Future.value(true);
   }
 }

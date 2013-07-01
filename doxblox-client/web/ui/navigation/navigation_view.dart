@@ -1,14 +1,17 @@
-library navigation_view;
+library doxblox.navigation_view;
 
 import 'dart:html' hide Document;
 import 'dart:async';
+import 'package:logging/logging.dart';
 import 'package:web_ui/web_ui.dart';
 
 import 'tree_view.dart';
 import '../../model/model.dart';
-import '../../data/data.dart' as data;
+import '../../data/data.dart';
 import '../../events.dart' as events;
 import '../../urls.dart' as urls;
+
+final _log = new Logger("doxblox.navigation_view");
 
 class NavigationView extends WebComponent {
   
@@ -25,6 +28,7 @@ class NavigationView extends WebComponent {
     _documentFolderTree.onSelectNode().listen((TreeNode node) {
       // Only react to [TreeNode.DOCOUMENT_TYPE] selections.
       if (node.type == TreeNode.DOCUMENT_TYPE) {
+        _log.finest('document node selected: node.id=${node.id}');
         urls.router.gotoUrl(urls.document, [node.id], 'doxblox');
       }
     });
@@ -32,10 +36,10 @@ class NavigationView extends WebComponent {
     createDocumentFolderTree();
     
     // Init listener.
-    events.eventBus.on(events.documentAndBlockSelect).listen((List documentAndBlock) {
-      Document document = documentAndBlock[0];
-      if (document != null) {
-        _documentFolderTree.selectNode(document.id, TreeNode.DOCUMENT_TYPE);
+    events.eventBus.on(events.documentSelect).listen((Document doc) {
+      if (doc != null) {
+        _log.finest('received document selection: doc.id=${doc.id}');
+        _documentFolderTree.selectNode(doc.id, TreeNode.DOCUMENT_TYPE);
       }
     });
   }
@@ -44,15 +48,19 @@ class NavigationView extends WebComponent {
    * Refreshes the tree.
    */
   void createDocumentFolderTree() {
-    List<DocumentFolder> folders = data.dataAccess.getDocumentFolders();
-    List<Document> documents = data.dataAccess.getDocuments();
+    Future<List<DocumentFolder>> foldersFuture = dataAccess.documentFolders.getAll();
+    Future<List<Document>> docsFuture = dataAccess.documents.getAll();
     
-    if (folders == null || folders.isEmpty) {
-      return;
-    }
+    Future.wait([foldersFuture, docsFuture]).then((List result) {
+      // Test if there are any folders.
+      if (result[0] == null || result[0].isEmpty) {
+        return;
+      }
+      
+      var builder = new DocumentFolderTreeBuilder(result[0], result[1]);
+      documentTreeRootNode = builder.buildJsonTree();
+    });
     
-    var builder = new DocumentFolderTreeBuilder(folders, documents);
-    documentTreeRootNode = builder.buildJsonTree();
   }
 }
 

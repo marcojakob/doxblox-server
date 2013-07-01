@@ -1,4 +1,4 @@
-library editor_view;
+library doxblox.editor_view;
 
 import 'dart:html';
 import 'dart:async';
@@ -20,9 +20,9 @@ class EditorView extends WebComponent {
   inserted() {
     // Subscribe to document block selection changes
     _documentSelectionSubscription = 
-        events.eventBus.on(events.documentAndBlockSelect).listen((List documentAndBlock) {
-      if (documentAndBlock[1] is QuestionBlock) {
-        questionBlock = documentAndBlock[1];
+        events.eventBus.on(events.documentBlockSelect).listen((DocumentBlock block) {
+      if (block is QuestionBlock) {
+        questionBlock = block;
       } else {
         questionBlock = null;
       }

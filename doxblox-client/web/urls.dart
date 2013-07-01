@@ -1,7 +1,7 @@
 /**
  * Sets up routing of urls.
  */
-library urls;
+library doxblox.urls;
 
 import 'package:route/client.dart';
 export 'package:route/client.dart';

@@ -1,14 +1,17 @@
-library digest_view;
+library doxblox.document_digest;
 
 import 'dart:html' hide Document;
 import 'dart:async';
+import 'package:logging/logging.dart';
 import 'package:web_ui/web_ui.dart';
 
 import 'document_block_digest.dart';
 
 import '../../model/model.dart';
-import '../../data/data.dart' as data;
+import '../../data/data.dart';
 import '../../urls.dart' as urls;
+
+final _log = new Logger("doxblox.document_digest");
 
 /**
  * View to display a [Document] with it's [DocumentBlock]s as digests.
@@ -19,34 +22,34 @@ class DocumentDigest extends WebComponent {
   @observable
   Document doc;
   
+  @observable
+  List<DocumentBlock> docBlocks = [];
+  
   /// Current selected [DocumentBlock].
   @observable
-  DocumentBlock selectedDocumentBlock;
+  DocumentBlock selectedDocBlock;
   
-  /**
-   * Invoked when component is added to the DOM.
-   */
-  inserted() {
-  }
-  
-  /**
-   * Returns the list of [DocumentBlock]s of the [doc] in this view.
-   */
-  List<DocumentBlock> _getDocumentBlocks() {
-    if (doc == null || doc.documentBlockIds == null) {
-      return [];
-    } else {
-      return data.dataAccess.getDocumentBlocksByIds(doc.documentBlockIds);
-    }
+  created() {
+    // Create observer for doc to get the new blocks when it changes.
+    observe(() => doc, (_) {
+      if (doc == null) {
+        _log.finest('doc changed: null');
+        docBlocks = [];
+      } else {
+        _log.finest('doc changed: doc.id=${doc.id}');
+        dataAccess.documentBlocks.getAllByIds(doc.documentBlockIds).then(
+            (List<DocumentBlock> blocks) => docBlocks = blocks);
+      }
+    });
   }
   
   /**
    * Called when a digest is selected.
    */
-  void _handleDigestSelection(DocumentBlock documentBlock) {
-    this.selectedDocumentBlock = documentBlock;
+  void _handleDigestSelection(DocumentBlock docBlock) {
+    this.selectedDocBlock = docBlock;
     // Fire url change
     urls.router.gotoUrl(urls.documentBlock, 
-        [doc.id, documentBlock.id], 'doxblox');
+        [doc.id, docBlock.id], 'doxblox');
   }
 }  

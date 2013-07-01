@@ -27,6 +27,8 @@ import 'urls.dart' as urls;
 
 part 'layout_manager.dart';
 
+final _log = new Logger("doxblox");
+
 void main() {
   initLogging();
   initBootjackWidgets();
@@ -54,9 +56,16 @@ void main() {
 
 /// Initializes the logging handler and log level.
 void initLogging() {
+  hierarchicalLoggingEnabled = true;
+  
   // Default PrintHandler prints output to console.
   Logger.root.onRecord.listen(new PrintHandler().call);
-  Logger.root.level = Level.FINEST;
+  
+  // Root logger level.
+  Logger.root.level = Level.INFO;
+  
+  // Doxblox logger level (affects all loggers starting with 'doxblox.').
+  new Logger('doxblox')..level = Level.ALL;
 }
 
 /// Initializes the Bootstrap widgets that need some Dart code to work.
@@ -75,18 +84,25 @@ void initRouter() {
   urls.init(new Router(useFragment: true));
   urls.router
   ..addHandler(urls.home, (_) {
-    events.eventBus.fire(events.documentAndBlockSelect, [null, null]);  
+    events.eventBus.fire(events.documentSelect, null);
+    events.eventBus.fire(events.documentBlockSelect, null);  
   })
   ..addHandler(urls.document, (path) {
+    _log.finest('matching urls.document path: $path');
     String docId = urls.document.parse(path)[0];
-    Document document = data.dataAccess.getDocumentById(docId);
-    events.eventBus.fire(events.documentAndBlockSelect, [document, null]);  
+    Future<Document> docFuture = data.dataAccess.documents.getById(docId);
+    docFuture.then((Document doc) => 
+        events.eventBus.fire(events.documentSelect, doc));  
   })
   ..addHandler(urls.documentBlock, (path) {
+    _log.finest('matching urls.documentBlock path: $path');
     List<String> groups = urls.documentBlock.parse(path);
-    Document document = data.dataAccess.getDocumentById(groups[0]);
-    DocumentBlock documentBlock = data.dataAccess.getDocumentBlockById(groups[1]);
-    events.eventBus.fire(events.documentAndBlockSelect, [document, documentBlock]);  
+    Future<Document> docFuture = data.dataAccess.documents.getById(groups[0]);
+    Future<DocumentBlock> docBlockFuture = data.dataAccess.documentBlocks.getById(groups[1]);
+    Future.wait([docFuture, docBlockFuture]).then((List result) {
+      events.eventBus.fire(events.documentSelect, result[0]);  
+      events.eventBus.fire(events.documentBlockSelect, result[1]);  
+    });
   })
   ..listen(ignoreClick: true);
 }

@@ -1,4 +1,4 @@
-library tree_view;
+library doxblox.tree_view;
 
 import 'dart:async';
 import 'dart:json' as json;
