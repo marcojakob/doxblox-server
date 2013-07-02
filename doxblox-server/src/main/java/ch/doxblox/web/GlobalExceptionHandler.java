@@ -23,8 +23,9 @@ import ch.doxblox.validation.dto.ValidationErrorMessageDto;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
-  protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-      HttpHeaders headers, HttpStatus status, WebRequest request) {
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException ex, HttpHeaders headers, 
+      HttpStatus status, WebRequest request) {
     List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
     List<ObjectError> globalErrors = ex.getBindingResult().getGlobalErrors();
     
