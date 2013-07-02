@@ -14,13 +14,12 @@ class Document implements Persistable {
   Document();
   
   /**
-   * Constructs a [Document] from a JSON String.
+   * Constructs a [Document] from the [jsonMap].
    */
-  Document.fromJson(String jsonString) {
-    var obj = json.parse(jsonString);
-    id = obj['id'];
-    name = obj['name'];
-    documentBlockIds = obj['documentBlockIds'];
+  Document.fromJson(Map jsonMap) {
+    id = jsonMap['id'];
+    name = jsonMap['name'];
+    documentBlockIds = jsonMap['documentBlockIds'];
   }
   
   @override

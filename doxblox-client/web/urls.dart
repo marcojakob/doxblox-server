@@ -21,6 +21,9 @@ void init(Router router) {
 // Get initial path.
 final String pathname = window.location.pathname;
 
+// -------------------
+// Url Patterns
+// -------------------
 final UrlPattern home = new UrlPattern(pathname + r'');
 final UrlPattern document = new UrlPattern(pathname + r'#document/(\d+)');
 final UrlPattern documentBlock = new UrlPattern(pathname + r'#document/(\d+)/block/(\d+)');

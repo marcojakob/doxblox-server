@@ -19,6 +19,11 @@ void init(EventBus eventBus) {
   _eventBus = eventBus;
 }
 
+
+// -------------------
+// Events
+// -------------------
+
 /// A [Document] was selected. If a selection was cleared, the data is null.
 final EventType<Document> documentSelect = new EventType<Document>();
 

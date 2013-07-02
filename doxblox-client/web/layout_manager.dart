@@ -7,7 +7,7 @@ class LayoutManager {
   
   final Element header;
   
-  final /*SplitPanel*/ baseContainer;
+  final SplitPanel baseContainer;
   
   LayoutManager(this.header, this.baseContainer);
   
@@ -26,7 +26,7 @@ class LayoutManager {
   void _onResized(Event event) {
     // Leave some space for the header
     int headerHeight = header.clientHeight;
-    baseContainer.host.style.paddingTop = "${headerHeight}px";
+    baseContainer.style.paddingTop = "${headerHeight}px";
     baseContainer.resize(window.innerWidth, window.innerHeight - headerHeight);
   }
 }

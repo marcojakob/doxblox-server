@@ -6,7 +6,7 @@ part of doxblox.model;
  * The folders are hierarchical. Every folder contains a reference to its parent
  * folder or null if it is a root folder.
  */
-class DocumentFolder {
+class DocumentFolder implements Persistable {
   String id;
   String name;
   String parentId;
@@ -18,19 +18,21 @@ class DocumentFolder {
   DocumentFolder();
   
   /**
-   * Constructs a [DocumentFolder] from a JSON String.
+   * Constructs a [DocumentFolder] from the [jsonMap].
    */
-  DocumentFolder.fromJson(String jsonString) {
-    var obj = json.parse(jsonString);
-    id = obj['id'];
-    name = obj['name'];
-    parentId = obj['parentId'];
-    documentIds = obj['documentIds'];
+  DocumentFolder.fromJson(Map jsonMap) {
+    id = jsonMap['id'];
+    name = jsonMap['name'];
+    parentId = jsonMap['parentId'];
+    documentIds = jsonMap['documentIds'];
   }
   
-  /**
-   * Converts this object to a JSON map.
-   */
+  @override
+  static FromJsonFactory get fromJsonFactory {
+    return (jsonString) => new DocumentFolder.fromJson(jsonString);
+  }
+  
+  @override
   Map toJson() {
     return {
       'id': id,

@@ -37,12 +37,10 @@ class DigestView extends WebComponent {
     
     // Initialize listeners
     events.eventBus.on(events.documentSelect).listen((Document doc) {
-      _log.finest('documentSelected received: doc.id=${doc.id}');
       this.doc = doc;
     });
     
     events.eventBus.on(events.documentBlockSelect).listen((DocumentBlock block) {
-      _log.finest('documentBlockSelected received: block.id=${block.id}');
       this.selectedDocumentBlock = block;
     });
   }
