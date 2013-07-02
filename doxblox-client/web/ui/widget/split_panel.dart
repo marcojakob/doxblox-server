@@ -1,4 +1,4 @@
-library split_panel;
+library doxblox.split_panel;
 
 import 'dart:html';
 import 'dart:math' as math;

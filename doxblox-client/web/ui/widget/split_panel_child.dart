@@ -1,4 +1,4 @@
-library split_panel_child;
+library doxblox.split_panel_child;
 
 import 'package:web_ui/web_ui.dart';
 

@@ -3,10 +3,6 @@ library doxblox;
 import 'dart:html' hide Document;
 import 'dart:async';
 
-// Cannot import [SplitPanel] because it creates ambiguity. SplitPanel is
-// automatically added see [issue 237](https://github.com/dart-lang/web-ui/issues/237)
-//import 'package:doxblox/split_panel.dart';
-
 import 'package:web_ui/web_ui.dart';
 import 'package:web_ui/watcher.dart' as watchers; 
 import 'package:route/client.dart';
@@ -17,6 +13,7 @@ import 'package:logging_handlers/logging_handlers_shared.dart';
 import 'ui/navigation/navigation_view.dart';
 import 'ui/digest/digest_view.dart';
 import 'ui/editor/editor_view.dart';
+import 'ui/widget/split_panel.dart';
 
 import 'model/model.dart';
 import 'data/mock/mock_data.dart';
@@ -40,10 +37,8 @@ void main() {
   
   events.init(new events.EventBus());
   
-  
   // Defer until the end of the event loop so that web components are loaded first.
   Timer.run(() {
-    
     Element header = query("#header");
     var baseContainer = query("#base-container").xtag;
     // Initialize the controller.
