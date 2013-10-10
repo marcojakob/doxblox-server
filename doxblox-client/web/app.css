@@ -2,11 +2,6 @@ html, body {
   overflow: hidden;
 }
 
-#header > .navbar-inner {
-  padding-left: 5px;  
-}
-
-
 .navigation-view, .digest-view, .editor-view {
   overflow: auto;
   height: 100%;
@@ -16,19 +11,6 @@ html, body {
   padding-left: 5px;
   padding-right: 5px;
   background-color: #eaedef;
-}
-
-/**************************** Splitter *********************************/
-.splitpanel-horizontal { 
-  float:left; 
-}
-
-.splitbar-vertical { 
-  background-color: #b5b5b5; 
-  width:3px; 
-  height:100%; 
-  float:left; 
-  cursor:e-resize; 
 }
 
 /*************************** Text Selection **************************/

@@ -1,9 +1,8 @@
 library doxblox.question_block_editor;
 
+import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'dart:async';
-import 'package:meta/meta.dart';
-import 'package:web_ui/web_ui.dart';
 import 'package:html5_dnd/html5_dnd.dart';
 
 import '../../model/model.dart';
@@ -16,7 +15,8 @@ final _logger = new Logger("doxblox.question_block_editor");
 /**
  * Editor for a [QuestionBlock].
  */
-class QuestionBlockEditor extends WebComponent {
+@CustomTag('doxblox-question-block-editor')
+class QuestionBlockEditorElement extends PolymerElement {
   
   static final List<String> letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 
                                        'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 
@@ -25,17 +25,24 @@ class QuestionBlockEditor extends WebComponent {
   @observable
   QuestionBlock questionBlock;
   
+  bool get applyAuthorStyles => true;
+  
   /**
    * Invoked when this component is added to the DOM.
    */
   inserted() {
-    // Create observer to watch for [questionBlock] changes.
-    observe(() => questionBlock, (_) => _asyncInstallDragAndDrop());
+    super.inserted();
     
     // First installation.
     _asyncInstallDragAndDrop();
   }
   
+  /**
+   * Is automatically called when the [questionBlock] attribute changed.
+   */
+  void questionBlockChanged(QuestionBlock oldQuestionBlock) {
+    _asyncInstallDragAndDrop();
+  }
   
   /**
    * Install Drag and Drop. Defer until the end of the event loop so that web 
@@ -77,7 +84,7 @@ class QuestionBlockEditor extends WebComponent {
     List<Element> questionEditorElements = host.queryAll('[is="text-question-editor"]');
     
     for (int i = 0; i < questionEditorElements.length; i++) {
-      (questionEditorElements[i].xtag as TextQuestionEditor).letter = letters[i];
+      (questionEditorElements[i].xtag as TextQuestionEditorElement).letter = letters[i];
     }
   }
 }

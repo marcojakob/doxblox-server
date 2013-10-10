@@ -1,9 +1,8 @@
 library doxblox.tree_view;
 
+import 'package:polymer/polymer.dart';
 import 'dart:async';
-import 'dart:json' as json;
 import 'package:meta/meta.dart';
-import 'package:web_ui/web_ui.dart';
 import 'package:js/js.dart' as js;
 
 /**
@@ -16,28 +15,22 @@ import 'package:js/js.dart' as js;
  * 
  * TODO: Replace jsTree with a Dart tree implementation.
  */
-class TreeView extends WebComponent {
+@CustomTag('doxblox-tree-view')
+class TreeViewElement extends PolymerElement {
   
-  @observable
-  TreeNode rootNode;
-  
+  @published TreeNode rootnode;
+
   /// The currently selected node
   TreeNode selectedNode;
   
-  /**
-   * Invoked when component is added to the DOM.
-   */
-  inserted() {
-    if (rootNode != null) {
-      initTree(rootNode);
-    }
-    
-    // Create observer to watch for rootNode changes.
-    observe(() => rootNode, (ChangeNotification e) {
-      initTree(rootNode);
-    });
-  }
+  bool get applyAuthorStyles => true;
   
+  /**
+   * Is automatically called when the [rootnode] attribute changed.
+   */
+  void rootnodeChanged(TreeNode oldRootNode) {
+    initTree(rootnode);
+  }
   
   /**
    * Initialize the jsTree.

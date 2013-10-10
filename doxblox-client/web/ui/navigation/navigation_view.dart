@@ -1,9 +1,8 @@
 library doxblox.navigation_view;
 
-import 'dart:html' hide Document;
+import 'package:polymer/polymer.dart';
 import 'dart:async';
 import 'package:logging/logging.dart';
-import 'package:web_ui/web_ui.dart';
 
 import 'tree_view.dart';
 import '../../model/model.dart';
@@ -13,16 +12,18 @@ import '../../urls.dart' as urls;
 
 final _log = new Logger("doxblox.navigation_view");
 
-class NavigationView extends WebComponent {
+@CustomTag('doxblox-navigation-view')
+class NavigationViewElement extends PolymerElement {
   
-  @observable
-  TreeNode documentTreeRootNode;
+  @observable TreeNode documentTreeRootNode;
   
-  /**
-   * Invoked when component is added to the DOM.
-   */
-  inserted() {
-    TreeView _documentFolderTree = query('#document-tree').xtag;
+  bool get applyAuthorStyles => true;
+  
+  created() {
+    super.created();
+    
+    var root = getShadowRoot('doxblox-navigation-view');
+    TreeViewElement _documentFolderTree = root.query('#document-tree').xtag;
     
     // Forward node selection as an event on event bus
     _documentFolderTree.onSelectNode().listen((TreeNode node) {

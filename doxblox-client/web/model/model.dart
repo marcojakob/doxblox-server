@@ -1,8 +1,8 @@
 library doxblox.model;
 
-import 'dart:json' as json;
+import 'dart:convert';
+import 'package:polymer/polymer.dart';
 import 'package:meta/meta.dart';
-import 'package:web_ui/observe.dart';
 import 'package:logging/logging.dart';
 
 import '../data/data.dart';
@@ -19,11 +19,6 @@ part 'document/question/text_question.dart';
 final _log = new Logger("doxblox.model");
 
 /**
- * Function used to create subclasses of [Persistable] from the [jsonMap].
- */
-typedef Persistable FromJsonFactory(Map jsonMap);
-
-/**
  * Persistable model object.
  */
 abstract class Persistable {
@@ -37,13 +32,6 @@ abstract class Persistable {
    * Sets the id.
    */
   set id(String id);
-  
-  /**
-   * Returns the [FromJsonFactory] that is used to create subclasses of 
-   * [Persistable] from a JSON Map. This is a trick to get access to the 
-   * fromJson constructor without using the mirror API.
-   */
-  FromJsonFactory get fromJsonFactory;
   
   /**
    * Converts this object to a JSON map. 

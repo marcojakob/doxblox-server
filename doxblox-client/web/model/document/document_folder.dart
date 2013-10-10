@@ -28,11 +28,6 @@ class DocumentFolder implements Persistable {
   }
   
   @override
-  static FromJsonFactory get fromJsonFactory {
-    return (jsonString) => new DocumentFolder.fromJson(jsonString);
-  }
-  
-  @override
   Map toJson() {
     return {
       'id': id,
@@ -43,6 +38,6 @@ class DocumentFolder implements Persistable {
   }
   
   String toString() {
-    return json.stringify(this);
+    return JSON.encode(this);
   }
 }

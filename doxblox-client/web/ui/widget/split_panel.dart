@@ -1,72 +1,82 @@
 library doxblox.split_panel;
 
-import 'dart:html';
-import 'dart:math' as math;
-import 'dart:async';
+import 'split_panel_child.dart';
+import 'split_bar.dart';
 
-import 'package:web_ui/web_ui.dart';
+import 'package:polymer/polymer.dart';
+import 'dart:math' as math;
+
+/// The horizontal (right <-> left) orientation.
+const String HORIZONTAL = "horizontal";
+
+/// The vertical (top <-> bottom) orientation.
+const String VERTICAL = "vertical";
+
+/// Minimum size of a child panel.
+const int MIN_PANEL_SIZE = 80; 
 
 /**
  * A panel that adds user-positioned splitters between each of its child panels.
  * It can be stacked horizontally or vertically.
- * 
- * This is a simplified version of the splitter_panel from [Dock Spawn](http://www.dockspawn.com/).
- */  
-class SplitPanel extends WebComponent {
-  static const String CSS_SPLIT_PANEL_VERTICAL = "splitpanel-vertical";
-  static const String CSS_SPLIT_PANEL_HORIZONTAL = "splitpanel-horizontal";
+ */
+@CustomTag('doxblox-split-panel')
+class SplitPanelElement extends PolymerElement {
   
-  List<Panel> childPanels;
-  List<SplitBar> splitBars;
-  bool stackedVertical = false;
+  /// The orientation of the split panel. Child panels can be positioned 
+  /// horizontally next to each other, or stacked vertically.
+  @published String orientation = HORIZONTAL;
   
-  /**
-   * Lifecycle method invoked whenever a component is added to the DOM.
-   */
-  inserted() {
-    childPanels = new List<Panel>();
-    splitBars = new List<SplitBar>();
-    
-    // Get all children that were passed to the component
+  List<SplitPanelChildElement> childPanels;
+  List<SplitBarElement> splitBars;
+  
+  void created() {
+    super.created();
+    // Get all direct children that were passed to the component
     // only SplitPanelChild components are allowed
-    for (Element splitPanelChild in host.children) {
-      // Get specified 'ratio' attribute and create a new child [Panel]
-      num ratio = splitPanelChild.xtag.ratio;
-      childPanels.add(new Panel(splitPanelChild, ratio));
-    }
+    childPanels = children
+        .where((child) => child.localName == 'doxblox-split-panel-child')
+        .map((panel) => panel.xtag).toList(growable: false);
     
-    _buildSplitPanelDOM();
-    performLayoutWithRatios();
+    // Set orientation as CSS class on all child panels.
+    childPanels.forEach((panel) => panel.classes.add(orientation));
+    
+    _createSplitBars();
   }
   
-  void _buildSplitPanelDOM() {
+  /**
+   * Initialize split bars between the panels.
+   */
+  void _createSplitBars() {
+    splitBars = new List<SplitBarElement>();
+    
+    // No split bar if there is zero or one child panel.
     if (childPanels.length <= 1) return;
     
-    splitBars = new List<SplitBar>();
     for (int i = 0; i < childPanels.length - 1; i++) {
       var previousPanel = childPanels[i];
       var nextPanel = childPanels[i + 1];
-      var splitterBar = new SplitBar(previousPanel, nextPanel, stackedVertical);
-      splitBars.add(splitterBar);
+      var bar = createElement('doxblox-split-bar');
+      SplitBarElement barElement = bar.xtag;
+      barElement..parent = this
+          ..previousPanel = previousPanel
+          ..nextPanel = nextPanel
+          ..classes.add(orientation); // Add orientation as CSS class.
+      splitBars.add(barElement);
       
-      // Add the div element and split bar to the panel's base div element
-      _insertIntoBaseElement(previousPanel);
-      host.nodes.add(splitterBar.barElement);
+      // Insert split bar into (light?) dom.
+      children.insert(i * 2 + 1, bar);
     }
-    _insertIntoBaseElement(childPanels.last);
-  }
-
-  void _insertIntoBaseElement(Panel panel) {
-    panel.contentElement.remove();
-    host.nodes.add(panel.contentElement);
-    panel.contentElement.classes.add(stackedVertical ? CSS_SPLIT_PANEL_VERTICAL : CSS_SPLIT_PANEL_HORIZONTAL);
   }
   
   /**
    * Resizes the child panels according to their initial relative ratios.
+   * The [width] and [height] must be the size of the content (without padding 
+   * and border).
    */ 
-  void performLayoutWithRatios() {
+  void resizeWithRatios(int width, int height) {
     if (childPanels.length <= 1) return;
+    
+    bool horizontal = orientation == HORIZONTAL;
     
     // Get the sum of all child panel ratios.
     num totalRatios = 0;
@@ -74,8 +84,8 @@ class SplitPanel extends WebComponent {
       totalRatios += panel.ratio;
     });
     
-    int containerSize = stackedVertical ? host.clientHeight : host.clientWidth;
-    int barSize = stackedVertical ? splitBars[0].height : splitBars[0].width;
+    int containerSize = horizontal ? width : height;
+    int barSize = horizontal ? splitBars[0].width : splitBars[0].height;
     int totalBarSize = splitBars.length * barSize;
     
     int panelSizeQuota = containerSize - totalBarSize;
@@ -83,72 +93,56 @@ class SplitPanel extends WebComponent {
     childPanels.forEach((panel) {
       num size = (panel.ratio / totalRatios) * panelSizeQuota;
       
-      if (stackedVertical) {
-        panel.height = size.toInt();
-      } else {
+      if (horizontal) {
         panel.width = size.toInt();
+      } else {
+        panel.height = size.toInt();
       }
     });
+    
+    style.width = "${width}px";
+    style.height = "${height}px";
   }
 
   /**
-   * Resizes the container and it's children.
+   * Resizes the container and it's children. The [width] and [height] must be
+   * the size of the content (without padding and border).
    */
   void resize(int width, int height) {
     if (childPanels.length <= 1) return;
     
-    // Adjust the fixed dimension that is common to all (i.e. width, if stacked vertical; height, if stacked horizontally)
-    for (int i = 0; i < childPanels.length; i++) {
-      var childPanel = childPanels[i];
-      if (stackedVertical) {
-        childPanel.width = width;
-      } else {
-        childPanel.height = height;
-      }
-      
-      if (i < splitBars.length) {
-        var splitBar = splitBars[i];
-        if (stackedVertical) {
-          splitBar.width = width;
-        } else {
-          splitBar.height = height;
-        }
-      }
-    }
+    bool horizontal = orientation == HORIZONTAL;
     
-    // Adjust the varying dimension
-    int totalChildPanelSize = 0;
     // Find out how much space existing child panels take up (excluding the splitter bars)
+    int totalChildPanelSize = 0;
     childPanels.forEach((panel) {
-      int size = stackedVertical ? panel.height : panel.width;
+      int size = horizontal ? panel.width : panel.height;
       totalChildPanelSize += size;
     });
     
     // Get the thickness of the bar
-    int barSize = stackedVertical ? splitBars[0].height : splitBars[0].width;
+    int barSize = horizontal ? splitBars[0].width : splitBars[0].height;
     
     // Find out how much space existing child panels will take after being resized (excluding the split bars)  
-    int targetTotalChildPanelSize = stackedVertical ? height : width;
+    int targetTotalChildPanelSize = horizontal ? width : height;
     targetTotalChildPanelSize -= barSize * splitBars.length;
     
     // Get the scale multiplier 
-    totalChildPanelSize = math.max(totalChildPanelSize, 1);
+    totalChildPanelSize = math.max(totalChildPanelSize, 1); // Make 
     num scaleMultiplier = targetTotalChildPanelSize / totalChildPanelSize;
     
-    // Update the size with this multiplier
+    // Update the size with the multiplier.
     int updatedTotalChildPanelSize = 0;
-    
     childPanels.forEach((child) {
-      int originalSize = stackedVertical ? child.height : child.width;
-      
+      int originalSize = horizontal ? child.width : child.height;
       int newSize = (originalSize * scaleMultiplier).round();
       updatedTotalChildPanelSize += newSize;
       
       // Set the size of the panel
-      if (stackedVertical) {
-        child.height = newSize;
-      } else {
+      if (horizontal) {
         child.width = newSize;
+      } else {
+        child.height = newSize;
       }
     });
     
@@ -157,174 +151,15 @@ class SplitPanel extends WebComponent {
     if (roundingError != 0) {
       // Add rounding error pixels to a panel. Panels receiving the pixels should take turns. 
       var childIndex = targetTotalChildPanelSize % (childPanels.length);
-      Panel child = childPanels[childIndex];
-      if (stackedVertical) {
-        child.height += roundingError;
-      } else {
+      SplitPanelChildElement child = childPanels[childIndex];
+      if (horizontal) {
         child.width += roundingError;
+      } else {
+        child.height += roundingError;
       }
     }
     
-    host.style.width = "${width}px";
-    host.style.height = "${height}px";
+    style.width = "${width}px";
+    style.height = "${height}px";
   }
 }
-
-/**
- * A [Panel] contains a [DivElement] with the panels content and a ratio 
- * for the relative size to other panels.
- */
-class Panel {
-  DivElement contentElement;
-  
-  final num ratio;
-  
-  int _cachedWidth = 0;
-  int _cachedHeight = 0;
-  
-  /**
-   * Creates a [Panel] for the [contentElement]. The [ratio] determines 
-   * the initial size, relative to other panels. 
-   */
-  Panel(this.contentElement, this.ratio) {
-  }
-  
-  int get width => _cachedWidth;
-  set width(int value) {
-    if (_cachedWidth != value) {
-      _cachedWidth = value;
-      contentElement.style.width = "${value}px";
-    }
-  }
-  
-  int get height => _cachedHeight;
-  set height(int value) {
-    if (_cachedHeight != value) {
-      _cachedHeight = value;
-      contentElement.style.height = "${value}px";
-    }
-  }
-}
-
-/**
- * The splitter between two child [DivElement]s.
- * 
- * [SplitBar] is inspired by the splitter_bar of [Dock Spawn](http://www.dockspawn.com/).
- */
-class SplitBar {
-  static const String CSS_SPLIT_BAR_HORIZONTAL = "splitbar-horizontal";
-  static const String CSS_SPLIT_BAR_VERTICAL = "splitbar-vertical";
-  static const String CSS_DISABLE_SELECTION = "disable-selection";
-  
-  Panel previousPanel; // The panel to the left/top side of the bar, depending on the bar orientation
-  Panel nextPanel;     // The panel to the right/bottom side of the bar, depending on the bar orientation
-  DivElement barElement;
-  bool stackedVertical;
-  StreamSubscription<MouseEvent> mouseMovedHandler;
-  StreamSubscription<MouseEvent> mouseDownHandler;
-  StreamSubscription<MouseEvent> mouseUpHandler;
-  MouseEvent previousMouseEvent;
-  int minPanelSize = 50; // TODO: Get from container configuration
-  
-  SplitBar(this.previousPanel, this.nextPanel, this.stackedVertical) {
-    barElement = new DivElement();
-    barElement.classes.add(stackedVertical ? CSS_SPLIT_BAR_HORIZONTAL : CSS_SPLIT_BAR_VERTICAL);
-    
-    mouseDownHandler = barElement.onMouseDown.listen(onMouseDown);
-  }
-  
-  int get width => barElement.clientWidth;
-  set width(int value) => barElement.style.width = "${value}px";
-
-  int get height => barElement.clientHeight;
-  set height(int value) => barElement.style.height = "${value}px";
-  
-  void onMouseDown(MouseEvent e) {
-    _startDragging(e);
-  }
-  
-  void onMouseUp(MouseEvent e) {
-    _stopDragging(e);
-  }
- 
-  bool readyToProcessNextDrag = true;
-  void onMouseMoved(MouseEvent e) {
-    if (!readyToProcessNextDrag) {
-      print ("Skip");
-      return;
-    }
-    readyToProcessNextDrag = false;
-//    var dockManager = previousPanel.dockManager;
-//    dockManager.suspendLayout();
-    int dx = e.page.x - previousMouseEvent.page.x;
-    int dy = e.page.y - previousMouseEvent.page.y;
-    _performDrag(dx, dy);
-    previousMouseEvent = e;
-    readyToProcessNextDrag = true;
-//    dockManager.resumeLayout();
-  }
-  
-  void _performDrag(int dx, int dy) {
-    int previousWidth = previousPanel.width;
-    int previousHeight = previousPanel.height;
-    int nextWidth = nextPanel.width;
-    int nextHeight = nextPanel.height;
-    
-    int previousPanelSize = stackedVertical ? previousHeight : previousWidth; 
-    int nextPanelSize = stackedVertical ? nextHeight : nextWidth;
-    int deltaMovement = stackedVertical ? dy : dx;
-    int newPreviousPanelSize = previousPanelSize + deltaMovement; 
-    int newNextPanelSize = nextPanelSize - deltaMovement;
-    
-    if (newPreviousPanelSize < minPanelSize || newNextPanelSize < minPanelSize) {
-      // One of the panels is smaller than it should be.
-      // In that case, check if the small panel's size is being increased
-      bool continueProcessing = (newPreviousPanelSize < minPanelSize && newPreviousPanelSize > previousPanelSize) || 
-          (newNextPanelSize < minPanelSize && newNextPanelSize > nextPanelSize);
-      
-      if (!continueProcessing) return;
-    }
-
-    if (stackedVertical) {
-      previousPanel.width = previousWidth;
-      previousPanel.height = newPreviousPanelSize;
-      nextPanel.width = nextWidth;
-      nextPanel.height = newNextPanelSize;
-    } else {
-      previousPanel.width = newPreviousPanelSize;
-      previousPanel.height = previousHeight;
-      nextPanel.width = newNextPanelSize;
-      nextPanel.height = nextHeight;
-    }
-  }
-  
-  void _startDragging(MouseEvent e) {
-//    disableGlobalTextSelection();
-    document.body.classes.add(CSS_DISABLE_SELECTION);
-    if (mouseMovedHandler != null) {
-      mouseMovedHandler.cancel();
-      mouseMovedHandler = null;
-    }
-    if (mouseUpHandler != null) {
-      mouseUpHandler.cancel();
-      mouseUpHandler = null;
-    }
-    mouseMovedHandler = window.onMouseMove.listen(onMouseMoved);
-    mouseUpHandler = window.onMouseUp.listen(onMouseUp);
-    previousMouseEvent = e;
-  }
-  
-  void _stopDragging(MouseEvent e) {
-//    enableGlobalTextSelection();
-    document.body.classes.remove(CSS_DISABLE_SELECTION);
-    if (mouseMovedHandler != null) {
-      mouseMovedHandler.cancel();
-      mouseMovedHandler = null;
-    }
-    if (mouseUpHandler != null) {
-      mouseUpHandler.cancel();
-      mouseUpHandler = null;
-    }
-  }
-}
-

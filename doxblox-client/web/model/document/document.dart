@@ -23,11 +23,6 @@ class Document implements Persistable {
   }
   
   @override
-  static FromJsonFactory get fromJsonFactory {
-    return (jsonString) => new Document.fromJson(jsonString);
-  }
-  
-  @override
   Map toJson() {
     return {
       'id': id,
@@ -37,7 +32,7 @@ class Document implements Persistable {
   }
   
   String toString() {
-    return json.stringify(this);
+    return JSON.encode(this);
   }
 }
 

@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 
-<html>
-<head>
-  <meta charset="utf-8">
-  <link rel="import" href="text_question_editor.html">
-</head>
-<body>
-<element name="question-block-editor" extends="div" apply-author-styles>
+<link rel="import" href="text_question_editor.html">
+
+<polymer-element name="doxblox-question-block-editor">
   <template>
-    <template iterate="question in questionBlock.questions">
-      <text-question-editor question="{{question}}" letter="{{letters[$index]}}" 
+    <style>
+      @host {
+        :scope {
+          display: block;
+        }
+      }
+    </style>
+    
+    <template repeat="{{question in questionBlock.questions}}">
+      <doxblox-text-question-editor question="{{question}}" letter="{{letters[$index]}}" 
           draggable="true">
-      </text-question-editor>
+      </doxblox-text-question-editor>
     </template>
   </template>
+  
   <script type="application/dart" src="question_block_editor.dart"></script>
-</element>
-</body>
-</html>
+</polymer-element>

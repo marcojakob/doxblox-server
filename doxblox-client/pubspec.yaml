@@ -3,14 +3,13 @@ version: 0.0.1
 description: web client for doxblox
 dependencies:
   bootjack: any
-  browser: any
   event_bus:
     git: https://github.com/marcojakob/dart-event-bus.git
   html5_dnd:
     git: https://github.com/marcojakob/dart-html5-dnd.git
   js: any
   logging_handlers: any
+  polymer: any
   route:
     git: https://github.com/dart-lang/route.git
   unittest: any
-  web_ui: any

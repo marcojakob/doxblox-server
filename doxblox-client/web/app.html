@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<link rel="import" href="ui/widget/split_panel.html">
+<link rel="import" href="ui/widget/split_panel_child.html">
+<link rel="import" href="ui/navigation/navigation_view.html">
+<link rel="import" href="ui/digest/digest_view.html">
+<link rel="import" href="ui/editor/editor_view.html">
+
+<polymer-element name="doxblox-app">
+  <template>
+    <div id="header" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">doxblox</a>
+        <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#"><i class="icon-home"></i> Home</a></li>
+          <li><a href="#">Link</a></li>
+          <li><a href="#">Link</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="user/preferences"><i class="icon-cog"></i> Preferences</a></li>
+              <li><a href="help/support"><i class="icon-envelope"></i> Contact Support</a></li>
+              <li class="divider"></li>
+              <li><a href="auth/logout"><i class="icon-off"></i> Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+        </div>
+      </div>
+    </div>
+    
+    <doxblox-split-panel id="base-container" orientation="horizontal">
+      <doxblox-split-panel-child ratio="0.2">
+        <doxblox-navigation-view id="navigation-view" class="navigation-view">
+        </doxblox-navigation-view>
+      </doxblox-split-panel-child>
+      <doxblox-split-panel-child ratio="0.2">
+        <doxblox-digest-view id="digest-view" class="digest-view">
+        </doxblox-digest-view>
+      </doxblox-split-panel-child>
+      <doxblox-split-panel-child ratio="0.6">
+        <doxblox-editor-view id="editor-view" class="editor-view">
+        </doxblox-editor-view>
+      </doxblox-split-panel-child>
+    </doxblox-split-panel>
+  </template>
+  
+  <script type="application/dart" src="app.dart"></script>
+</polymer-element>

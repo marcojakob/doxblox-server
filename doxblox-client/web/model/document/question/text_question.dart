@@ -36,6 +36,6 @@ class TextQuestion extends Question {
   }
   
   String toString() {
-    return json.stringify(this);
+    return JSON.encode(this);
   }
 }

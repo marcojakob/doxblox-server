@@ -1,23 +1,21 @@
 library doxblox.digest_view;
 
+import 'package:polymer/polymer.dart';
 import 'dart:html' hide Document;
 import 'dart:async';
 import 'package:logging/logging.dart';
-import 'package:web_ui/web_ui.dart';
 
-import 'document_block_digest.dart';
 
 import '../../model/model.dart';
-import '../../data/data.dart' as data;
 import '../../events.dart' as events;
-import '../../urls.dart' as urls;
 
 final _log = new Logger("doxblox.digest_view");
 
 /**
  * View displaying a list of [DocumentBlock]s from a library or a  
  */
-class DigestView extends WebComponent {
+@CustomTag('doxblox-digest-view')
+class DigestViewElement extends PolymerElement {
   DivElement digestContainer;
   
   /// The [Document] displayed in this view. [doc] is null if a library is 
@@ -29,10 +27,14 @@ class DigestView extends WebComponent {
   @observable
   DocumentBlock selectedDocumentBlock;
   
+  bool get applyAuthorStyles => true;
+  
   /**
    * Invoked when component is added to the DOM.
    */
   inserted() {
+    super.inserted();
+    
     digestContainer = query('#digest-container');
     
     // Initialize listeners

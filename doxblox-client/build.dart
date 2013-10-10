@@ -1,7 +1,5 @@
-import 'dart:io';
-import 'package:web_ui/component_build.dart';
+import 'package:polymer/builder.dart';
 
 void main() {
-  var args = new List.from(new Options().arguments);
-  build(args, ['web/doxblox.html']);
+  build(entryPoints: ['web/index.html']);
 }

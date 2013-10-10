@@ -1,25 +1,25 @@
 library doxblox.document_block_digest;
 
-import 'package:web_ui/web_ui.dart';
-import 'package:meta/meta.dart';
+import 'package:polymer/polymer.dart';
 
 import '../../model/model.dart';
 
 /**
  * A cell displaying a digest version of a document block.
  */
-class DocumentBlockDigest extends WebComponent {
+@CustomTag('doxblox-document-block-digest')
+class DocumentBlockDigestElement extends PolymerElement {
   DocumentBlock docBlock;
   
   @observable
   bool selected;
   
-  /**
-   * Invoked when component is added to the DOM.
-   */
-  @override
-  inserted() {
-    bindCssClasses(this, () => selected ? 'selected' : null);
+  bool get applyAuthorStyles => true;
+  
+  created() {
+    super.created();
+    
+    bindCssClass(this, 'selected', this, 'selected');
   }
 }
 

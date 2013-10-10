@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 
-<html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="import" href="question_block_editor.html">
-  </head>
-  <body>
-    <element name="editor-view" extends="div" apply-author-styles>
-      <template>
-        <template instantiate="if questionBlock != null">
-          <question-block-editor question-block="{{questionBlock}}"></question-block-editor>
-        </template>
-      </template>
-      <script type="application/dart" src="editor_view.dart"></script>
-    </element>
-  </body>
-</html>
+<link rel="import" href="question_block_editor.html">
+
+<polymer-element name="doxblox-editor-view">
+  <template>
+    <style>
+      @host {
+        :scope {
+          display: block;
+        }
+      }
+    </style>
+    
+    <template if="{{questionBlock != null}}">
+      <doxblox-question-block-editor question-block="{{questionBlock}}">
+      </doxblox-question-block-editor>
+    </template>
+  </template>
+  <script type="application/dart" src="editor_view.dart"></script>
+</polymer-element>

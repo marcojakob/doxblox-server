@@ -4,89 +4,141 @@ packages:
   analyzer_experimental:
     description: analyzer_experimental
     source: hosted
-    version: "0.5.20"
+    version: "0.8.1+2"
   args:
     description: args
     source: hosted
-    version: "0.5.20"
+    version: "0.8.1"
+  barback:
+    description: barback
+    source: hosted
+    version: "0.8.1"
   bootjack:
     description: bootjack
     source: hosted
-    version: "0.5.2"
+    version: "0.6.0+1"
   browser:
     description: browser
     source: hosted
-    version: "0.5.20"
+    version: "0.8.1"
   csslib:
     description: csslib
     source: hosted
-    version: "0.4.7+7"
+    version: "0.4.7+11"
+  custom_element:
+    description: custom_element
+    source: hosted
+    version: "0.8.1"
   dquery:
     description: dquery
     source: hosted
-    version: "0.5.1"
+    version: "0.5.2"
   event_bus:
     description:
       ref: null
-      resolved-ref: dee177e5b73cd152cedd252ffa544d4fb91cf883
+      resolved-ref: d5e9b7fbef27a30156cadfcfb7ea666bbdfc2e3f
       url: "https://github.com/marcojakob/dart-event-bus.git"
     source: git
-    version: "0.2.1"
+    version: "0.2.3"
   html5_dnd:
     description:
       ref: null
-      resolved-ref: dfc8d42e85df47620ad0f578e52b4682b04aa261
+      resolved-ref: "243db655dcbbaa739abd04e91aad751b3a168ac1"
       url: "https://github.com/marcojakob/dart-html5-dnd.git"
     source: git
-    version: "0.3.2"
+    version: "0.3.4"
   html5lib:
     description: html5lib
     source: hosted
-    version: "0.4.3"
+    version: "0.4.4"
+  html_import:
+    description: html_import
+    source: hosted
+    version: "0.8.1"
   intl:
     description: intl
     source: hosted
-    version: "0.5.20"
+    version: "0.8.1"
   js:
     description: js
     source: hosted
-    version: "0.0.23"
+    version: "0.0.25"
   logging:
     description: logging
     source: hosted
-    version: "0.5.13"
+    version: "0.8.1"
   logging_handlers:
     description: logging_handlers
     source: hosted
     version: "0.5.0+3"
+  mdv:
+    description: mdv
+    source: hosted
+    version: "0.8.1"
   meta:
     description: meta
     source: hosted
-    version: "0.5.13"
+    version: "0.8.1"
+  mutation_observer:
+    description: mutation_observer
+    source: hosted
+    version: "0.8.1"
+  observe:
+    description: observe
+    source: hosted
+    version: "0.8.1"
+  path:
+    description: path
+    source: hosted
+    version: "0.8.1"
   pathos:
     description: pathos
     source: hosted
-    version: "0.5.20"
+    version: "0.6.3+1"
+  polymer:
+    description: polymer
+    source: hosted
+    version: "0.8.1+1"
+  polymer_expressions:
+    description: polymer_expressions
+    source: hosted
+    version: "0.8.1"
   rikulo_commons:
     description: rikulo_commons
     source: hosted
-    version: "0.7.8+2"
+    version: "0.8.7"
   route:
     description:
       ref: null
-      resolved-ref: b5d62bc4c3b5deff6602ff6f5dcdee720e652e5c
+      resolved-ref: e970830923d1e4c0e6b47613a4bbf4b88ef1d17a
       url: "https://github.com/dart-lang/route.git"
     source: git
     version: "0.4.5+1"
+  shadow_dom:
+    description: shadow_dom
+    source: hosted
+    version: "0.8.1"
   source_maps:
     description: source_maps
     source: hosted
-    version: "0.5.20"
+    version: "0.8.1"
+  stack_trace:
+    description: stack_trace
+    source: hosted
+    version: "0.8.1"
   unittest:
     description: unittest
     source: hosted
-    version: "0.5.20"
+    version: "0.8.1"
+  unmodifiable_collection:
+    description: unmodifiable_collection
+    source: hosted
+    version: "0.8.1"
   web_ui:
     description: web_ui
     source: hosted
-    version: "0.4.13+2"
+    version: "0.4.22"
+  yaml:
+    description: yaml
+    source: hosted
+    version: "0.8.1"

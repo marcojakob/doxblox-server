@@ -1,23 +1,26 @@
 library doxblox.editor_view;
 
-import 'dart:html';
+import 'package:polymer/polymer.dart';
 import 'dart:async';
-import 'package:web_ui/web_ui.dart';
 
 import '../../model/model.dart';
-import '../../data/data.dart' as data;
 import '../../events.dart' as events;
 
-class EditorView extends WebComponent {
+@CustomTag('doxblox-editor-view')
+class EditorViewElement extends PolymerElement {
   StreamSubscription _documentSelectionSubscription;
   
   @observable
   QuestionBlock questionBlock;
   
+  bool get applyAuthorStyles => true;
+  
   /**
    * Invoked when component is added to the DOM.
    */
   inserted() {
+    super.inserted();
+    
     // Subscribe to document block selection changes
     _documentSelectionSubscription = 
         events.eventBus.on(events.documentBlockSelect).listen((DocumentBlock block) {
@@ -33,6 +36,8 @@ class EditorView extends WebComponent {
    * Invoked when component is removed from the DOM.
    */
   removed() {
+    super.removed();
+    
     // Cancel subscription.
     if (_documentSelectionSubscription != null) {
       _documentSelectionSubscription.cancel();

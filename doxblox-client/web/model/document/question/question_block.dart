@@ -40,11 +40,6 @@ class QuestionBlock extends DocumentBlock {
   }
   
   @override
-  static FromJsonFactory get fromJsonFactory {
-    return (jsonString) => new QuestionBlock.fromJson(jsonString);
-  }
-  
-  @override
   Map toJson() {
     return {
       'id': id,
@@ -59,7 +54,7 @@ class QuestionBlock extends DocumentBlock {
   }
   
   String toString() {
-    return json.stringify(this);
+    return JSON.encode(this);
   }
   
   /**

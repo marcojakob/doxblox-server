@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 
-<html>
-  <head>
-    <meta charset="utf-8">
-    <!-- import the web components -->
-    <link rel="import" href="document_digest.html">
-  </head>
-  <body>
-    <element name="digest-view" extends="div" apply-author-styles>
-      <template>
-        <template instantiate="if doc != null">
-          <document-digest doc="{{doc}}" selected-doc-block="{{selectedDocumentBlock}}">
-          </document-digest>
-        </template>
-      </template>
-      <script type="application/dart" src="digest_view.dart"></script>
-    </element>
-  </body>
-</html>
+<link rel="import" href="document_digest.html">
+
+<polymer-element name="doxblox-digest-view">
+  <template>
+    <style>
+      @host {
+        :scope {
+          display: block;
+        }
+      }
+    </style>
+    
+    <template if="{{doc != null}}">
+      <doxblox-document-digest doc="{{doc}}" selected-doc-block="{{selectedDocumentBlock}}">
+      </doxblox-document-digest>
+    </template>
+  </template>
+  
+  <script type="application/dart" src="digest_view.dart"></script>
+</polymer-element>

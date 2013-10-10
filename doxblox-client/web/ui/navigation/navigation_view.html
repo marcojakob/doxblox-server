@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 
-<html>
-  <head>
-    <meta charset="utf-8">
-    <!-- import the web components -->
-    <link rel="import" href="tree_view.html">
-  </head>
-  <body>
-    <element name="navigation-view" extends="div" apply-author-styles>
-      <template>
-        <h5>Libraries</h5>
-        <ul class="unstyled">
-          <li><a href="#">Public Library</a></li>
-          <li><a href="#">Private Library</a></li>
-        </ul>
-        <h5>Documents</h5>
-        <tree-view id="document-tree" root-node="{{documentTreeRootNode}}"></tree-view>
-      </template>
-      <script type="application/dart" src="navigation_view.dart"></script>
-    </element>
-  </body>
-</html>
+<link rel="import" href="tree_view.html">
+
+<polymer-element name="doxblox-navigation-view">
+  <template>
+    <style>
+      @host {
+        :scope {
+          display: block;
+        }
+      }
+    </style>
+    
+    <h5>Libraries</h5>
+    <ul class="unstyled">
+      <li><a href="#">Public Library</a></li>
+      <li><a href="#">Private Library</a></li>
+    </ul>
+    <h5>Documents</h5>
+    <doxblox-tree-view id="document-tree" rootnode="{{documentTreeRootNode}}">
+    </doxblox-tree-view>
+  </template>
+  
+  <script type="application/dart" src="navigation_view.dart"></script>
+</polymer-element>
