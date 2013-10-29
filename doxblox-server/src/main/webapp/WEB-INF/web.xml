@@ -42,15 +42,4 @@
 		<servlet-name>app</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
-	
-	<!-- Logback status servlet -->
-	<servlet>
-		<servlet-name>ViewStatusMessages</servlet-name>
-		<servlet-class>ch.qos.logback.classic.ViewStatusMessagesServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>ViewStatusMessages</servlet-name>
-		<url-pattern>/logbackStatus</url-pattern>
-	</servlet-mapping>
 </web-app>

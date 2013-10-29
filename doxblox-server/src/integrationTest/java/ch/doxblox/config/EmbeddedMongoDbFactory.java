@@ -1,11 +1,8 @@
-package ch.doxblox;
+package ch.doxblox.config;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.stereotype.Component;
 
 import com.mongodb.Mongo;
 
@@ -27,20 +24,22 @@ import de.flapdoodle.embed.process.runtime.Network;
 import de.flapdoodle.embed.process.store.IArtifactStore;
 
 /**
- * EmbeddedMongoDbFactoryBean creates a MongoDbFactory with an embedded mongo instance.
+ * EmbeddedMongoDbFactory creates a MongoDbFactory with an embedded mongo instance.
  * 
  * @author Marco Jakob based on EmbedMongoDbFactoryBean by Waldemar Biller
  */
-@Component
-public class EmbeddedMongoDbFactoryBean implements FactoryBean<MongoDbFactory> {
+public class EmbeddedMongoDbFactory extends SimpleMongoDbFactory {
 
-  public static final String DATABASE_NAME = "embeddedMongo";
+  public static final String HOST = "localhost";
   public static final int PORT = 12345;
+  public static final String DATABASE_NAME = "embeddedMongo";
   
   private static MongodExecutable mongodExec;
   private static MongodProcess mongod;
-
-  public void init() throws IOException {
+  
+  public EmbeddedMongoDbFactory() throws IOException {
+    super(new Mongo(HOST, PORT), DATABASE_NAME);
+    
     MongodConfig config = new MongodConfig(Version.Main.V2_4, PORT, Network.localhostIsIPv6());
     
     // Set executable naming to be the same for every run so we don't need to confirm the firewall dialog$
@@ -67,25 +66,10 @@ public class EmbeddedMongoDbFactoryBean implements FactoryBean<MongoDbFactory> {
     mongod = mongodExec.start();
   }
 
-  public void destroy() {
+  public void destroy() throws Exception {
+    super.destroy();
     if (mongod != null) {
       mongod.stop();
     }
-  }
-
-  @Override
-  public MongoDbFactory getObject() throws Exception {
-    Mongo mongo = new Mongo("localhost", PORT);
-    return new SimpleMongoDbFactory(mongo, DATABASE_NAME);
-  }
-
-  @Override
-  public Class<?> getObjectType() {
-    return MongoDbFactory.class;
-  }
-
-  @Override
-  public boolean isSingleton() {
-    return false;
   }
 }

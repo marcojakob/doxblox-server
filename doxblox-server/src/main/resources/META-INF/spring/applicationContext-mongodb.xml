@@ -29,7 +29,7 @@
 
 	<beans profile="dev">
 		<bean id="mongoDbFactory" init-method="init" destroy-method="destroy"
-			class="ch.doxblox.EmbeddedMongoDbFactoryBean" />
+			class="ch.doxblox.config.EmbeddedMongoDbFactory" />
 	</beans>
 	
 </beans>
