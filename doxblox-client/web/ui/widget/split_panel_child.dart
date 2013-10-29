@@ -14,6 +14,8 @@ class SplitPanelChildElement extends PolymerElement {
   int _cachedWidth = 0;
   int _cachedHeight = 0;
   
+  SplitPanelChildElement.created() : super.created();
+  
   int get width => _cachedWidth;
   set width(int value) {
     if (_cachedWidth != value) {

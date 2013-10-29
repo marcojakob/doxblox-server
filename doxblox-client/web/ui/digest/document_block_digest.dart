@@ -16,9 +16,7 @@ class DocumentBlockDigestElement extends PolymerElement {
   
   bool get applyAuthorStyles => true;
   
-  created() {
-    super.created();
-    
+  DocumentBlockDigestElement.created() : super.created() {
     bindCssClass(this, 'selected', this, 'selected');
   }
 }

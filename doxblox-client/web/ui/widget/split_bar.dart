@@ -34,6 +34,8 @@ class SplitBarElement extends PolymerElement {
   int get width => client.width;
   int get height => client.height;
   
+  SplitBarElement.created() : super.created();
+  
   /**
    * Sets the size of the bar. If split vertically the size is the height, if 
    * split horizontally the size is the width.
@@ -48,7 +50,7 @@ class SplitBarElement extends PolymerElement {
   
   bool readyToProcessNextDrag = true;
   
-  void _startDragging(Event e, var detail, Element target) {
+  void startDragging(Event e, var detail, Element target) {
     document.body.classes.add('disable-selection');
     if (mouseMovedHandler != null) {
       mouseMovedHandler.cancel();
@@ -58,12 +60,12 @@ class SplitBarElement extends PolymerElement {
       mouseUpHandler.cancel();
       mouseUpHandler = null;
     }
-    mouseMovedHandler = window.onMouseMove.listen(_onMouseMoved);
-    mouseUpHandler = window.onMouseUp.listen(_stopDragging);
+    mouseMovedHandler = window.onMouseMove.listen(_mouseMoved);
+    mouseUpHandler = window.onMouseUp.listen(stopDragging);
     previousMouseEvent = e;
   }
   
-  void _stopDragging(Event e, [var detail, Element target]) {
+  void stopDragging(Event e) {
     document.body.classes.remove('disable-selection');
     if (mouseMovedHandler != null) {
       mouseMovedHandler.cancel();
@@ -75,7 +77,7 @@ class SplitBarElement extends PolymerElement {
     }
   }
   
-  void _onMouseMoved(MouseEvent e) {
+  void _mouseMoved(MouseEvent e) {
     int dx = e.page.x - previousMouseEvent.page.x;
     int dy = e.page.y - previousMouseEvent.page.y;
     previousMouseEvent = e;

@@ -1,6 +1,6 @@
 library model_tests;
 
-import 'dart:json' as json;
+import 'dart:convert';
 import 'package:unittest/unittest.dart';
 import '../../web/model/model.dart';
 

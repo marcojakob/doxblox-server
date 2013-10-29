@@ -1,6 +1,5 @@
 library all_tests;
 
-import 'package:unittest/unittest.dart';
 import 'package:unittest/html_enhanced_config.dart';
 
 import 'model/model_tests.dart' as modelTests;

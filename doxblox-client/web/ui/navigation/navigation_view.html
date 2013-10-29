@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<link rel="import" href="tree_view.html">
+<link rel="import" href="document_tree.html">
 
 <polymer-element name="doxblox-navigation-view">
   <template>
@@ -18,8 +18,9 @@
       <li><a href="#">Private Library</a></li>
     </ul>
     <h5>Documents</h5>
-    <doxblox-tree-view id="document-tree" rootnode="{{documentTreeRootNode}}">
-    </doxblox-tree-view>
+    
+    <doxblox-document-tree id="document-tree">
+    </doxblox-document-tree>
   </template>
   
   <script type="application/dart" src="navigation_view.dart"></script>

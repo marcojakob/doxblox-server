@@ -1,7 +1,6 @@
 library doxblox.text_answer_question_editor;
 
 import 'package:polymer/polymer.dart';
-import 'package:meta/meta.dart';
 
 import '../../model/model.dart';
 
@@ -17,4 +16,6 @@ class TextQuestionEditorElement extends PolymerElement {
   String letter;
   
   bool get applyAuthorStyles => true;
+  
+  TextQuestionEditorElement.created() : super.created();
 }

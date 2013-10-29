@@ -15,11 +15,13 @@ class EditorViewElement extends PolymerElement {
   
   bool get applyAuthorStyles => true;
   
+  EditorViewElement.created() : super.created();
+  
   /**
    * Invoked when component is added to the DOM.
    */
-  inserted() {
-    super.inserted();
+  void enteredView() {
+    super.enteredView();
     
     // Subscribe to document block selection changes
     _documentSelectionSubscription = 
@@ -35,8 +37,8 @@ class EditorViewElement extends PolymerElement {
   /**
    * Invoked when component is removed from the DOM.
    */
-  removed() {
-    super.removed();
+  void leftView() {
+    super.leftView();
     
     // Cancel subscription.
     if (_documentSelectionSubscription != null) {

@@ -6,7 +6,6 @@ library doxblox.events;
 import 'package:event_bus/event_bus.dart';
 export 'package:event_bus/event_bus.dart';
 
-import 'ui/digest/document_block_digest.dart';
 import 'model/model.dart';
 
 EventBus _eventBus;

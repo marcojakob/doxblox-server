@@ -19,7 +19,7 @@ documentTests() {
   
   test('constructorFromJson_AllAttributesSet_ReturnsFolder', () {
     // when
-    Document document = new Document.fromJson(json.parse(DOCUMENT_JSON));
+    Document document = new Document.fromJson(JSON.decode(DOCUMENT_JSON));
     
     // then
     expect(document.id, equals('51267b98f5c757f73f98dc1e'));
@@ -32,7 +32,7 @@ documentTests() {
   
   test('constructorFromJson_EmptyJsonString_ReturnsDocumentWithNullValues', () {
     // when
-    Document document = new Document.fromJson(json.parse('{}'));
+    Document document = new Document.fromJson(JSON.parse('{}'));
     
     // then
     expect(document.id, isNull);
@@ -48,10 +48,10 @@ documentTests() {
         ..documentBlockIds = ['3333', '4444'];
     
     // when
-    String jsonString = json.stringify(document);
+    String jsonString = JSON.encode(document);
     
     // then
-    Document reconvertedDoc = new Document.fromJson(json.parse(jsonString));
+    Document reconvertedDoc = new Document.fromJson(JSON.decode(jsonString));
     expect(reconvertedDoc.id, equals('1111'));
     expect(reconvertedDoc.name, equals('class 2d'));
     expect(reconvertedDoc.documentBlockIds, isList);

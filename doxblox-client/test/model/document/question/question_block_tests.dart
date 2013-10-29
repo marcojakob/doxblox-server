@@ -46,7 +46,7 @@ questionBlockTests() {
   
   test('constructorFromJson_AllAttributesSet_ReturnsQuestionBlock', () {
     // when
-    QuestionBlock block = new QuestionBlock.fromJson(json.parse(QUESTION_BLOCK_JSON));
+    QuestionBlock block = new QuestionBlock.fromJson(JSON.decode(QUESTION_BLOCK_JSON));
     
     // then
     expect(block.id, equals('51267930f5c7f925eaae04d2'));
@@ -72,7 +72,7 @@ questionBlockTests() {
   
   test('constructorFromJson_EmptyJsonString_ReturnsWithNullOrEmptyValues', () {
     // when
-    QuestionBlock block = new QuestionBlock.fromJson(json.parse('{}'));
+    QuestionBlock block = new QuestionBlock.fromJson(JSON.decode('{}'));
     
     // then
     expect(block.id, isNull);
@@ -103,10 +103,10 @@ questionBlockTests() {
     ..userId = '9999';
     
     // when
-    String jsonString = json.stringify(block);
+    String jsonString = JSON.encode(block);
     
     // then
-    QuestionBlock reconvertedBlock = new QuestionBlock.fromJson(json.parse(jsonString));
+    QuestionBlock reconvertedBlock = new QuestionBlock.fromJson(JSON.decode(jsonString));
     expect(reconvertedBlock.id, equals('1111'));
     expect(reconvertedBlock.questions, hasLength(2));
     expect(reconvertedBlock.questions[0], new isInstanceOf<TextQuestion>('TextQuestion'));

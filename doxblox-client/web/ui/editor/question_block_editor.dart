@@ -27,38 +27,34 @@ class QuestionBlockEditorElement extends PolymerElement {
   
   bool get applyAuthorStyles => true;
   
+  QuestionBlockEditorElement.created() : super.created();
+  
   /**
    * Invoked when this component is added to the DOM.
    */
-  inserted() {
-    super.inserted();
+  void enteredView() {
+    super.enteredView();
     
-    // First installation.
-    _asyncInstallDragAndDrop();
+    // First installation. Defer until the end of the event loop so that web 
+    // components are loaded first.
+    new Future(_installDragAndDrop);
   }
   
   /**
    * Is automatically called when the [questionBlock] attribute changed.
    */
   void questionBlockChanged(QuestionBlock oldQuestionBlock) {
-    _asyncInstallDragAndDrop();
-  }
-  
-  /**
-   * Install Drag and Drop. Defer until the end of the event loop so that web 
-   * components are loaded first.
-   */
-  void _asyncInstallDragAndDrop() {
-    Timer.run(() {
-      _installDragAndDrop();
-    });
+    // Defer until the end of the event loop so that web components are loaded 
+    // first.
+    new Future(_installDragAndDrop);
   }
   
   /**
    * Install drag and drop to enable reordering of questions.
    */
   void _installDragAndDrop() {
-    List<Element> questionEditorElements = host.queryAll('[is="text-question-editor"]');
+    List<Element> questionEditorElements = 
+        shadowRoot.querySelectorAll('text-question-editor');
     
     SortableGroup dndGroup = new SortableGroup()
     ..installAll(questionEditorElements)
@@ -81,10 +77,11 @@ class QuestionBlockEditorElement extends PolymerElement {
   }
   
   void _refreshLetters() {
-    List<Element> questionEditorElements = host.queryAll('[is="text-question-editor"]');
+    List<Element> questionEditorElements = 
+        shadowRoot.querySelectorAll('text-question-editor');
     
     for (int i = 0; i < questionEditorElements.length; i++) {
-      (questionEditorElements[i].xtag as TextQuestionEditorElement).letter = letters[i];
+      (questionEditorElements[i] as TextQuestionEditorElement).letter = letters[i];
     }
   }
 }

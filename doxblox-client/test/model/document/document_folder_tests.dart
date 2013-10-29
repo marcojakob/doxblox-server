@@ -21,7 +21,7 @@ documentFolderTests() {
   
   test('constructorFromJson_AllAttributesSet_ReturnsFolder', () {
     // when
-    DocumentFolder folder = new DocumentFolder.fromJson(json.parse(DOCUMENT_FOLDER_JSON));
+    DocumentFolder folder = new DocumentFolder.fromJson(JSON.decode(DOCUMENT_FOLDER_JSON));
     
     // then
     expect(folder.id, equals('51267b98f5c757f73f98dc1e'));
@@ -35,7 +35,7 @@ documentFolderTests() {
   
   test('constructorFromJson_EmptyJsonString_ReturnsFolderWithNullValues', () {
     // when
-    DocumentFolder folder = new DocumentFolder.fromJson(json.parse('{}'));
+    DocumentFolder folder = new DocumentFolder.fromJson(JSON.decode('{}'));
     
     // then
     expect(folder.id, isNull);
@@ -53,10 +53,10 @@ documentFolderTests() {
         ..documentIds = ['3333', '4444'];
     
     // when
-    String jsonString = json.stringify(folder);
+    String jsonString = JSON.stringify(folder);
     
     // then
-    DocumentFolder reconvertedFolder = new DocumentFolder.fromJson(json.parse(jsonString));
+    DocumentFolder reconvertedFolder = new DocumentFolder.fromJson(JSON.deocde(jsonString));
     expect(reconvertedFolder.id, equals('1111'));
     expect(reconvertedFolder.name, equals('class 2d'));
     expect(reconvertedFolder.parentId, equals('9999'));

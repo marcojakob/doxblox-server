@@ -1,11 +1,8 @@
 library doxblox.model;
 
 import 'dart:convert';
-import 'package:polymer/polymer.dart';
-import 'package:meta/meta.dart';
 import 'package:logging/logging.dart';
 
-import '../data/data.dart';
 import '../util/string_utils.dart';
 
 part 'document/document_folder.dart';

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<link rel="import" href="packages/tree_view/tree_view.html">
+
+<polymer-element name="doxblox-document-tree">
+  <template>
+    <style>
+      @host {
+        :scope {
+          display: block;
+        }
+      }
+    </style>
+    
+    <tree-view id="tree" root="{{root}}">
+    </tree-view>
+  </template>
+  
+  <script type="application/dart" src="document_tree.dart"></script>
+</polymer-element>

@@ -7,9 +7,9 @@ dependencies:
     git: https://github.com/marcojakob/dart-event-bus.git
   html5_dnd:
     git: https://github.com/marcojakob/dart-html5-dnd.git
-  js: any
-  logging_handlers: any
+  intl: any
   polymer: any
-  route:
-    git: https://github.com/dart-lang/route.git
+  route: any
+  tree_view:
+    git: https://github.com/marcojakob/dart-tree-view.git
   unittest: any

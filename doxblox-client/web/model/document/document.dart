@@ -22,7 +22,6 @@ class Document implements Persistable {
     documentBlockIds = jsonMap['documentBlockIds'];
   }
   
-  @override
   Map toJson() {
     return {
       'id': id,

@@ -1,5 +1,6 @@
 library doxblox.split_panel;
 
+import 'dart:html';
 import 'split_panel_child.dart';
 import 'split_bar.dart';
 
@@ -18,6 +19,8 @@ const int MIN_PANEL_SIZE = 80;
 /**
  * A panel that adds user-positioned splitters between each of its child panels.
  * It can be stacked horizontally or vertically.
+ * 
+ * Part of the resize-mechanism is inspired by [Dock Spawn](http://www.dockspawn.com/).
  */
 @CustomTag('doxblox-split-panel')
 class SplitPanelElement extends PolymerElement {
@@ -29,13 +32,15 @@ class SplitPanelElement extends PolymerElement {
   List<SplitPanelChildElement> childPanels;
   List<SplitBarElement> splitBars;
   
-  void created() {
-    super.created();
+  SplitPanelElement.created() : super.created() {
+  }
+  
+  void enteredView() {
+    super.enteredView();
+    
     // Get all direct children that were passed to the component
     // only SplitPanelChild components are allowed
-    childPanels = children
-        .where((child) => child.localName == 'doxblox-split-panel-child')
-        .map((panel) => panel.xtag).toList(growable: false);
+    childPanels = new List.from(children, growable: false);
     
     // Set orientation as CSS class on all child panels.
     childPanels.forEach((panel) => panel.classes.add(orientation));
@@ -55,13 +60,12 @@ class SplitPanelElement extends PolymerElement {
     for (int i = 0; i < childPanels.length - 1; i++) {
       var previousPanel = childPanels[i];
       var nextPanel = childPanels[i + 1];
-      var bar = createElement('doxblox-split-bar');
-      SplitBarElement barElement = bar.xtag;
-      barElement..parent = this
+      var bar = new Element.tag('doxblox-split-bar');
+      bar..parent = this
           ..previousPanel = previousPanel
           ..nextPanel = nextPanel
           ..classes.add(orientation); // Add orientation as CSS class.
-      splitBars.add(barElement);
+      splitBars.add(bar);
       
       // Insert split bar into (light?) dom.
       children.insert(i * 2 + 1, bar);

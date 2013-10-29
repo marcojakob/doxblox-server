@@ -29,13 +29,15 @@ class DigestViewElement extends PolymerElement {
   
   bool get applyAuthorStyles => true;
   
+  DigestViewElement.created() : super.created();
+  
   /**
    * Invoked when component is added to the DOM.
    */
-  inserted() {
-    super.inserted();
+  enteredView() {
+    super.enteredView();
     
-    digestContainer = query('#digest-container');
+    digestContainer = querySelector('#digest-container');
     
     // Initialize listeners
     events.eventBus.on(events.documentSelect).listen((Document doc) {

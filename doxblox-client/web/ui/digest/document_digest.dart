@@ -32,9 +32,7 @@ class DocumentDigestElement extends PolymerElement {
   
   bool get applyAuthorStyles => true;
   
-  created() {
-    super.created();
-    
+  DocumentDigestElement.created() : super.created() {
 //    // Create observer for doc to get the new blocks when it changes.
 //    new PathObserver(doc, '')
 //      ..bindSync((Document newDoc) {
@@ -61,8 +59,9 @@ class DocumentDigestElement extends PolymerElement {
     } else {
       _log.finest('doc changed: doc.id=${doc.id}');
       dataAccess.documentBlocks.getAllByIds(doc.documentBlockIds).then((List<DocumentBlock> blocks) {
+        var oldDocBlocks = docBlocks;
         docBlocks = blocks;
-        notifyProperty(this, #docBlocks);
+        notifyPropertyChange(#docBlocks, oldDocBlocks, docBlocks);
       });
     }
   }

@@ -39,7 +39,6 @@ class QuestionBlock extends DocumentBlock {
     userId = jsonMap['userId'];
   }
   
-  @override
   Map toJson() {
     return {
       'id': id,

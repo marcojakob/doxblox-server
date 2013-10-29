@@ -27,7 +27,6 @@ class DocumentFolder implements Persistable {
     documentIds = jsonMap['documentIds'];
   }
   
-  @override
   Map toJson() {
     return {
       'id': id,

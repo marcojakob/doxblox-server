@@ -24,7 +24,6 @@ class TextQuestion extends Question {
     solution = jsonMap['solution'];
   }
   
-  @override
   Map toJson() {
     return {
       'text': text,
