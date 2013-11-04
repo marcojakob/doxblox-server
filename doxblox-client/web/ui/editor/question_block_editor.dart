@@ -18,12 +18,11 @@ final _logger = new Logger("doxblox.question_block_editor");
 @CustomTag('doxblox-question-block-editor')
 class QuestionBlockEditorElement extends PolymerElement {
   
-  static final List<String> letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 
+  List<String> letters = const ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 
                                        'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 
                                        's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
   
-  @observable
-  QuestionBlock questionBlock;
+  @published QuestionBlock questionBlock;
   
   bool get applyAuthorStyles => true;
   

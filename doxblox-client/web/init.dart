@@ -11,16 +11,11 @@ import 'events.dart' as events;
 final _log = new Logger("doxblox.init");
 
 main() {
-  initLogging();
-  _log.info('Logging initialized.');
+  _initLogging();
   
-  // ////////////////////////////////////
   // TODO: Replace Mock with REST data access
-  // /////////////////////////////////////
-  _log.info('Initializing data access.');
   data.init(new MockDataAccess());
   
-  _log.info('Initializing event bus.');
   events.init(new events.EventBus());
   
   _log.info('Initializing polymer.');
@@ -28,7 +23,7 @@ main() {
 }
 
 /// Initializes the logging handler and log level.
-void initLogging() {
+void _initLogging() {
   hierarchicalLoggingEnabled = true;
 
   DateFormat dateFormat = new DateFormat('yyyy.mm.dd HH:mm:ss.SSS');
@@ -43,4 +38,6 @@ void initLogging() {
   
   // Doxblox logger level (affects all loggers starting with 'doxblox.').
   new Logger('doxblox')..level = Level.ALL;
+  
+  _log.info('Logging initialized.');
 }

@@ -20,8 +20,8 @@ class NavigationViewElement extends PolymerElement {
   NavigationViewElement.created() : super.created() {
   }
   
-  void ready() {
-    super.ready();
+  void enteredView() {
+    super.enteredView();
     
     initDocumentTree();
   }

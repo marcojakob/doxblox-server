@@ -9,8 +9,8 @@
     </div>
     
     <template repeat="{{docBlock in docBlocks}}">
-      <doxblox-document-block-digest doc-block="{{docBlock}}" selected="{{docBlock == selectedDocBlock}}"
-          on-click="_handleDigestSelection">
+      <doxblox-document-block-digest docBlock="{{docBlock}}" selected="{{docBlock == selectedDocBlock}}"
+          on-click="{{handleDigestSelection}}">
       </doxblox-document-block-digest>
     </template>
     

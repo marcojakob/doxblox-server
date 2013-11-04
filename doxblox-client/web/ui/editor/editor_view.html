@@ -8,12 +8,14 @@
       @host {
         :scope {
           display: block;
+          overflow: auto;
+          height: 100%;
         }
       }
     </style>
     
     <template if="{{questionBlock != null}}">
-      <doxblox-question-block-editor question-block="{{questionBlock}}">
+      <doxblox-question-block-editor questionBlock="{{questionBlock}}">
       </doxblox-question-block-editor>
     </template>
   </template>

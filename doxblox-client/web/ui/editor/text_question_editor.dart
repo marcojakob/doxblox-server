@@ -10,10 +10,9 @@ import '../../model/model.dart';
 @CustomTag('doxblox-text-question-editor')
 class TextQuestionEditorElement extends PolymerElement {
   
-  TextQuestion question;
+  @published TextQuestion question;
   
-  @observable
-  String letter;
+  @published String letter;
   
   bool get applyAuthorStyles => true;
   

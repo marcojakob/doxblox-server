@@ -21,48 +21,68 @@ class DocumentTreeElement extends PolymerElement {
   /// The root of all tree items.
   @observable TreeItem root;
   
-  bool get applyAuthorStyles => true;
+  /// The currently selected document.
+  @observable Document selectedDoc;
   
-  // The initially selected document.
-  Document _initialSelection;
+  bool get applyAuthorStyles => true;
   
   DocumentTreeElement.created() : super.created() {
   }
   
-  void ready() {
-    super.ready();
+  void enteredView() {
+    super.enteredView();
+    
     TreeViewElement tree = $['tree'];
     
-    // Forward item selection as an event on event bus
+    // Forward item selection to event bus.
     tree.onItemSelected.listen((CustomEvent event) {
       TreeItem item = event.detail;
       
-      // Only react to document type selections.
+      // Only react to document selections.
       if (item is DocumentTreeItem) {
         _log.finest('Document item selected: ${item.name}');
         urls.router.gotoUrl(urls.document, [item.data.id], 'doxblox');
       }
     });
     
-    // React to document selection events.
+    // Handle document selection events.
     events.eventBus.on(events.documentSelect).listen((Document doc) {
-      if (doc != null) {
-        _log.finest('Received document selection: doc.id=${doc.id}');
-        if (root != null) {
-          _selectDocument(doc);
-        } else {
-          // Tree is not ready yet, save for later.
-          _initialSelection = doc;
-        }
-      }
+      _log.finest('Received document selection: doc.id=${doc != null ? doc.id : null}');
+      selectedDoc = doc;
     });
   }
   
-  void _selectDocument(Document doc) {
-    TreeViewElement tree = $['tree'];
-    tree.selectWhere((TreeItem item) {
-      return item is DocumentTreeItem && item.data == doc;
-    });
+  /**
+   * Is (magically) called when the [selectedDoc] changed.
+   */
+  void selectedDocChanged(Document oldDoc) {
+    _applySelection();    
+  }
+  
+  /**
+   * Is (magically) called when the [root] changed.
+   */
+  void rootChanged(TreeItem oldRoot) {
+    // Wait for the tree to build.
+    new Future(_applySelection);  
+  }
+  
+  /**
+   * Applies the selection in the tree.
+   */
+  void _applySelection() {
+    // Make sure the tree is ready.
+    if (root != null) {
+      TreeViewElement tree = $['tree'];
+      
+      if (selectedDoc != null) {
+        tree.selectWhere((TreeItem item) {
+          return item is DocumentTreeItem && item.data == selectedDoc;
+        });
+      } else {
+        tree.clearSelection();
+      }
+    }
   }
   
   /**
@@ -72,10 +92,6 @@ class DocumentTreeElement extends PolymerElement {
     _log.finest('Building the document tree.');
     var builder = new DocumentTreeBuilder(folders, documents);
     root = builder.buildTree();
-    
-    if (_initialSelection != null) {
-      new Future(() => _selectDocument(_initialSelection));
-    }
   }
 }
 

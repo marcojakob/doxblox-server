@@ -3,10 +3,14 @@
  */
 library doxblox.events;
 
+import 'package:logging/logging.dart';
+
 import 'package:event_bus/event_bus.dart';
 export 'package:event_bus/event_bus.dart';
 
 import 'model/model.dart';
+
+final _log = new Logger('doxblox.events');
 
 EventBus _eventBus;
 
@@ -15,6 +19,7 @@ EventBus get eventBus => _eventBus;
 
 /// Initializes the global [EventBus] object. Should only be called once!
 void init(EventBus eventBus) {
+  _log.info('Initializing event bus.');
   _eventBus = eventBus;
 }
 

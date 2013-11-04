@@ -1,12 +1,15 @@
 library doxblox.data;
 
 import 'dart:async';
+import 'package:logging/logging.dart';
 
 import '../model/model.dart';
 
 part 'document_dao.dart';
 part 'document_folder_dao.dart';
 part 'document_block_dao.dart';
+
+final _log = new Logger("doxblox.data");
 
 DataAccess _dataAccess;
 
@@ -15,6 +18,7 @@ DataAccess get dataAccess => _dataAccess;
 
 /// Initializes the global [DataAccess] object. Should only be called once!
 void init(DataAccess dataAccess) {
+  _log.info('Initializing data access.');
   _dataAccess = dataAccess;
 }
 

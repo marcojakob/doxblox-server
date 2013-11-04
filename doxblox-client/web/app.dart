@@ -24,18 +24,19 @@ class DoxbloxApp extends PolymerElement {
   bool get applyAuthorStyles => true;
   
   DoxbloxApp.created() : super.created() {
-    initBootjackWidgets();
+    _initBootjackWidgets();
   }
   
   void enteredView() {
     super.enteredView();
     
-    initLayout();
+    _initMainLayout();
     
-    initRouter();
+    _initRouter();
   }
   
-  void initLayout() {
+  void _initMainLayout() {
+    _log.finest('Initializing main layout.');
     Element header = $['header'];
     SplitPanelElement baseContainer = $['base-container'];
     
@@ -53,22 +54,32 @@ class DoxbloxApp extends PolymerElement {
     });
   }
   
-  void initRouter() {
+  void _initRouter() {
+    _log.finest('Initializing router');
     // Start listening for window history events.
     urls.init(new Router(useFragment: true));
     urls.router
       ..addHandler(urls.home, (_) {
+        _log.finest('Matching urls.home');
         events.eventBus.fire(events.documentSelect, null);
         events.eventBus.fire(events.documentBlockSelect, null);  
       })
+      
       ..addHandler(urls.document, (path) {
+        // Prevent handling twice (once with # and once with /). TODO: Fix this.
+        if (path.contains('#')) return;
+        
         _log.finest('matching urls.document path: $path');
         String docId = urls.document.parse(path)[0];
         Future<Document> docFuture = data.dataAccess.documents.getById(docId);
         docFuture.then((Document doc) => 
             events.eventBus.fire(events.documentSelect, doc));  
       })
+      
       ..addHandler(urls.documentBlock, (path) {
+        // Prevent handling twice (once with # and once with /). TODO: Fix this.
+        if (path.contains('#')) return;
+        
         _log.finest('matching urls.documentBlock path: $path');
         List<String> groups = urls.documentBlock.parse(path);
         Future<Document> docFuture = data.dataAccess.documents.getById(groups[0]);
@@ -82,7 +93,7 @@ class DoxbloxApp extends PolymerElement {
   }
   
   /// Initializes the Bootstrap widgets that need some Dart code to work.
-  void initBootjackWidgets() {
+  void _initBootjackWidgets() {
     _log.info('Initializing bootjack widgets.');
     
     Dropdown.use();

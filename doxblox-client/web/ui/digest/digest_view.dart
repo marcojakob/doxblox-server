@@ -1,7 +1,7 @@
 library doxblox.digest_view;
 
 import 'package:polymer/polymer.dart';
-import 'dart:html' hide Document;
+import 'dart:html' show DivElement, querySelector;
 import 'dart:async';
 import 'package:logging/logging.dart';
 
@@ -25,7 +25,7 @@ class DigestViewElement extends PolymerElement {
   
   /// [DocumentBlock] that is currently selected.
   @observable
-  DocumentBlock selectedDocumentBlock;
+  DocumentBlock selectedDocBlock;
   
   bool get applyAuthorStyles => true;
   
@@ -45,7 +45,7 @@ class DigestViewElement extends PolymerElement {
     });
     
     events.eventBus.on(events.documentBlockSelect).listen((DocumentBlock block) {
-      this.selectedDocumentBlock = block;
+      this.selectedDocBlock = block;
     });
   }
 }  

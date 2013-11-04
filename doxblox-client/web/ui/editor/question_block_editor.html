@@ -12,8 +12,8 @@
       }
     </style>
     
-    <template repeat="{{question in questionBlock.questions}}">
-      <doxblox-text-question-editor question="{{question}}" letter="{{letters[$index]}}" 
+    <template repeat="{{question in questionBlock.questions | enumerate}}">
+      <doxblox-text-question-editor question="{{question.value}}" letter="{{letters[question.index]}}" 
           draggable="true">
       </doxblox-text-question-editor>
     </template>

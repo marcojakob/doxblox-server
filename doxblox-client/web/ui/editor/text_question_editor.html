@@ -2,6 +2,21 @@
 
 <polymer-element name="doxblox-text-question-editor">
   <template>
+    <style>
+      .question-form {
+        padding: 10px 5px 10px 5px;
+        margin: 0;
+      }
+      
+      .label-vertical-center {
+        line-height: 30px;
+      }
+      
+      .form-row {
+        margin-bottom: 5px;
+      }
+    </style>      
+    
     <form class="question-form">
       <div class="form-inline form-row">
         <label for="{{letter}}-text" class="control-label label-vertical-center"><strong>{{letter}})</strong></label>
@@ -25,21 +40,6 @@
       </div>
       <textarea id="{{letter}}-solution" rows="5" class="input-block-level">{{question.solution}}</textarea>
     </form>
-    
-    <style scoped>
-.question-form {
-  padding: 10px 5px 10px 5px;
-  margin: 0;
-}
-
-.label-vertical-center {
-  line-height: 30px;
-}
-
-.form-row {
-  margin-bottom: 5px;
-}
-    </style>      
   </template>
   
   <script type="application/dart" src="text_question_editor.dart"></script>

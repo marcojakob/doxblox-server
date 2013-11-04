@@ -2,17 +2,6 @@ html, body {
   overflow: hidden;
 }
 
-.navigation-view, .digest-view, .editor-view {
-  overflow: auto;
-  height: 100%;
-}
-
-.navigation-view {
-  padding-left: 5px;
-  padding-right: 5px;
-  background-color: #eaedef;
-}
-
 /*************************** Text Selection **************************/
 .disable-selection {
   -webkit-user-select: none;
@@ -30,22 +19,6 @@ html, body {
 .dnd-dragging {
   opacity: 0.5;
 } 
-
-/*************************** Digest View **************************/
-div[is=document-block-digest] {
-  min-width: 100px;
-  padding: 4px 10px 4px 4px; /* 4px padding, but a bit extra on the RHS. */
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
-div[is=document-block-digest].selected {
-  background-color: #ecf0f3;
-}
-
-div[is=document-block-digest]:hover {
-  background-color: #d1d4d7;
-}
 
 /*************************** Editor View **************************/
 div[is=text-question-editor]:not(.dnd-drag-occurring):hover {

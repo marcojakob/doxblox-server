@@ -9,9 +9,11 @@ import '../../model/model.dart';
  */
 @CustomTag('doxblox-document-block-digest')
 class DocumentBlockDigestElement extends PolymerElement {
+  
+  @published
   DocumentBlock docBlock;
   
-  @observable
+  @published
   bool selected;
   
   bool get applyAuthorStyles => true;

@@ -20,33 +20,19 @@ final _log = new Logger("doxblox.document_digest");
 class DocumentDigestElement extends PolymerElement {
   /// The [Document] displayed in this view. Called [doc] to not interfere with
   /// getters from [PolymerElement].
-  @observable
+  @published
   Document doc;
+  
+  /// Current selected [DocumentBlock].
+  @published
+  DocumentBlock selectedDocBlock;
   
   @observable
   List<DocumentBlock> docBlocks = [];
   
-  /// Current selected [DocumentBlock].
-  @observable
-  DocumentBlock selectedDocBlock;
-  
   bool get applyAuthorStyles => true;
   
   DocumentDigestElement.created() : super.created() {
-//    // Create observer for doc to get the new blocks when it changes.
-//    new PathObserver(doc, '')
-//      ..bindSync((Document newDoc) {
-//        if (newDoc == null) {
-//          _log.finest('doc changed: null');
-//          docBlocks = [];
-//        } else {
-//          _log.finest('doc changed: doc.id=${newDoc.id}');
-//          dataAccess.documentBlocks.getAllByIds(newDoc.documentBlockIds).then((List<DocumentBlock> blocks) {
-//            docBlocks = blocks;
-//            notifyProperty(this, const Symbol('docBlocks'));
-//          });
-//        }
-//      });
   }
   
   /**
@@ -69,7 +55,7 @@ class DocumentDigestElement extends PolymerElement {
   /**
    * Called when a digest is selected.
    */
-  void _handleDigestSelection(Event e, var detail, Node target) {
+  void handleDigestSelection(Event event, var detail, Node target) {
     this.selectedDocBlock = (target as DocumentBlockDigestElement).docBlock;
     // Fire url change
     urls.router.gotoUrl(urls.documentBlock, 

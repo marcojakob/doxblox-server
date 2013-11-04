@@ -3,6 +3,7 @@
 .buildlog
 packages/
 web/out/
+pubspec.lock
 *.iml
 *.ipr
 *.iws
