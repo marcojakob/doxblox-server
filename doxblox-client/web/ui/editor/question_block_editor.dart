@@ -13,7 +13,7 @@ import 'package:logging/logging.dart';
 final _logger = new Logger("doxblox.question_block_editor");
 
 /**
- * Editor for a [QuestionBlock].
+ * Editor for a [QuestionBlock] containing [Question]s.
  */
 @CustomTag('doxblox-question-block-editor')
 class QuestionBlockEditorElement extends PolymerElement {
