@@ -1,4 +1,0 @@
-rootProject.name = "doxblox"
-
-include "doxblox-server"
-include "doxblox-client"
